@@ -11,6 +11,7 @@ on:
     branches: [ claude/testimonials-plugin-designs-urcnvt ]
     paths:
       - devadigm-testimonials/devadigm-testimonials.php
+  workflow_dispatch: {}
 
 permissions:
   contents: write
