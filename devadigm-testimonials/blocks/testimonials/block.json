@@ -1,0 +1,112 @@
+{
+	"$schema": "https://schemas.wp.org/trunk/block.json",
+	"apiVersion": 3,
+	"name": "devadigm/testimonials",
+	"title": "Testimonials",
+	"category": "devadigm",
+	"icon": "format-quote",
+	"description": "Show testimonials as a spotlight, a row, a slideshow, a wall, a marquee or a single inline pull-quote.",
+	"keywords": [ "testimonial", "review", "quote", "social proof" ],
+	"textdomain": "devadigm-testimonials",
+	"supports": {
+		"html": false,
+		"align": [ "wide", "full" ],
+		"spacing": {
+			"margin": true,
+			"padding": true
+		},
+		"color": {
+			"background": true,
+			"text": true
+		},
+		"typography": {
+			"fontSize": true,
+			"lineHeight": true
+		}
+	},
+	"attributes": {
+		"layout": {
+			"type": "string"
+		},
+		"markStyle": {
+			"type": "string"
+		},
+		"count": {
+			"type": "number",
+			"default": 3
+		},
+		"columns": {
+			"type": "number",
+			"default": 3
+		},
+		"service": {
+			"type": "string",
+			"default": ""
+		},
+		"source": {
+			"type": "string",
+			"default": ""
+		},
+		"minRating": {
+			"type": "number",
+			"default": 0
+		},
+		"featuredOnly": {
+			"type": "boolean",
+			"default": false
+		},
+		"order": {
+			"type": "string",
+			"default": "newest"
+		},
+		"showRating": {
+			"type": "boolean",
+			"default": true
+		},
+		"showAvatar": {
+			"type": "boolean",
+			"default": true
+		},
+		"accentColor": {
+			"type": "string",
+			"default": ""
+		},
+		"quoteColor": {
+			"type": "string",
+			"default": ""
+		},
+		"nameColor": {
+			"type": "string",
+			"default": ""
+		},
+		"metaColor": {
+			"type": "string",
+			"default": ""
+		},
+		"surfaceColor": {
+			"type": "string",
+			"default": ""
+		},
+		"borderColor": {
+			"type": "string",
+			"default": ""
+		},
+		"quoteFont": {
+			"type": "string",
+			"default": ""
+		},
+		"bodyFont": {
+			"type": "string",
+			"default": ""
+		},
+		"quoteScale": {
+			"type": "number"
+		},
+		"markScale": {
+			"type": "number"
+		}
+	},
+	"editorScript": "file:./editor.js",
+	"style": "file:./style.css",
+	"viewScriptModule": "file:./view.js"
+}

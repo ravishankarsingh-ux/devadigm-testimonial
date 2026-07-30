@@ -8,6 +8,28 @@ The visual advisory and live design specimens live in
 
 ---
 
+## Status
+
+**Phase 1 is built** and lives in [`devadigm-testimonials/`](devadigm-testimonials/),
+packaged as `devadigm-testimonials.zip`. It was verified against a real
+WordPress 7.0.2 install: all six layouts and all six quotation-mark treatments
+render, the settings screen saves and drives every token, the carousel and
+marquee work by mouse, keyboard and touch, and the blocks pass axe at WCAG 2.2
+AA with zero violations.
+
+Two things changed from the plan below during the build:
+
+- **All six layouts shipped in phase 1**, not three. The remaining three were
+  nearly free once the token layer and the item renderer existed.
+- **A separate `accent_text` colour was added.** The contrast audit in section 5
+  predicted this: an accent chosen to work as a mark or a fill is usually too
+  light to use as text. Keeping them apart is what lets a brass or pastel accent
+  be used without failing contrast on the result-metric line.
+
+Phases 2 to 5 are unchanged.
+
+---
+
 ## 1. Environment findings
 
 Observed from the live site before writing this plan:

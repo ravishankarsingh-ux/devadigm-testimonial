@@ -1,0 +1,48 @@
+/**
+ * Devadigm Testimonials - settings screen styling.
+ */
+
+.dvdm-settings .dvdm-intro {
+	max-width: 62em;
+	font-size: 13px;
+}
+
+.dvdm-settings h2.title {
+	margin-top: 2em;
+	padding-top: 1em;
+	border-top: 1px solid #dcdcde;
+}
+
+.dvdm-settings .dvdm-note {
+	max-width: 62em;
+	margin-top: -0.5em;
+}
+
+.dvdm-colour-cell .dvdm-colour-custom,
+.dvdm-font-cell .dvdm-font-custom {
+	display: none;
+	margin-top: 0.5em;
+}
+
+.dvdm-colour-cell.is-custom .dvdm-colour-custom,
+.dvdm-font-cell.is-custom .dvdm-font-custom {
+	display: inline-block;
+}
+
+/* The colour picker wraps the input, so reveal the wrapper too. */
+.dvdm-colour-cell .wp-picker-container {
+	display: none;
+	margin-top: 0.5em;
+}
+
+.dvdm-colour-cell.is-custom .wp-picker-container {
+	display: block;
+}
+
+.dvdm-colour-cell.is-custom .dvdm-colour-custom {
+	display: inline-block;
+}
+
+.dvdm-settings select {
+	max-width: 24em;
+}
