@@ -1,0 +1,854 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+	Sample testimonials for the Devadigm Testimonials plugin.
+
+	Import with Tools > Import > WordPress. Activate the plugin first, so the
+	testimonial post type and its taxonomies exist before the import runs.
+
+	Every person, company and quote here is invented for testing. None of it is
+	a real customer statement and none of it should ever be published as one.
+-->
+<rss version="2.0"
+	xmlns:excerpt="http://wordpress.org/export/1.2/excerpt/"
+	xmlns:content="http://purl.org/rss/1.0/modules/content/"
+	xmlns:wfw="http://wellformedweb.org/CommentAPI/"
+	xmlns:dc="http://purl.org/dc/elements/1.1/"
+	xmlns:wp="http://wordpress.org/export/1.2/"
+>
+<channel>
+	<title>Devadigm Testimonials sample data</title>
+	<link>https://example.com</link>
+	<description>Sample testimonials for layout and design testing</description>
+	<pubDate>Thu, 30 Jul 2026 00:00:00 +0000</pubDate>
+	<language>en-GB</language>
+	<wp:wxr_version>1.2</wp:wxr_version>
+	<wp:base_site_url>https://example.com</wp:base_site_url>
+	<wp:base_blog_url>https://example.com</wp:base_blog_url>
+	<wp:term>
+		<wp:term_id>101</wp:term_id>
+		<wp:term_taxonomy>dvdm_service</wp:term_taxonomy>
+		<wp:term_slug>branding</wp:term_slug>
+		<wp:term_parent></wp:term_parent>
+		<wp:term_name><![CDATA[Branding]]></wp:term_name>
+	</wp:term>
+	<wp:term>
+		<wp:term_id>102</wp:term_id>
+		<wp:term_taxonomy>dvdm_service</wp:term_taxonomy>
+		<wp:term_slug>web-design</wp:term_slug>
+		<wp:term_parent></wp:term_parent>
+		<wp:term_name><![CDATA[Web Design]]></wp:term_name>
+	</wp:term>
+	<wp:term>
+		<wp:term_id>103</wp:term_id>
+		<wp:term_taxonomy>dvdm_service</wp:term_taxonomy>
+		<wp:term_slug>web-development</wp:term_slug>
+		<wp:term_parent></wp:term_parent>
+		<wp:term_name><![CDATA[Web Development]]></wp:term_name>
+	</wp:term>
+	<wp:term>
+		<wp:term_id>104</wp:term_id>
+		<wp:term_taxonomy>dvdm_service</wp:term_taxonomy>
+		<wp:term_slug>seo</wp:term_slug>
+		<wp:term_parent></wp:term_parent>
+		<wp:term_name><![CDATA[SEO]]></wp:term_name>
+	</wp:term>
+	<wp:term>
+		<wp:term_id>105</wp:term_id>
+		<wp:term_taxonomy>dvdm_service</wp:term_taxonomy>
+		<wp:term_slug>retainer</wp:term_slug>
+		<wp:term_parent></wp:term_parent>
+		<wp:term_name><![CDATA[Retainer]]></wp:term_name>
+	</wp:term>
+	<wp:term>
+		<wp:term_id>106</wp:term_id>
+		<wp:term_taxonomy>dvdm_source</wp:term_taxonomy>
+		<wp:term_slug>direct</wp:term_slug>
+		<wp:term_parent></wp:term_parent>
+		<wp:term_name><![CDATA[Direct]]></wp:term_name>
+	</wp:term>
+	<wp:term>
+		<wp:term_id>107</wp:term_id>
+		<wp:term_taxonomy>dvdm_source</wp:term_taxonomy>
+		<wp:term_slug>google</wp:term_slug>
+		<wp:term_parent></wp:term_parent>
+		<wp:term_name><![CDATA[Google]]></wp:term_name>
+	</wp:term>
+	<wp:term>
+		<wp:term_id>108</wp:term_id>
+		<wp:term_taxonomy>dvdm_source</wp:term_taxonomy>
+		<wp:term_slug>linkedin</wp:term_slug>
+		<wp:term_parent></wp:term_parent>
+		<wp:term_name><![CDATA[LinkedIn]]></wp:term_name>
+	</wp:term>
+	<wp:term>
+		<wp:term_id>109</wp:term_id>
+		<wp:term_taxonomy>dvdm_source</wp:term_taxonomy>
+		<wp:term_slug>clutch</wp:term_slug>
+		<wp:term_parent></wp:term_parent>
+		<wp:term_name><![CDATA[Clutch]]></wp:term_name>
+	</wp:term>
+	<wp:term>
+		<wp:term_id>110</wp:term_id>
+		<wp:term_taxonomy>dvdm_source</wp:term_taxonomy>
+		<wp:term_slug>email</wp:term_slug>
+		<wp:term_parent></wp:term_parent>
+		<wp:term_name><![CDATA[Email]]></wp:term_name>
+	</wp:term>
+	<item>
+		<title>Marta Reyes - Halberd Studio</title>
+		<link>https://example.com/testimonial/marta-reyes/</link>
+		<pubDate>Thu, 30 Jul 2026 09:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=dvdm_testimonial&#38;p=9001</guid>
+		<description></description>
+		<content:encoded><![CDATA[They rebuilt our identity in eleven weeks and the quality of our enquiries changed immediately. We stopped explaining what we charge.]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>9001</wp:post_id>
+		<wp:post_date><![CDATA[2026-07-01 09:00:00]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-07-01 09:00:00]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-07-01 09:00:00]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-07-01 09:00:00]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[marta-reyes]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>1</wp:menu_order>
+		<wp:post_type><![CDATA[dvdm_testimonial]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="dvdm_service" nicename="branding"><![CDATA[Branding]]></category>
+		<category domain="dvdm_source" nicename="direct"><![CDATA[Direct]]></category>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_name]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Marta Reyes]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_role]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Founder]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_company]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Halberd Studio]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_company_url]]></wp:meta_key>
+			<wp:meta_value><![CDATA[https://example.com/halberd]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_rating]]></wp:meta_key>
+			<wp:meta_value><![CDATA[5]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_result_metric]]></wp:meta_key>
+			<wp:meta_value><![CDATA[+38% qualified enquiries]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_given_on]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2026-02-11]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_verified_at]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2026-02-11]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_consent_method]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Signed consent form]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_original_text]]></wp:meta_key>
+			<wp:meta_value><![CDATA[They rebuilt our identity in eleven weeks and the quality of our enquiries changed immediately. We stopped explaining what we charge.]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_featured]]></wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+	</item>
+	<item>
+		<title>Daniel Okonjo - Northbound Logistics</title>
+		<link>https://example.com/testimonial/daniel-okonjo/</link>
+		<pubDate>Thu, 30 Jul 2026 09:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=dvdm_testimonial&#38;p=9002</guid>
+		<description></description>
+		<content:encoded><![CDATA[The handover was the best I have had from any agency. Documented, recorded, and nothing broke when their team stepped away.]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>9002</wp:post_id>
+		<wp:post_date><![CDATA[2026-07-02 09:00:00]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-07-02 09:00:00]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-07-02 09:00:00]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-07-02 09:00:00]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[daniel-okonjo]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>2</wp:menu_order>
+		<wp:post_type><![CDATA[dvdm_testimonial]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="dvdm_service" nicename="web-development"><![CDATA[Web Development]]></category>
+		<category domain="dvdm_source" nicename="email"><![CDATA[Email]]></category>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_name]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Daniel Okonjo]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_role]]></wp:meta_key>
+			<wp:meta_value><![CDATA[CTO]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_company]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Northbound Logistics]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_company_url]]></wp:meta_key>
+			<wp:meta_value><![CDATA[https://example.com/northbound]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_rating]]></wp:meta_key>
+			<wp:meta_value><![CDATA[5]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_given_on]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2026-01-28]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_verified_at]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2026-01-28]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_consent_method]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Email confirmation]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_original_text]]></wp:meta_key>
+			<wp:meta_value><![CDATA[The handover was the best I have had from any agency. Documented, recorded, and nothing broke when their team stepped away.]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_featured]]></wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+	</item>
+	<item>
+		<title>Sena Kaya - Meridian Group</title>
+		<link>https://example.com/testimonial/sena-kaya/</link>
+		<pubDate>Thu, 30 Jul 2026 09:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=dvdm_testimonial&#38;p=9003</guid>
+		<description></description>
+		<content:encoded><![CDATA[We came in with a brief for a website and left with a positioning strategy we still use in every pitch.]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>9003</wp:post_id>
+		<wp:post_date><![CDATA[2026-07-03 09:00:00]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-07-03 09:00:00]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-07-03 09:00:00]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-07-03 09:00:00]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[sena-kaya]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>3</wp:menu_order>
+		<wp:post_type><![CDATA[dvdm_testimonial]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="dvdm_service" nicename="branding"><![CDATA[Branding]]></category>
+		<category domain="dvdm_source" nicename="linkedin"><![CDATA[LinkedIn]]></category>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_name]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Sena Kaya]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_role]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Head of Brand]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_company]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Meridian Group]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_rating]]></wp:meta_key>
+			<wp:meta_value><![CDATA[4.5]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_given_on]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2025-11-04]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_verified_at]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2025-11-04]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_consent_method]]></wp:meta_key>
+			<wp:meta_value><![CDATA[LinkedIn recommendation]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_original_text]]></wp:meta_key>
+			<wp:meta_value><![CDATA[We came in with a brief for a website and left with a positioning strategy we still use in every pitch.]]></wp:meta_value>
+		</wp:postmeta>
+	</item>
+	<item>
+		<title>Elin Lindqvist - Fjord Health</title>
+		<link>https://example.com/testimonial/elin-lindqvist/</link>
+		<pubDate>Thu, 30 Jul 2026 09:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=dvdm_testimonial&#38;p=9004</guid>
+		<description></description>
+		<content:encoded><![CDATA[Every deadline held. I have never been able to write that sentence about an agency before.]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>9004</wp:post_id>
+		<wp:post_date><![CDATA[2026-07-04 09:00:00]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-07-04 09:00:00]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-07-04 09:00:00]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-07-04 09:00:00]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[elin-lindqvist]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>4</wp:menu_order>
+		<wp:post_type><![CDATA[dvdm_testimonial]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="dvdm_service" nicename="retainer"><![CDATA[Retainer]]></category>
+		<category domain="dvdm_source" nicename="direct"><![CDATA[Direct]]></category>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_name]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Elin Lindqvist]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_role]]></wp:meta_key>
+			<wp:meta_value><![CDATA[COO]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_company]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Fjord Health]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_company_url]]></wp:meta_key>
+			<wp:meta_value><![CDATA[https://example.com/fjord]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_rating]]></wp:meta_key>
+			<wp:meta_value><![CDATA[5]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_result_metric]]></wp:meta_key>
+			<wp:meta_value><![CDATA[14 months, zero missed deadlines]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_given_on]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2026-03-19]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_verified_at]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2026-03-19]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_consent_method]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Signed consent form]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_original_text]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Every deadline held. I have never been able to write that sentence about an agency before.]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_featured]]></wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+	</item>
+	<item>
+		<title>Ravi Tandon - Cadence</title>
+		<link>https://example.com/testimonial/ravi-tandon/</link>
+		<pubDate>Thu, 30 Jul 2026 09:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=dvdm_testimonial&#38;p=9005</guid>
+		<description></description>
+		<content:encoded><![CDATA[They cut our onboarding flow from nine screens to four and support tickets dropped by a third within the quarter.]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>9005</wp:post_id>
+		<wp:post_date><![CDATA[2026-07-05 09:00:00]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-07-05 09:00:00]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-07-05 09:00:00]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-07-05 09:00:00]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[ravi-tandon]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>5</wp:menu_order>
+		<wp:post_type><![CDATA[dvdm_testimonial]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="dvdm_service" nicename="web-design"><![CDATA[Web Design]]></category>
+		<category domain="dvdm_source" nicename="google"><![CDATA[Google]]></category>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_name]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Ravi Tandon]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_role]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Product Lead]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_company]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Cadence]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_rating]]></wp:meta_key>
+			<wp:meta_value><![CDATA[4]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_result_metric]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Support tickets down 33%]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_given_on]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2025-09-22]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_verified_at]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2025-09-22]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_consent_method]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Google review]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_original_text]]></wp:meta_key>
+			<wp:meta_value><![CDATA[They cut our onboarding flow from nine screens to four and support tickets dropped by a third within the quarter.]]></wp:meta_value>
+		</wp:postmeta>
+	</item>
+	<item>
+		<title>Aoife Varela - Loam</title>
+		<link>https://example.com/testimonial/aoife-varela/</link>
+		<pubDate>Thu, 30 Jul 2026 09:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=dvdm_testimonial&#38;p=9006</guid>
+		<description></description>
+		<content:encoded><![CDATA[Six months in, the site still looks like it was designed for us specifically. That is rarer than it should be.]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>9006</wp:post_id>
+		<wp:post_date><![CDATA[2026-07-06 09:00:00]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-07-06 09:00:00]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-07-06 09:00:00]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-07-06 09:00:00]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[aoife-varela]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>6</wp:menu_order>
+		<wp:post_type><![CDATA[dvdm_testimonial]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="dvdm_service" nicename="web-design"><![CDATA[Web Design]]></category>
+		<category domain="dvdm_source" nicename="direct"><![CDATA[Direct]]></category>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_name]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Aoife Varela]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_role]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Chief Executive]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_company]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Loam]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_company_url]]></wp:meta_key>
+			<wp:meta_value><![CDATA[https://example.com/loam]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_rating]]></wp:meta_key>
+			<wp:meta_value><![CDATA[5]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_given_on]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2026-04-02]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_verified_at]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2026-04-02]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_consent_method]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Signed consent form]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_original_text]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Six months in, the site still looks like it was designed for us specifically. That is rarer than it should be.]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_featured]]></wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+	</item>
+	<item>
+		<title>Joachim Pilar - Vessel and Co</title>
+		<link>https://example.com/testimonial/joachim-pilar/</link>
+		<pubDate>Thu, 30 Jul 2026 09:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=dvdm_testimonial&#38;p=9007</guid>
+		<description></description>
+		<content:encoded><![CDATA[Fast, opinionated, and willing to argue with us. That last part is why the work is any good.]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>9007</wp:post_id>
+		<wp:post_date><![CDATA[2026-07-07 09:00:00]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-07-07 09:00:00]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-07-07 09:00:00]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-07-07 09:00:00]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[joachim-pilar]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>7</wp:menu_order>
+		<wp:post_type><![CDATA[dvdm_testimonial]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="dvdm_service" nicename="branding"><![CDATA[Branding]]></category>
+		<category domain="dvdm_source" nicename="clutch"><![CDATA[Clutch]]></category>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_name]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Joachim Pilar]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_role]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Director]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_company]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Vessel and Co]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_rating]]></wp:meta_key>
+			<wp:meta_value><![CDATA[4.5]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_given_on]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2025-12-15]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_verified_at]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2025-12-15]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_consent_method]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Clutch review]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_original_text]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Fast, opinionated, and willing to argue with us. That last part is why the work is any good.]]></wp:meta_value>
+		</wp:postmeta>
+	</item>
+	<item>
+		<title>Priya Ghosh - Arbor Financial</title>
+		<link>https://example.com/testimonial/priya-ghosh/</link>
+		<pubDate>Thu, 30 Jul 2026 09:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=dvdm_testimonial&#38;p=9008</guid>
+		<description></description>
+		<content:encoded><![CDATA[Organic traffic more than doubled over two quarters and nothing else about our marketing changed. I checked.]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>9008</wp:post_id>
+		<wp:post_date><![CDATA[2026-07-08 09:00:00]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-07-08 09:00:00]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-07-08 09:00:00]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-07-08 09:00:00]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[priya-ghosh]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>8</wp:menu_order>
+		<wp:post_type><![CDATA[dvdm_testimonial]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="dvdm_service" nicename="seo"><![CDATA[SEO]]></category>
+		<category domain="dvdm_source" nicename="direct"><![CDATA[Direct]]></category>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_name]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Priya Ghosh]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_role]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Marketing Director]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_company]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Arbor Financial]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_rating]]></wp:meta_key>
+			<wp:meta_value><![CDATA[5]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_result_metric]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Organic traffic up 2.4x]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_given_on]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2026-05-08]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_verified_at]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2026-05-08]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_consent_method]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Email confirmation]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_original_text]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Organic traffic more than doubled over two quarters and nothing else about our marketing changed. I checked.]]></wp:meta_value>
+		</wp:postmeta>
+	</item>
+	<item>
+		<title>Tom Byrne - Kestrel Manufacturing</title>
+		<link>https://example.com/testimonial/tom-byrne/</link>
+		<pubDate>Thu, 30 Jul 2026 09:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=dvdm_testimonial&#38;p=9009</guid>
+		<description></description>
+		<content:encoded><![CDATA[Responsive without being reactive. They pushed back when we were wrong, which saved us a rebuild.]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>9009</wp:post_id>
+		<wp:post_date><![CDATA[2026-07-09 09:00:00]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-07-09 09:00:00]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-07-09 09:00:00]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-07-09 09:00:00]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[tom-byrne]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>9</wp:menu_order>
+		<wp:post_type><![CDATA[dvdm_testimonial]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="dvdm_service" nicename="web-development"><![CDATA[Web Development]]></category>
+		<category domain="dvdm_source" nicename="email"><![CDATA[Email]]></category>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_name]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Tom Byrne]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_role]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Operations Manager]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_company]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Kestrel Manufacturing]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_rating]]></wp:meta_key>
+			<wp:meta_value><![CDATA[4]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_given_on]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2025-10-30]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_verified_at]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2025-10-30]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_consent_method]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Email confirmation]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_original_text]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Responsive without being reactive. They pushed back when we were wrong, which saved us a rebuild.]]></wp:meta_value>
+		</wp:postmeta>
+	</item>
+	<item>
+		<title>Hana Novak - Solstice</title>
+		<link>https://example.com/testimonial/hana-novak/</link>
+		<pubDate>Thu, 30 Jul 2026 09:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=dvdm_testimonial&#38;p=9010</guid>
+		<description></description>
+		<content:encoded><![CDATA[The strategy work paid for the whole engagement before a single page was designed. I did not expect that.]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>9010</wp:post_id>
+		<wp:post_date><![CDATA[2026-07-10 09:00:00]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-07-10 09:00:00]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-07-10 09:00:00]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-07-10 09:00:00]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[hana-novak]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>10</wp:menu_order>
+		<wp:post_type><![CDATA[dvdm_testimonial]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="dvdm_service" nicename="retainer"><![CDATA[Retainer]]></category>
+		<category domain="dvdm_source" nicename="direct"><![CDATA[Direct]]></category>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_name]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Hana Novak]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_role]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Head of Growth]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_company]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Solstice]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_company_url]]></wp:meta_key>
+			<wp:meta_value><![CDATA[https://example.com/solstice]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_rating]]></wp:meta_key>
+			<wp:meta_value><![CDATA[5]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_given_on]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2026-06-11]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_verified_at]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2026-06-11]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_consent_method]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Signed consent form]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_original_text]]></wp:meta_key>
+			<wp:meta_value><![CDATA[The strategy work paid for the whole engagement before a single page was designed. I did not expect that.]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_featured]]></wp:meta_key>
+			<wp:meta_value><![CDATA[1]]></wp:meta_value>
+		</wp:postmeta>
+	</item>
+	<item>
+		<title>Luc Moreau - Atelier Bellwether</title>
+		<link>https://example.com/testimonial/luc-moreau/</link>
+		<pubDate>Thu, 30 Jul 2026 09:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=dvdm_testimonial&#38;p=9011</guid>
+		<description></description>
+		<content:encoded><![CDATA[Genuinely good writers, which I did not expect from a design studio.]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>9011</wp:post_id>
+		<wp:post_date><![CDATA[2026-07-11 09:00:00]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-07-11 09:00:00]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-07-11 09:00:00]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-07-11 09:00:00]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[luc-moreau]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>11</wp:menu_order>
+		<wp:post_type><![CDATA[dvdm_testimonial]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="dvdm_service" nicename="branding"><![CDATA[Branding]]></category>
+		<category domain="dvdm_source" nicename="linkedin"><![CDATA[LinkedIn]]></category>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_name]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Luc Moreau]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_role]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Creative Director]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_company]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Atelier Bellwether]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_rating]]></wp:meta_key>
+			<wp:meta_value><![CDATA[4.5]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_given_on]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2026-01-09]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_verified_at]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2026-01-09]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_consent_method]]></wp:meta_key>
+			<wp:meta_value><![CDATA[LinkedIn recommendation]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_original_text]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Genuinely good writers, which I did not expect from a design studio.]]></wp:meta_value>
+		</wp:postmeta>
+	</item>
+	<item>
+		<title>Sarah Whitfield - Northbound Logistics</title>
+		<link>https://example.com/testimonial/sarah-whitfield/</link>
+		<pubDate>Thu, 30 Jul 2026 09:00:00 +0000</pubDate>
+		<dc:creator><![CDATA[admin]]></dc:creator>
+		<guid isPermaLink="false">https://example.com/?post_type=dvdm_testimonial&#38;p=9012</guid>
+		<description></description>
+		<content:encoded><![CDATA[They inherited a decade of technical debt and left the codebase better than they found it. Our own team says so.]]></content:encoded>
+		<excerpt:encoded><![CDATA[]]></excerpt:encoded>
+		<wp:post_id>9012</wp:post_id>
+		<wp:post_date><![CDATA[2026-07-12 09:00:00]]></wp:post_date>
+		<wp:post_date_gmt><![CDATA[2026-07-12 09:00:00]]></wp:post_date_gmt>
+		<wp:post_modified><![CDATA[2026-07-12 09:00:00]]></wp:post_modified>
+		<wp:post_modified_gmt><![CDATA[2026-07-12 09:00:00]]></wp:post_modified_gmt>
+		<wp:comment_status><![CDATA[closed]]></wp:comment_status>
+		<wp:ping_status><![CDATA[closed]]></wp:ping_status>
+		<wp:post_name><![CDATA[sarah-whitfield]]></wp:post_name>
+		<wp:status><![CDATA[publish]]></wp:status>
+		<wp:post_parent>0</wp:post_parent>
+		<wp:menu_order>12</wp:menu_order>
+		<wp:post_type><![CDATA[dvdm_testimonial]]></wp:post_type>
+		<wp:post_password><![CDATA[]]></wp:post_password>
+		<wp:is_sticky>0</wp:is_sticky>
+		<category domain="dvdm_service" nicename="web-development"><![CDATA[Web Development]]></category>
+		<category domain="dvdm_source" nicename="direct"><![CDATA[Direct]]></category>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_name]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Sarah Whitfield]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_role]]></wp:meta_key>
+			<wp:meta_value><![CDATA[VP Engineering]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_author_company]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Northbound Logistics]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_rating]]></wp:meta_key>
+			<wp:meta_value><![CDATA[5]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_result_metric]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Legacy stack retired in 6 weeks]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_given_on]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2026-02-26]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_verified_at]]></wp:meta_key>
+			<wp:meta_value><![CDATA[2026-02-26]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_consent_method]]></wp:meta_key>
+			<wp:meta_value><![CDATA[Signed consent form]]></wp:meta_value>
+		</wp:postmeta>
+		<wp:postmeta>
+			<wp:meta_key><![CDATA[dvdm_original_text]]></wp:meta_key>
+			<wp:meta_value><![CDATA[They inherited a decade of technical debt and left the codebase better than they found it. Our own team says so.]]></wp:meta_value>
+		</wp:postmeta>
+	</item>
+</channel>
+</rss>

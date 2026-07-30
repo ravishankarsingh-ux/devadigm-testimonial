@@ -272,8 +272,19 @@ final class Renderer {
 	private static function wrap_marquee( array $items, string $wrapper_attributes, string $layout, string $mark ): string {
 		$duplicate = '';
 		foreach ( $items as $item ) {
-			// The copy is decorative, so it is hidden from assistive technology.
-			$duplicate .= str_replace( '<figure class="dvdm-t__item', '<figure aria-hidden="true" class="dvdm-t__item', $item );
+			/*
+			 * The second copy of the track exists only so the loop loops. It is
+			 * hidden from assistive technology and marked inert, because a
+			 * testimonial can carry a company link, and hiding a focusable
+			 * element without removing it from the tab order strands keyboard
+			 * users on a control screen readers cannot describe.
+			 */
+			$processor = new \WP_HTML_Tag_Processor( $item );
+			if ( $processor->next_tag( array( 'tag_name' => 'FIGURE' ) ) ) {
+				$processor->set_attribute( 'aria-hidden', 'true' );
+				$processor->set_attribute( 'inert', '' );
+			}
+			$duplicate .= $processor->get_updated_html();
 		}
 
 		$context = wp_json_encode(
