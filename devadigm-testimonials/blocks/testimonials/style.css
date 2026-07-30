@@ -596,8 +596,15 @@
 	overflow: hidden;
 }
 
+/*
+ * No align-self here on purpose - it needs to follow whatever align-items the
+ * container is set to (stretch by default, centre or flex-end when the block
+ * is aligned), the same as every other child. Pinning it to align-self:start
+ * previously meant the link stayed glued to the left edge even when the rest
+ * of the card - the quote, the rating, the attribution - had been centred or
+ * right-aligned, the one part of the card visibly ignoring the setting.
+ */
 .dvdm-t__more {
-	align-self: start;
 	font-size: 0.82em;
 	font-weight: 600;
 	color: var( --dvdm-accent-text, inherit );
@@ -608,8 +615,27 @@
 	padding: 0;
 }
 
-.dvdm-t__dialog {
+/*
+ * Positioning is written out in full rather than left to the browser's default
+ * <dialog> stylesheet. That default is exactly what centres a native dialog
+ * and lifts it into the top layer, but it is also just an ordinary UA rule,
+ * so any theme carrying its own reset for `dialog` - not unusual, some strip
+ * position and margin from every element they don't recognise - silently
+ * turns this from a centred modal into an inline block that renders wherever
+ * it falls in the document, stacked on top of whatever content surrounds it.
+ * A class-and-attribute selector outranks a bare element selector, so this
+ * rule wins that fight regardless of what the theme's reset says.
+ */
+.dvdm-t__dialog[open] {
+	display: flex;
+	flex-direction: column;
+	position: fixed;
+	inset: 0;
+	margin: auto;
+	z-index: 999999;
+	width: min( 44rem, calc( 100vw - 2.5rem ) );
 	max-width: min( 44rem, calc( 100vw - 2.5rem ) );
+	height: fit-content;
 	max-height: min( 80vh, 44rem );
 	overflow-y: auto;
 	border: 1px solid var( --dvdm-border, currentColor );
@@ -619,7 +645,13 @@
 	padding: clamp( 1.5rem, 4vw, 2.75rem );
 }
 
+.dvdm-t__dialog:not( [open] ) {
+	display: none;
+}
+
 .dvdm-t__dialog::backdrop {
+	position: fixed;
+	inset: 0;
 	background: rgba( 0, 0, 0, 0.55 );
 }
 
@@ -644,6 +676,8 @@
 }
 
 .dvdm-t__dialog-close {
+	align-self: flex-start;
+	flex: none;
 	font: inherit;
 	font-size: 0.85em;
 	margin-top: 1.75rem;
@@ -658,6 +692,126 @@
 .dvdm-t__dialog-close:hover {
 	background: var( --dvdm-accent, currentColor );
 	color: var( --dvdm-accent-contrast, canvas );
+}
+
+/* ------------------------------------------------------------ alignment */
+
+/*
+ * Left is the unstyled default. Centring or right-aligning a card needs both
+ * the text lined up (`text-align`) and the card's own block-level children -
+ * the blockquote, the metric, the attribution row - pulled along with it
+ * (`align-items` on the flex column each card already is), or the text would
+ * shift while the quote box and the avatar row stayed pinned to the left.
+ */
+.has-text-align-center .dvdm-t__item {
+	align-items: center;
+	text-align: center;
+}
+
+.has-text-align-center .dvdm-t__attribution {
+	justify-content: center;
+}
+
+.has-text-align-right .dvdm-t__item {
+	align-items: flex-end;
+	text-align: right;
+}
+
+.has-text-align-right .dvdm-t__attribution {
+	justify-content: flex-end;
+}
+
+/* Bracket rules draws a leading and a trailing rule; swap which side leads. */
+.has-text-align-right .dvdm-t__rule--bottom {
+	margin-inline-start: 0;
+	margin-inline-end: auto;
+}
+
+/*
+ * The Ledger mark's hanging-glyph-beside-the-text arrangement is a two-column
+ * grid built for the left-aligned case, where the glyph hangs in its own
+ * margin outside the text measure. Centred or right-aligned, "hanging outside
+ * the measure" no longer means anything - there is no longer a fixed left
+ * text edge for it to hang outside of - and attempting to keep the two-column
+ * layout runs into a genuinely unresolvable conflict: the text column is
+ * defined as `1fr`, which wants to fill the width its container offers, while
+ * centring wants the grid to shrink to only as much width as the wrapped
+ * text actually needs. Those two sizing goals cannot both be satisfied by the
+ * same grid at once, in any browser. Rather than leave the glyph stranded at
+ * the left edge while the now-centred text floats independently away from
+ * it - what happened before this rule existed - the glyph moves to its own
+ * centred line above the quote, which is what most centred testimonial
+ * designs do with a quotation mark regardless.
+ */
+.has-text-align-center.dvdm-mark--ledger .dvdm-t__quote,
+.has-text-align-right.dvdm-mark--ledger .dvdm-t__quote {
+	display: block;
+}
+
+.has-text-align-center.dvdm-mark--ledger .dvdm-t__quote::before,
+.has-text-align-right.dvdm-mark--ledger .dvdm-t__quote::before {
+	display: block;
+	margin-bottom: 0.1em;
+}
+
+/*
+ * The Filled slab bakes its two-column layout directly onto the item itself
+ * rather than the quote, but the underlying conflict is identical to
+ * Ledger's: a `1fr` text column wants to fill the width it is given, centring
+ * wants the item to shrink to its content, and no browser can satisfy both
+ * from the same grid. The slab becomes its own centred line above the quote,
+ * the same resolution as Ledger.
+ */
+.has-text-align-center.dvdm-mark--slab .dvdm-t__item,
+.has-text-align-right.dvdm-mark--slab .dvdm-t__item {
+	display: flex;
+	flex-direction: column;
+}
+
+.has-text-align-center.dvdm-mark--slab .dvdm-t__rating,
+.has-text-align-center.dvdm-mark--slab .dvdm-t__metric,
+.has-text-align-center.dvdm-mark--slab .dvdm-t__attribution,
+.has-text-align-right.dvdm-mark--slab .dvdm-t__rating,
+.has-text-align-right.dvdm-mark--slab .dvdm-t__metric,
+.has-text-align-right.dvdm-mark--slab .dvdm-t__attribution {
+	grid-column: auto;
+}
+
+.has-text-align-center.dvdm-mark--slab .dvdm-t__slab {
+	margin-inline: auto;
+	margin-bottom: 0.5em;
+}
+
+.has-text-align-right.dvdm-mark--slab .dvdm-t__slab {
+	margin-inline-start: auto;
+	margin-bottom: 0.5em;
+}
+
+/*
+ * A drop cap is a left-margin technique by definition - the letter is only
+ * "dropped" relative to a straight left edge the following lines return to.
+ * Centred text has no such edge for it to relate to, and a floated first
+ * letter beside centred lines produces lopsided wrapping rather than a
+ * balanced block, which is why print typography never combines the two.
+ * Centred or right-aligned, the float comes off and the mark returns to an
+ * ordinary inline character in front of the text, matching what happens
+ * anywhere else a decorative float would otherwise fight the alignment.
+ */
+.has-text-align-center.dvdm-mark--dropcap .dvdm-t__quote::before,
+.has-text-align-right.dvdm-mark--dropcap .dvdm-t__quote::before {
+	float: none;
+	display: inline;
+	font-size: 1em;
+	line-height: inherit;
+	padding-top: 0;
+}
+
+.has-text-align-center.dvdm-mark--dropcap .dvdm-t__quote p::first-letter,
+.has-text-align-right.dvdm-mark--dropcap .dvdm-t__quote p::first-letter {
+	float: none;
+	font-size: inherit;
+	line-height: inherit;
+	color: inherit;
 }
 
 /* ------------------------------------------------------- interaction */

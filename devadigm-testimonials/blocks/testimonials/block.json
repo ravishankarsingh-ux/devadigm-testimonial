@@ -56,6 +56,10 @@
 		"clampLines": {
 			"type": "number"
 		},
+		"textAlign": {
+			"type": "string",
+			"default": ""
+		},
 		"service": {
 			"type": "string",
 			"default": ""

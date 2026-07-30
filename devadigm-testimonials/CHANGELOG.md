@@ -4,6 +4,57 @@ All notable changes to this plugin are documented here. Version numbers follow
 [Semantic Versioning](https://semver.org/): MAJOR for breaking changes, MINOR
 for new features that stay backward-compatible, PATCH for fixes.
 
+## 1.3.0 - 2026-07-30
+
+### Added
+
+- **Alignment control.** A block toolbar (Align text left/center/right) now
+  sits above every testimonials block, matching how core blocks expose
+  alignment. It writes the same `has-text-align-{left|center|right}` class
+  core paragraphs use, so a theme's own alignment rules apply too.
+- **Read More is now universal.** Previously it only appeared for side-by-side
+  arrangements (Grid/columns/sliders); a single large Spotlight or Inline
+  testimonial always rendered its full text with no way to trim it. Read More
+  now depends purely on the block's own Read More toggle (or the Design
+  screen's site-wide default when the block hasn't set one), regardless of
+  layout or column count.
+
+### Fixed
+
+- **The Read More dialog could render with overlapping, misplaced content.**
+  Its positioning relied entirely on the browser's default `<dialog>`
+  stylesheet, which a theme's own CSS reset can (and did) override. The
+  dialog now carries explicit position, sizing and z-index rules of its own,
+  so it centres correctly and stays above page content no matter what the
+  active theme resets.
+- **The Read More link ignored the block's own alignment**, because
+  `.dvdm-t__more` hardcoded `align-self: start`, overriding whatever
+  alignment the surrounding card was using. That override is gone; the link
+  now follows the card's alignment like everything else in it.
+- **Ledger and Slab quotation marks did not centre or right-align.** Both
+  rely on CSS Grid with an `1fr` content track, and a grid track cannot
+  shrink-wrap to the width of wrapped text - so centering the grid centred a
+  column much wider than the visible text, leaving the mark and quote looking
+  left-anchored regardless of alignment. Center and right alignment now
+  switch these two marks to a stacked block/flex arrangement instead of
+  fighting the grid.
+- **The Dropcap mark and centered/right-aligned text were fundamentally at
+  odds** - a floated first letter is inherently a left-margin technique, and
+  combining it with centered text produced lopsided wrapping. Center and
+  right alignment now fall back to a plain inline mark for Dropcap instead of
+  attempting to float it.
+- **Marquee's Read More could occasionally be unreliable to click** while the
+  strip was actively drifting: a card partially masked by the marquee's own
+  `overflow: hidden` still reports its full, unclipped bounding box to the
+  browser, so a click aimed at the reported center can land past the visible
+  edge, on the page behind the strip. Hover/focus now pauses the drift via
+  the Interactivity API directly (previously CSS-only `:hover`, which a theme
+  could override), stopping the motion as soon as a pointer or keyboard focus
+  reaches a card. This does not claim to eliminate the underlying limitation
+  100% of the time - it is a characteristic of continuously-scrolling masked
+  strips in general - but it removes the CSS-override failure mode and stops
+  the motion far sooner than before.
+
 ## 1.2.0 - 2026-07-30
 
 ### Changed

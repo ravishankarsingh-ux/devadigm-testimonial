@@ -12,6 +12,8 @@
 	var Fragment = wp.element.Fragment;
 	var __ = wp.i18n.__;
 	var InspectorControls = wp.blockEditor.InspectorControls;
+	var BlockControls = wp.blockEditor.BlockControls;
+	var AlignmentToolbar = wp.blockEditor.AlignmentToolbar;
 	var useBlockProps = wp.blockEditor.useBlockProps;
 	var ServerSideRender = wp.serverSideRender;
 
@@ -164,11 +166,6 @@
 			var autoplay = effective( 'autoplay', defaults.autoplay || 0 );
 			var readMore = !! effective( 'readMore', defaults.readMore !== false );
 
-			// Cards have others beside them whenever more than one column shows,
-			// on any layout, and always for Marquee. That is when a long quote
-			// needs trimming to keep the row even.
-			var sideBySide = isMarquee || columns > 1;
-
 			var inspector = el(
 				InspectorControls,
 				null,
@@ -300,36 +297,34 @@
 					  )
 					: null,
 
-				sideBySide
-					? el(
-							PanelBody,
-							{ title: __( 'Long quotes', 'devadigm-testimonials' ), initialOpen: false },
-							el( ToggleControl, {
-								label: __( 'Trim long quotes', 'devadigm-testimonials' ),
-								checked: readMore,
+				el(
+					PanelBody,
+					{ title: __( 'Long quotes', 'devadigm-testimonials' ), initialOpen: false },
+					el( ToggleControl, {
+						label: __( 'Trim long quotes', 'devadigm-testimonials' ),
+						checked: readMore,
+						__nextHasNoMarginBottom: true,
+						help: __(
+							'Applies on every layout, including a single testimonial. Long quotes are shortened with a Read more link that opens the full quote. Short quotes are shown in full.',
+							'devadigm-testimonials'
+						),
+						onChange: function ( next ) {
+							set( { readMore: next } );
+						},
+					} ),
+					readMore
+						? el( RangeControl, {
+								label: __( 'Lines before trimming', 'devadigm-testimonials' ),
+								value: a.clampLines || 6,
+								min: 2,
+								max: 20,
 								__nextHasNoMarginBottom: true,
-								help: __(
-									'Long quotes are shortened with a Read more link that opens the full quote. Short quotes are shown in full.',
-									'devadigm-testimonials'
-								),
 								onChange: function ( next ) {
-									set( { readMore: next } );
+									set( { clampLines: next } );
 								},
-							} ),
-							readMore
-								? el( RangeControl, {
-										label: __( 'Lines before trimming', 'devadigm-testimonials' ),
-										value: a.clampLines || 6,
-										min: 2,
-										max: 20,
-										__nextHasNoMarginBottom: true,
-										onChange: function ( next ) {
-											set( { clampLines: next } );
-										},
-								  } )
-								: null
-					  )
-					: null,
+						  } )
+						: null
+				),
 
 				el(
 					PanelBody,
@@ -521,9 +516,21 @@
 				)
 			);
 
+			var toolbar = el(
+				BlockControls,
+				null,
+				el( AlignmentToolbar, {
+					value: a.textAlign || undefined,
+					onChange: function ( next ) {
+						set( { textAlign: next || '' } );
+					},
+				} )
+			);
+
 			return el(
 				Fragment,
 				null,
+				toolbar,
 				inspector,
 				el(
 					'div',

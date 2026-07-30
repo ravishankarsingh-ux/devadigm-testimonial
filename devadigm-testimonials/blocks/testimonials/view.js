@@ -243,6 +243,23 @@ store( 'devadigm/testimonials', {
 		get paused() {
 			return getContext().paused ? 'true' : 'false';
 		},
+
+		/**
+		 * Whether the marquee track should actually be stopped right now:
+		 * explicitly paused via its button, or currently hovered or focused.
+		 *
+		 * This is the value the track's own animation state binds to, kept
+		 * separate from the manual `paused` flag so hovering away afterwards
+		 * does not un-pause a marquee someone deliberately stopped, and so
+		 * hovering it in the first place does not flip the button's own label
+		 * to "Play" for a pause nobody asked for.
+		 *
+		 * @return {string} 'true' or 'false'.
+		 */
+		get trackPaused() {
+			const context = getContext();
+			return context.paused || context.hovering ? 'true' : 'false';
+		},
 	},
 
 	actions: {
@@ -337,6 +354,27 @@ store( 'devadigm/testimonials', {
 			} else if ( root ) {
 				startTimer( root, context );
 			}
+		},
+
+		/**
+		 * Stop the marquee's drift the moment a pointer or keyboard focus
+		 * enters it, independent of the CSS :hover / :focus-within rule that
+		 * does the same thing visually. A Read More link only sits still long
+		 * enough to click once the drift has actually stopped, and driving
+		 * that from script rather than trusting CSS alone means it keeps
+		 * working even against a theme whose own styles happen to touch
+		 * animation-play-state with a rule that outranks a plain :hover.
+		 */
+		marqueeHoverStart() {
+			getContext().hovering = true;
+		},
+
+		/**
+		 * Resume the marquee's drift once the pointer or focus leaves it,
+		 * unless it was already explicitly paused by its own button.
+		 */
+		marqueeHoverEnd() {
+			getContext().hovering = false;
 		},
 
 		/**

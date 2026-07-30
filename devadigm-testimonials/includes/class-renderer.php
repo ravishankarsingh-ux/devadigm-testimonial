@@ -193,11 +193,13 @@ final class Renderer {
 	 * Whether this testimonial has others sitting beside it.
 	 *
 	 * True whenever more than one column is showing, on any layout, and always
-	 * true for Marquee, whose cards are inherently side by side. False for a
-	 * single Spotlight or Inline quote with nothing beside it to line up
-	 * against. Two things depend on this: whether a long quote needs trimming
-	 * to keep a row even, and whether an oversized mark - sized for a wide,
-	 * solitary quote - needs scaling back down to fit a narrower column.
+	 * true for Marquee, whose cards are inherently side by side. Used only to
+	 * scale an oversized mark - sized for a wide, solitary quote - back down
+	 * once it shares a narrower column with others. Whether long quotes get
+	 * trimmed is a separate question, decided purely by whether Read More is
+	 * turned on: a single large Spotlight quote can run just as long as one
+	 * sitting in a row of cards, and the choice of whether to shorten it
+	 * belongs to whoever placed the block, not to how many columns it has.
 	 *
 	 * @param array<string,mixed> $attrs Settled attributes.
 	 */
@@ -208,15 +210,18 @@ final class Renderer {
 	/**
 	 * Whether long quotes should be trimmed.
 	 *
+	 * Decided entirely by the Read More setting - a per-block override where
+	 * one is set, the site-wide default otherwise - and nothing else. Applies
+	 * on every layout, including a single-column Spotlight or Inline quote and
+	 * Marquee alike.
+	 *
 	 * @param array<string,mixed> $attrs Settled attributes.
 	 */
 	private static function trims_quotes( array $attrs ): bool {
 		if ( array_key_exists( 'readMore', $attrs ) ) {
-			$enabled = (bool) $attrs['readMore'];
-		} else {
-			$enabled = (bool) Settings::get( 'read_more', true );
+			return (bool) $attrs['readMore'];
 		}
-		return $enabled && self::is_side_by_side( $attrs );
+		return (bool) Settings::get( 'read_more', true );
 	}
 
 	/**
@@ -231,6 +236,13 @@ final class Renderer {
 			'dvdm-t--' . $attrs['layout'],
 			'dvdm-mark--' . $attrs['markStyle'],
 		);
+
+		// Named to match core's own has-text-align-* convention, so a theme
+		// that already styles that class for other blocks styles this one too.
+		$align = (string) ( $attrs['textAlign'] ?? '' );
+		if ( in_array( $align, array( 'left', 'center', 'right' ), true ) ) {
+			$classes[] = 'has-text-align-' . $align;
+		}
 
 		$applies = 'marquee' !== $attrs['layout'];
 		$slider  = $applies && ! empty( $attrs['slider'] );
@@ -460,15 +472,28 @@ final class Renderer {
 		$context = wp_json_encode(
 			array(
 				'paused'    => false,
+				'hovering'  => false,
 				'pauseText' => __( 'Pause', 'devadigm-testimonials' ),
 				'playText'  => __( 'Play', 'devadigm-testimonials' ),
 			)
 		);
 
+		/*
+		 * Pausing while hovered or focused is driven from JavaScript
+		 * (state.trackPaused), not left to the CSS :hover / :focus-within rule
+		 * alone. CSS hover is what actually stops the animation frame by frame,
+		 * so it still does the work, but a theme carrying its own animation or
+		 * transition reset can override a plain :hover rule with a more
+		 * specific or later one - which is exactly the class of bug that broke
+		 * this plugin's dialog positioning on a real site. Binding the pause
+		 * through data-wp-bind--data-paused as well means the state the Read
+		 * More link's own click and focus handling can depend on is never
+		 * purely a CSS outcome that a theme happens to be able to override.
+		 */
 		return sprintf(
 			'<div %1$s data-wp-interactive="devadigm/testimonials" data-wp-context=\'%2$s\'>
-				<div class="dvdm-t__marquee">
-					<div class="dvdm-t__track" data-wp-bind--data-paused="state.paused">%3$s%4$s</div>
+				<div class="dvdm-t__marquee" data-wp-on--mouseenter="actions.marqueeHoverStart" data-wp-on--mouseleave="actions.marqueeHoverEnd" data-wp-on--focusin="actions.marqueeHoverStart" data-wp-on--focusout="actions.marqueeHoverEnd">
+					<div class="dvdm-t__track" data-wp-bind--data-paused="state.trackPaused">%3$s%4$s</div>
 				</div>
 				<button type="button" class="dvdm-t__pause" data-wp-on--click="actions.togglePause" data-wp-text="state.pauseLabel">%5$s</button>
 				%6$s
