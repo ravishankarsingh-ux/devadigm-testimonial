@@ -4,6 +4,27 @@ All notable changes to this plugin are documented here. Version numbers follow
 [Semantic Versioning](https://semver.org/): MAJOR for breaking changes, MINOR
 for new features that stay backward-compatible, PATCH for fixes.
 
+## 1.4.2 - 2026-07-30
+
+### Fixed
+
+- **The Read More dialog could render pinned to the left edge of the screen
+  instead of centred**, with a large empty gap on the right. The dialog's
+  centring relies on all four `inset` sides plus `margin: auto` cooperating;
+  a theme's own reset targeting the bare `dialog` element (rather than a
+  class this plugin controls) can win the fight for one or two of those
+  properties individually - typically `left`/`right`/`margin` - even though
+  this plugin's own selector is more specific overall, because CSS resolves
+  each property independently rather than as a whole rule. With `right`
+  no longer pinned to 0, `margin: auto` has nothing left to distribute
+  against, and the dialog collapses to wherever `left` puts it. The
+  properties that place and size the dialog (`position`, `inset`, `margin`,
+  `width`, `max-width`, `z-index`) now carry `!important`, which a theme
+  rule can only still beat by also using `!important` itself - confirmed by
+  reproducing the exact failure with a simulated hostile rule first (dialog
+  pinned 16px from the left, 580px of empty space on the right, matching
+  what was reported), then confirming this fix holds against that same rule.
+
 ## 1.4.1 - 2026-07-30
 
 ### Fixed

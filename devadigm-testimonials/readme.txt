@@ -4,7 +4,7 @@ Tags: testimonials, reviews, social proof, block, slider
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -91,6 +91,14 @@ front-end script is a plain ES module, so the plugin runs straight from the zip.
 == Changelog ==
 
 See CHANGELOG.md for full detail. Summary:
+
+= 1.4.2 =
+* Fixed: the Read More dialog could render pinned to the left edge with a
+  large empty gap on the right, instead of centred, when the active theme's
+  own CSS reset for the `dialog` element won the fight for one or two of the
+  properties that centre it. The properties that place and size the dialog
+  now carry !important so a theme reset can no longer partially override
+  them.
 
 = 1.4.1 =
 * Fixed: the Read More dialog could render with a huge, wrapped quote and no

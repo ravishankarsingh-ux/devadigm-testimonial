@@ -624,9 +624,17 @@
  * turns this from a centred modal into an inline block that renders wherever
  * it falls in the document, stacked on top of whatever content surrounds it.
  * A class-and-attribute selector outranks a bare element selector, so this
- * rule wins that fight regardless of what the theme's reset says.
- */
-/*
+ * rule wins that fight on specificity alone - except a theme reset caught in
+ * the wild still won this exact fight for its own `left`/`right`/`margin`
+ * values, which only a specificity edge cannot beat if the theme rule (or a
+ * later stylesheet generally) carries its own !important, or simply loads
+ * after this one with matching specificity on an individual longhand rather
+ * than the `inset` shorthand. The result was a dialog pinned to the left
+ * edge instead of centred: with `left` winning at 0 (or some small value)
+ * but `right` not, `margin: auto` has only one side to distribute against
+ * and stops centring anything. `!important` on the properties that place and
+ * size the box is the only thing that reliably wins that fight either way.
+ *
  * font-size: 1rem re-establishes a plain baseline for everything inside.
  * Without it, a block given a large custom font size (its Typography panel
  * writes that as an inline style on the very wrapper this dialog lives
@@ -636,14 +644,14 @@
  * wrapping to a handful of oversized words per line.
  */
 .dvdm-t__dialog[open] {
-	display: flex;
+	display: flex !important;
 	flex-direction: column;
-	position: fixed;
-	inset: 0;
-	margin: auto;
-	z-index: 999999;
-	width: min( 44rem, calc( 100vw - 2.5rem ) );
-	max-width: min( 44rem, calc( 100vw - 2.5rem ) );
+	position: fixed !important;
+	inset: 0 !important;
+	margin: auto !important;
+	z-index: 999999 !important;
+	width: min( 44rem, calc( 100vw - 2.5rem ) ) !important;
+	max-width: min( 44rem, calc( 100vw - 2.5rem ) ) !important;
 	height: fit-content;
 	max-height: min( 80vh, 44rem );
 	overflow-y: auto;
