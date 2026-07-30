@@ -118,8 +118,28 @@
 			var layout = a.layout || settings.defaultLayout || 'spotlight';
 			var mark = a.markStyle || settings.defaultMark || 'ledger';
 
-			var isMultiple = [ 'row', 'wall', 'marquee', 'slideshow' ].indexOf( layout ) !== -1;
-			var hasColumns = [ 'row', 'wall' ].indexOf( layout ) !== -1;
+			// Blocks saved before the layouts were reorganised keep working, but
+			// their old names are not offered as choices any more.
+			var isLegacy = ( settings.legacyLayouts || [] ).indexOf( layout ) !== -1;
+
+			var isGrid = layout === 'grid';
+			var canSlide = ! isLegacy && [ 'spotlight', 'grid' ].indexOf( layout ) !== -1;
+			var canTrim = ! isLegacy && [ 'grid', 'marquee' ].indexOf( layout ) !== -1;
+			var isMultiple = isLegacy || [ 'grid', 'marquee' ].indexOf( layout ) !== -1 || !! a.slider;
+
+			var columns = a.columns || settings.defaultColumns || 3;
+			var isSlider = !! a.slider;
+			var perView = a.slidesPerView || ( isGrid ? columns : 1 );
+			var loop =
+				a.loop === undefined
+					? settings.defaultLoop !== false
+					: !! a.loop;
+			var autoplay =
+				a.autoplay === undefined ? settings.defaultAutoplay || 0 : a.autoplay;
+			var readMore =
+				a.readMore === undefined
+					? settings.defaultReadMore !== false
+					: !! a.readMore;
 
 			var inspector = el(
 				InspectorControls,
@@ -128,13 +148,28 @@
 				el(
 					PanelBody,
 					{ title: __( 'Layout', 'devadigm-testimonials' ), initialOpen: true },
+					isLegacy
+						? el(
+								Notice,
+								{ status: 'warning', isDismissible: false },
+								__(
+									'This block still uses an older layout name. It renders the same, but pick a layout below to get the newer controls.',
+									'devadigm-testimonials'
+								)
+						  )
+						: null,
 					el( SelectControl, {
 						label: __( 'Display as', 'devadigm-testimonials' ),
-						value: layout,
-						options: settings.layouts || [],
+						value: isLegacy ? '' : layout,
+						options: ( isLegacy
+							? [ { label: __( 'Older layout', 'devadigm-testimonials' ), value: '' } ]
+							: [] 
+						).concat( settings.layouts || [] ),
 						__nextHasNoMarginBottom: true,
 						onChange: function ( next ) {
-							set( { layout: next } );
+							if ( next !== '' ) {
+								set( { layout: next } );
+							}
 						},
 					} ),
 					el( SelectControl, {
@@ -146,9 +181,38 @@
 							set( { markStyle: next } );
 						},
 					} ),
+					isGrid
+						? el( RangeControl, {
+								label: __( 'Columns', 'devadigm-testimonials' ),
+								value: columns,
+								min: 1,
+								max: 6,
+								__nextHasNoMarginBottom: true,
+								help: __(
+									'Columns drop automatically when the space cannot fit them.',
+									'devadigm-testimonials'
+								),
+								onChange: function ( next ) {
+									set( { columns: next } );
+								},
+						  } )
+						: null,
+					isGrid
+						? el( ToggleControl, {
+								label: __( 'Masonry', 'devadigm-testimonials' ),
+								checked: !! a.masonry,
+								__nextHasNoMarginBottom: true,
+								help: a.masonry
+									? __( 'Cards pack by height.', 'devadigm-testimonials' )
+									: __( 'Cards in a row share the same height.', 'devadigm-testimonials' ),
+								onChange: function ( next ) {
+									set( { masonry: next } );
+								},
+						  } )
+						: null,
 					isMultiple
 						? el( RangeControl, {
-								label: __( 'How many', 'devadigm-testimonials' ),
+								label: __( 'How many to show', 'devadigm-testimonials' ),
 								value: a.count,
 								min: 1,
 								max: 24,
@@ -157,20 +221,105 @@
 									set( { count: next } );
 								},
 						  } )
-						: null,
-					hasColumns
-						? el( RangeControl, {
-								label: __( 'Columns', 'devadigm-testimonials' ),
-								value: a.columns,
-								min: 1,
-								max: 6,
-								__nextHasNoMarginBottom: true,
-								onChange: function ( next ) {
-									set( { columns: next } );
-								},
-						  } )
 						: null
 				),
+
+				canSlide
+					? el(
+							PanelBody,
+							{ title: __( 'Slider', 'devadigm-testimonials' ), initialOpen: false },
+							el( ToggleControl, {
+								label: __( 'Turn this into a slider', 'devadigm-testimonials' ),
+								checked: isSlider,
+								__nextHasNoMarginBottom: true,
+								help: __(
+									'Available on Spotlight and Grid. Set how many are visible at once below.',
+									'devadigm-testimonials'
+								),
+								onChange: function ( next ) {
+									set( { slider: next } );
+								},
+							} ),
+							isSlider
+								? el( RangeControl, {
+										label: __( 'Visible at once', 'devadigm-testimonials' ),
+										value: perView,
+										min: 1,
+										max: 6,
+										__nextHasNoMarginBottom: true,
+										help: __(
+											'Drops to one on narrow screens.',
+											'devadigm-testimonials'
+										),
+										onChange: function ( next ) {
+											set( { slidesPerView: next } );
+										},
+								  } )
+								: null,
+							isSlider
+								? el( ToggleControl, {
+										label: __( 'Loop back to the start', 'devadigm-testimonials' ),
+										checked: loop,
+										__nextHasNoMarginBottom: true,
+										help: loop
+											? __( 'The arrows carry on past the ends.', 'devadigm-testimonials' )
+											: __( 'The arrows stop at the first and last slide.', 'devadigm-testimonials' ),
+										onChange: function ( next ) {
+											set( { loop: next } );
+										},
+								  } )
+								: null,
+							isSlider
+								? el( RangeControl, {
+										label: __( 'Advance automatically after', 'devadigm-testimonials' ),
+										value: autoplay,
+										min: 0,
+										max: 30,
+										__nextHasNoMarginBottom: true,
+										help: autoplay
+											? __(
+													'Seconds. A pause button appears, and it stops as soon as anyone interacts.',
+													'devadigm-testimonials'
+											  )
+											: __( 'Off. Visitors advance it themselves.', 'devadigm-testimonials' ),
+										onChange: function ( next ) {
+											set( { autoplay: next } );
+										},
+								  } )
+								: null
+					  )
+					: null,
+
+				canTrim
+					? el(
+							PanelBody,
+							{ title: __( 'Long quotes', 'devadigm-testimonials' ), initialOpen: false },
+							el( ToggleControl, {
+								label: __( 'Trim long quotes', 'devadigm-testimonials' ),
+								checked: readMore,
+								__nextHasNoMarginBottom: true,
+								help: __(
+									'Long quotes are shortened with a Read more link that opens the full quote. Short quotes are shown in full.',
+									'devadigm-testimonials'
+								),
+								onChange: function ( next ) {
+									set( { readMore: next } );
+								},
+							} ),
+							readMore
+								? el( RangeControl, {
+										label: __( 'Lines before trimming', 'devadigm-testimonials' ),
+										value: a.clampLines || 6,
+										min: 2,
+										max: 20,
+										__nextHasNoMarginBottom: true,
+										onChange: function ( next ) {
+											set( { clampLines: next } );
+										},
+								  } )
+								: null
+					  )
+					: null,
 
 				el(
 					PanelBody,
@@ -387,18 +536,77 @@
 		},
 	} );
 
-	// One inserter entry per layout, so the choice is made before insertion.
-	( settings.layouts || [] ).forEach( function ( layout ) {
+	/*
+	 * Inserter entries. Sliding is a property rather than a layout, so the
+	 * common combinations are offered here as starting points instead of being
+	 * assembled by hand every time.
+	 */
+	[
+		{
+			name: 'spotlight',
+			title: __( 'Spotlight', 'devadigm-testimonials' ),
+			description: __( 'One large testimonial.', 'devadigm-testimonials' ),
+			attributes: { layout: 'spotlight', count: 1 },
+		},
+		{
+			name: 'spotlight-slider',
+			title: __( 'Spotlight slider', 'devadigm-testimonials' ),
+			description: __( 'One large testimonial at a time, with arrows.', 'devadigm-testimonials' ),
+			attributes: { layout: 'spotlight', slider: true, slidesPerView: 1, count: 6 },
+		},
+		{
+			name: 'grid',
+			title: __( 'Grid', 'devadigm-testimonials' ),
+			description: __( 'Three across, equal height.', 'devadigm-testimonials' ),
+			attributes: { layout: 'grid', columns: 3, count: 6 },
+		},
+		{
+			name: 'grid-slider-2',
+			title: __( 'Two-column slider', 'devadigm-testimonials' ),
+			description: __( 'Two cards at a time, with arrows.', 'devadigm-testimonials' ),
+			attributes: { layout: 'grid', slider: true, slidesPerView: 2, columns: 2, count: 8 },
+		},
+		{
+			name: 'grid-slider-3',
+			title: __( 'Three-column slider', 'devadigm-testimonials' ),
+			description: __( 'Three cards at a time, with arrows.', 'devadigm-testimonials' ),
+			attributes: { layout: 'grid', slider: true, slidesPerView: 3, columns: 3, count: 9 },
+		},
+		{
+			name: 'masonry',
+			title: __( 'Masonry wall', 'devadigm-testimonials' ),
+			description: __( 'Cards packed by height, for a dedicated page.', 'devadigm-testimonials' ),
+			attributes: { layout: 'grid', masonry: true, columns: 3, count: 12 },
+		},
+		{
+			name: 'marquee',
+			title: __( 'Marquee', 'devadigm-testimonials' ),
+			description: __( 'A continuous drift of short quotes.', 'devadigm-testimonials' ),
+			attributes: { layout: 'marquee', count: 8 },
+		},
+		{
+			name: 'inline',
+			title: __( 'Inline proof', 'devadigm-testimonials' ),
+			description: __( 'A single pull-quote to sit beside a call to action.', 'devadigm-testimonials' ),
+			attributes: { layout: 'inline', count: 1 },
+		},
+	].forEach( function ( variation ) {
 		wp.blocks.registerBlockVariation( 'devadigm/testimonials', {
-			name: 'devadigm-testimonials-' + layout.value,
-			title: layout.label.split( ' - ' )[ 0 ],
-			description: layout.label,
+			name: 'devadigm-testimonials-' + variation.name,
+			title: variation.title,
+			description: variation.description,
 			icon: 'format-quote',
-			attributes: { layout: layout.value },
+			attributes: variation.attributes,
 			scope: [ 'inserter' ],
 			isActive: function ( blockAttributes ) {
-				return blockAttributes.layout === layout.value;
+				return Object.keys( variation.attributes ).every( function ( key ) {
+					if ( key === 'count' ) {
+						return true;
+					}
+					return blockAttributes[ key ] === variation.attributes[ key ];
+				} );
 			},
 		} );
 	} );
+
 } )( window.wp, window.dvdmTestimonials );

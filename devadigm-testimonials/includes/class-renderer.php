@@ -104,31 +104,94 @@ final class Renderer {
 	 * @param string              $wrapper_attributes Attributes from get_block_wrapper_attributes().
 	 */
 	public static function render( array $attrs, string $wrapper_attributes ): string {
+		$attrs = self::normalise( $attrs );
 		$posts = self::query( $attrs );
 		if ( array() === $posts ) {
 			return '';
 		}
 
-		$layout = (string) ( $attrs['layout'] ?? Settings::get( 'default_layout', 'spotlight' ) );
-		$mark   = (string) ( $attrs['markStyle'] ?? Settings::get( 'default_mark', 'ledger' ) );
+		$layout = (string) $attrs['layout'];
+		$mark   = (string) $attrs['markStyle'];
 
-		if ( ! array_key_exists( $layout, Settings::layouts() ) ) {
-			$layout = 'spotlight';
-		}
-		if ( ! array_key_exists( $mark, Settings::mark_styles() ) ) {
-			$mark = 'ledger';
-		}
+		// Sliding is a property, so it can apply to more than one layout.
+		$slider = ! empty( $attrs['slider'] ) && in_array( $layout, array( 'spotlight', 'grid' ), true );
 
 		$items = array();
 		foreach ( $posts as $post ) {
 			$items[] = self::item( $post, $mark, $layout, $attrs );
 		}
 
-		return match ( $layout ) {
-			'slideshow' => self::wrap_slideshow( $items, $wrapper_attributes, $layout, $mark ),
-			'marquee'   => self::wrap_marquee( $items, $wrapper_attributes, $layout, $mark ),
-			default     => self::wrap_plain( $items, $wrapper_attributes, $layout, $mark ),
-		};
+		if ( 'marquee' === $layout ) {
+			return self::wrap_marquee( $items, $wrapper_attributes, $attrs );
+		}
+		if ( $slider ) {
+			return self::wrap_slider( $items, $wrapper_attributes, $attrs );
+		}
+		return self::wrap_plain( $items, $wrapper_attributes, $attrs );
+	}
+
+	/**
+	 * Resolve a block's attributes into a settled set.
+	 *
+	 * Translates the version 1.0 layout names, falls back to the settings screen
+	 * where the block is silent, and clamps anything out of range. Legacy values
+	 * only fill attributes the block has not set itself, so an old block keeps
+	 * its old appearance while a newly edited one wins.
+	 *
+	 * @param array<string,mixed> $attrs Raw block attributes.
+	 * @return array<string,mixed>
+	 */
+	public static function normalise( array $attrs ): array {
+		$layout = (string) ( $attrs['layout'] ?? Settings::get( 'default_layout', 'spotlight' ) );
+
+		$legacy = Settings::legacy_layouts();
+		if ( isset( $legacy[ $layout ] ) ) {
+			foreach ( $legacy[ $layout ] as $key => $value ) {
+				if ( 'layout' === $key || ! array_key_exists( $key, $attrs ) ) {
+					$attrs[ $key ] = $value;
+				}
+			}
+			$layout = (string) $legacy[ $layout ]['layout'];
+		}
+
+		if ( ! array_key_exists( $layout, Settings::layouts() ) ) {
+			$layout = 'spotlight';
+		}
+		$attrs['layout'] = $layout;
+
+		$mark = (string) ( $attrs['markStyle'] ?? Settings::get( 'default_mark', 'ledger' ) );
+		if ( ! array_key_exists( $mark, Settings::mark_styles() ) ) {
+			$mark = 'ledger';
+		}
+		$attrs['markStyle'] = $mark;
+
+		$attrs['columns'] = max( 1, min( 6, (int) ( $attrs['columns'] ?? Settings::get( 'default_columns', 3 ) ) ) );
+
+		$per_view = (int) ( $attrs['slidesPerView'] ?? ( 'spotlight' === $layout ? 1 : $attrs['columns'] ) );
+		$attrs['slidesPerView'] = max( 1, min( 6, $per_view ) );
+
+		$attrs['loop']     = array_key_exists( 'loop', $attrs ) ? (bool) $attrs['loop'] : (bool) Settings::get( 'slider_loop', true );
+		$attrs['autoplay'] = max( 0, min( 30, (int) ( $attrs['autoplay'] ?? Settings::get( 'slider_autoplay', 0 ) ) ) );
+
+		return $attrs;
+	}
+
+	/**
+	 * Whether long quotes should be trimmed for this layout.
+	 *
+	 * Only the layouts where quote length actually causes a problem: cards sat
+	 * beside each other. A spotlight or an inline pull-quote has nothing to line
+	 * up with, so trimming there would just hide words for no reason.
+	 *
+	 * @param array<string,mixed> $attrs Settled attributes.
+	 */
+	private static function trims_quotes( array $attrs ): bool {
+		if ( array_key_exists( 'readMore', $attrs ) ) {
+			$enabled = (bool) $attrs['readMore'];
+		} else {
+			$enabled = (bool) Settings::get( 'read_more', true );
+		}
+		return $enabled && in_array( (string) $attrs['layout'], array( 'grid', 'marquee' ), true );
 	}
 
 	/**
@@ -137,26 +200,69 @@ final class Renderer {
 	 * @param string $layout Layout key.
 	 * @param string $mark   Quotation-mark key.
 	 */
-	private static function wrapper_classes( string $layout, string $mark ): string {
-		return sprintf( 'dvdm-t dvdm-t--%s dvdm-mark--%s', $layout, $mark );
+	private static function wrapper_classes( array $attrs ): string {
+		$classes = array(
+			'dvdm-t',
+			'dvdm-t--' . $attrs['layout'],
+			'dvdm-mark--' . $attrs['markStyle'],
+		);
+
+		if ( ! empty( $attrs['masonry'] ) && 'grid' === $attrs['layout'] ) {
+			$classes[] = 'dvdm-t--masonry';
+		}
+		if ( ! empty( $attrs['slider'] ) && in_array( (string) $attrs['layout'], array( 'spotlight', 'grid' ), true ) ) {
+			$classes[] = 'dvdm-t--slider';
+		}
+		if ( self::trims_quotes( $attrs ) ) {
+			$classes[] = 'dvdm-t--trimmed';
+		}
+
+		return implode( ' ', $classes );
 	}
 
 	/**
-	 * Merge our classes into the attributes WordPress generated for the block.
+	 * Merge classes and extra CSS declarations into the attributes WordPress
+	 * generated for the block, producing exactly one class attribute and
+	 * exactly one style attribute.
 	 *
-	 * @param string $wrapper_attributes Attribute string from core.
-	 * @param string $extra_classes      Classes to add.
+	 * Every wrapper here needs to add its own classes, and the slider wrapper
+	 * also needs to add a CSS custom property alongside whatever style
+	 * get_block_wrapper_attributes() already produced (colours, fonts, the
+	 * column count). Concatenating a second `style="..."` string onto the
+	 * markup by hand, which is what an earlier version of this method's
+	 * caller did, produces two style attributes on one element - invalid
+	 * HTML that browsers resolve by silently keeping only the first and
+	 * discarding the second, which is why the per-view slide width once
+	 * disappeared without any error. Routing every addition through
+	 * WP_HTML_Tag_Processor is what makes that class of bug impossible.
+	 *
+	 * @param string               $wrapper_attributes Attribute string from core.
+	 * @param string               $extra_classes      Classes to add.
+	 * @param array<string,string> $extra_style        CSS custom properties to add, name to value.
 	 */
-	private static function merge_classes( string $wrapper_attributes, string $extra_classes ): string {
+	private static function merge_attributes( string $wrapper_attributes, string $extra_classes, array $extra_style = array() ): string {
 		$processor = new \WP_HTML_Tag_Processor( '<div ' . $wrapper_attributes . '></div>' );
 		if ( ! $processor->next_tag() ) {
 			return $wrapper_attributes;
 		}
+
 		foreach ( explode( ' ', $extra_classes ) as $class ) {
 			if ( '' !== $class ) {
 				$processor->add_class( $class );
 			}
 		}
+
+		if ( array() !== $extra_style ) {
+			$style = (string) $processor->get_attribute( 'style' );
+			if ( '' !== $style && ! str_ends_with( rtrim( $style ), ';' ) ) {
+				$style .= ';';
+			}
+			foreach ( $extra_style as $property => $value ) {
+				$style .= $property . ':' . $value . ';';
+			}
+			$processor->set_attribute( 'style', $style );
+		}
+
 		$html = $processor->get_updated_html();
 		// Strip the synthetic tag back down to its attribute string.
 		$html = preg_replace( '/^<div\s*/', '', $html );
@@ -165,37 +271,42 @@ final class Renderer {
 	}
 
 	/**
-	 * Wrap items for the static layouts.
+	 * Wrap items for the layouts that do not move.
 	 *
-	 * @param array<int,string> $items              Rendered items.
-	 * @param string            $wrapper_attributes Core wrapper attributes.
-	 * @param string            $layout             Layout key.
-	 * @param string            $mark               Quotation-mark key.
+	 * @param array<int,string>   $items              Rendered items.
+	 * @param string              $wrapper_attributes Core wrapper attributes.
+	 * @param array<string,mixed> $attrs              Settled attributes.
 	 */
-	private static function wrap_plain( array $items, string $wrapper_attributes, string $layout, string $mark ): string {
+	private static function wrap_plain( array $items, string $wrapper_attributes, array $attrs ): string {
 		return sprintf(
-			'<div %1$s><div class="dvdm-t__items">%2$s</div></div>',
-			self::merge_classes( $wrapper_attributes, self::wrapper_classes( $layout, $mark ) ),
-			implode( '', $items )
+			'<div %1$s%2$s><div class="dvdm-t__items">%3$s</div>%4$s</div>',
+			self::merge_attributes( $wrapper_attributes, self::wrapper_classes( $attrs ) ),
+			self::trims_quotes( $attrs ) ? ' data-wp-interactive="devadigm/testimonials"' : '',
+			implode( '', $items ),
+			self::dialog( $attrs )
 		);
 	}
 
 	/**
-	 * Wrap items as an accessible carousel driven by the Interactivity API.
+	 * Wrap items as an accessible carousel.
 	 *
-	 * @param array<int,string> $items              Rendered items.
-	 * @param string            $wrapper_attributes Core wrapper attributes.
-	 * @param string            $layout             Layout key.
-	 * @param string            $mark               Quotation-mark key.
+	 * Works for any number of visible slides, so the same code serves a single
+	 * large testimonial and a three-across slider. Scroll snapping does the
+	 * moving; the script only keeps the controls in step.
+	 *
+	 * @param array<int,string>   $items              Rendered items.
+	 * @param string              $wrapper_attributes Core wrapper attributes.
+	 * @param array<string,mixed> $attrs              Settled attributes.
 	 */
-	private static function wrap_slideshow( array $items, string $wrapper_attributes, string $layout, string $mark ): string {
-		$prev = (string) Settings::get( 'arrow_prev', '←' );
-		$next = (string) Settings::get( 'arrow_next', '→' );
+	private static function wrap_slider( array $items, string $wrapper_attributes, array $attrs ): string {
+		$prev     = (string) Settings::get( 'arrow_prev', '←' );
+		$next     = (string) Settings::get( 'arrow_next', '→' );
+		$total    = count( $items );
+		$per_view = min( (int) $attrs['slidesPerView'], max( 1, $total ) );
+		$pages    = (int) ceil( $total / $per_view );
 
 		$slides = '';
 		foreach ( $items as $index => $item ) {
-			// A div, not a list item: giving an <li> role="group" strips its
-			// listitem role and leaves the <ul> holding invalid children.
 			$slides .= sprintf(
 				'<div class="dvdm-t__slide" role="group" aria-roledescription="%1$s" aria-label="%2$s">%3$s</div>',
 				esc_attr__( 'slide', 'devadigm-testimonials' ),
@@ -204,7 +315,7 @@ final class Renderer {
 						/* translators: 1: slide number, 2: total slides. */
 						__( '%1$d of %2$d', 'devadigm-testimonials' ),
 						$index + 1,
-						count( $items )
+						$total
 					)
 				),
 				$item
@@ -212,72 +323,95 @@ final class Renderer {
 		}
 
 		$dots = '';
-		foreach ( array_keys( $items ) as $index ) {
-			// The first dot is marked on the server so the state is right
-			// before hydration, and for anyone with scripting turned off.
+		for ( $page = 0; $page < $pages; $page++ ) {
+			// The first dot is marked on the server, so the state is correct
+			// before hydration and for anyone without scripting.
 			$dots .= sprintf(
 				'<button type="button" class="dvdm-t__dot" data-wp-context=\'{"index":%1$d}\' data-wp-on--click="actions.goTo" data-wp-bind--aria-current="state.isCurrent"%3$s aria-label="%2$s"></button>',
-				$index,
+				$page,
 				esc_attr(
 					sprintf(
-						/* translators: %d: slide number. */
-						__( 'Go to testimonial %d', 'devadigm-testimonials' ),
-						$index + 1
+						/* translators: %d: slide group number. */
+						__( 'Go to testimonial group %d', 'devadigm-testimonials' ),
+						$page + 1
 					)
 				),
-				0 === $index ? ' aria-current="true"' : ''
+				0 === $page ? ' aria-current="true"' : ''
+			);
+		}
+
+		$autoplay = (int) $attrs['autoplay'];
+		$pause    = '';
+		if ( $autoplay > 0 ) {
+			$pause = sprintf(
+				'<button type="button" class="dvdm-t__pause" data-wp-on--click="actions.togglePause" data-wp-text="state.pauseLabel">%s</button>',
+				esc_html__( 'Pause', 'devadigm-testimonials' )
 			);
 		}
 
 		$context = wp_json_encode(
 			array(
-				'current' => 0,
-				'total'   => count( $items ),
+				'current'   => 0,
+				'total'     => $total,
+				'perView'   => $per_view,
+				'pages'     => $pages,
+				'loop'      => (bool) $attrs['loop'],
+				'autoplay'  => $autoplay,
+				'paused'    => false,
+				'pauseText' => __( 'Pause', 'devadigm-testimonials' ),
+				'playText'  => __( 'Play', 'devadigm-testimonials' ),
 			)
 		);
 
 		return sprintf(
-			'<div %1$s data-wp-interactive="devadigm/testimonials" data-wp-context=\'%2$s\' data-wp-init="callbacks.init">
-				<div class="dvdm-t__carousel" role="group" aria-roledescription="%3$s" aria-label="%4$s">
-					<div class="dvdm-t__items" data-wp-on--scroll="actions.onScroll" tabindex="0" data-wp-on--keydown="actions.onKeydown">%5$s</div>
+			'<div %1$s data-wp-interactive="devadigm/testimonials" data-wp-context=\'%2$s\' data-wp-init="callbacks.initSlider">
+				<div class="dvdm-t__carousel" role="group" aria-roledescription="%3$s" aria-label="%4$s" data-wp-on--focusin="actions.stopAutoplay" data-wp-on--mouseenter="actions.stopAutoplay">
+					<div class="dvdm-t__items" tabindex="0" data-wp-on--scroll="actions.onScroll" data-wp-on--keydown="actions.onKeydown">%5$s</div>
 					<div class="dvdm-t__nav">
-						<button type="button" class="dvdm-t__arrow" data-wp-on--click="actions.prev" aria-label="%6$s">%7$s</button>
+						<button type="button" class="dvdm-t__arrow" data-wp-on--click="actions.prev" data-wp-bind--disabled="state.atStart" aria-label="%6$s">%7$s</button>
 						<div class="dvdm-t__dots">%8$s</div>
-						<button type="button" class="dvdm-t__arrow" data-wp-on--click="actions.next" aria-label="%9$s">%10$s</button>
+						<button type="button" class="dvdm-t__arrow" data-wp-on--click="actions.next" data-wp-bind--disabled="state.atEnd" aria-label="%9$s">%10$s</button>
+						%11$s
 					</div>
 					<p class="dvdm-t__live screen-reader-text" aria-live="polite" data-wp-text="state.liveText"></p>
 				</div>
+				%12$s
 			</div>',
-			self::merge_classes( $wrapper_attributes, self::wrapper_classes( $layout, $mark ) ),
+			self::merge_attributes(
+				$wrapper_attributes,
+				self::wrapper_classes( $attrs ),
+				array( '--dvdm-per-view' => (string) $per_view )
+			),
 			esc_attr( (string) $context ),
 			esc_attr__( 'carousel', 'devadigm-testimonials' ),
 			esc_attr__( 'Testimonials', 'devadigm-testimonials' ),
 			$slides,
-			esc_attr__( 'Previous testimonial', 'devadigm-testimonials' ),
+			esc_attr__( 'Previous testimonials', 'devadigm-testimonials' ),
 			esc_html( $prev ),
 			$dots,
-			esc_attr__( 'Next testimonial', 'devadigm-testimonials' ),
-			esc_html( $next )
+			esc_attr__( 'Next testimonials', 'devadigm-testimonials' ),
+			esc_html( $next ),
+			$pause,
+			self::dialog( $attrs )
 		);
 	}
 
 	/**
 	 * Wrap items as a pausable marquee. The track is duplicated so the loop is seamless.
 	 *
-	 * @param array<int,string> $items              Rendered items.
-	 * @param string            $wrapper_attributes Core wrapper attributes.
-	 * @param string            $layout             Layout key.
-	 * @param string            $mark               Quotation-mark key.
+	 * @param array<int,string>   $items              Rendered items.
+	 * @param string              $wrapper_attributes Core wrapper attributes.
+	 * @param array<string,mixed> $attrs              Settled attributes.
 	 */
-	private static function wrap_marquee( array $items, string $wrapper_attributes, string $layout, string $mark ): string {
+	private static function wrap_marquee( array $items, string $wrapper_attributes, array $attrs ): string {
 		$duplicate = '';
 		foreach ( $items as $item ) {
 			/*
 			 * The second copy of the track exists only so the loop loops. It is
 			 * hidden from assistive technology and marked inert, because a
-			 * testimonial can carry a company link, and hiding a focusable
-			 * element without removing it from the tab order strands keyboard
-			 * users on a control screen readers cannot describe.
+			 * testimonial can carry a company link or a Read more link, and
+			 * hiding a focusable element without removing it from the tab order
+			 * strands keyboard users on a control screen readers cannot describe.
 			 */
 			$processor = new \WP_HTML_Tag_Processor( $item );
 			if ( $processor->next_tag( array( 'tag_name' => 'FIGURE' ) ) ) {
@@ -301,12 +435,38 @@ final class Renderer {
 					<div class="dvdm-t__track" data-wp-bind--data-paused="state.paused">%3$s%4$s</div>
 				</div>
 				<button type="button" class="dvdm-t__pause" data-wp-on--click="actions.togglePause" data-wp-text="state.pauseLabel">%5$s</button>
+				%6$s
 			</div>',
-			self::merge_classes( $wrapper_attributes, self::wrapper_classes( $layout, $mark ) ),
+			self::merge_attributes( $wrapper_attributes, self::wrapper_classes( $attrs ) ),
 			esc_attr( (string) $context ),
 			implode( '', $items ),
 			$duplicate,
-			esc_html__( 'Pause', 'devadigm-testimonials' )
+			esc_html__( 'Pause', 'devadigm-testimonials' ),
+			self::dialog( $attrs )
+		);
+	}
+
+	/**
+	 * The shared dialog a Read more link opens.
+	 *
+	 * One per block rather than one per testimonial. The full quote already
+	 * exists in the card - it is only visually trimmed - so the script moves
+	 * that markup in here rather than the server printing every quote twice.
+	 *
+	 * @param array<string,mixed> $attrs Settled attributes.
+	 */
+	private static function dialog( array $attrs ): string {
+		if ( ! self::trims_quotes( $attrs ) ) {
+			return '';
+		}
+
+		return sprintf(
+			'<dialog class="dvdm-t__dialog" aria-label="%1$s" data-wp-on--click="actions.dialogClickOut" data-wp-on--close="actions.dialogClosed">
+				<div class="dvdm-t__dialog-body"></div>
+				<button type="button" class="dvdm-t__dialog-close" data-wp-on--click="actions.closeDialog">%2$s</button>
+			</dialog>',
+			esc_attr__( 'Full testimonial', 'devadigm-testimonials' ),
+			esc_html__( 'Close', 'devadigm-testimonials' )
 		);
 	}
 
@@ -335,16 +495,33 @@ final class Renderer {
 		$show_rating = ! empty( $attrs['showRating'] ) && $rating > 0;
 		$show_avatar = ! isset( $attrs['showAvatar'] ) || ! empty( $attrs['showAvatar'] );
 
+		/*
+		 * Length is judged on the server so the decision is identical for every
+		 * visitor and survives page caching. Measuring rendered overflow in the
+		 * browser instead would mean the link flickers in after paint, and would
+		 * leave the quote trimmed with no way out for anyone without scripting.
+		 */
+		$long = false;
+		if ( self::trims_quotes( $attrs ) ) {
+			$words     = preg_split( '/\s+/', $quote, -1, PREG_SPLIT_NO_EMPTY );
+			$threshold = (int) Settings::get( 'excerpt_words', 28 );
+			$long      = is_array( $words ) && count( $words ) > $threshold;
+		}
+
 		$parts = array();
 
 		if ( $show_rating ) {
 			$parts[] = self::rating( $rating );
 		}
 
-		$parts[] = self::quote_block( $quote, $mark, $source );
+		$parts[] = self::quote_block( $quote, $mark, $source, $long );
 
 		if ( '' !== $metric ) {
 			$parts[] = sprintf( '<p class="dvdm-t__metric">%s</p>', esc_html( $metric ) );
+		}
+
+		if ( $long ) {
+			$parts[] = self::read_more_link( $post, $name );
 		}
 
 		$parts[] = self::attribution( $post, $name, $role, $company, $url, $show_avatar );
@@ -365,13 +542,19 @@ final class Renderer {
 	 * @param string $mark   Quotation-mark key.
 	 * @param string $source Optional source URL for the cite attribute.
 	 */
-	private static function quote_block( string $quote, string $mark, string $source ): string {
+	private static function quote_block( string $quote, string $mark, string $source, bool $clamped = false ): string {
 		$cite = '' !== $source ? sprintf( ' cite="%s"', esc_url( $source ) ) : '';
 
+		/*
+		 * The whole quote is printed either way. Trimming is done in CSS, so the
+		 * complete text stays in the document for search engines, for copying,
+		 * and for the script to move into the dialog - printed once, not twice.
+		 */
 		$blockquote = sprintf(
-			'<blockquote class="dvdm-t__quote"%1$s><p>%2$s</p></blockquote>',
+			'<blockquote class="dvdm-t__quote%3$s"%1$s><p>%2$s</p></blockquote>',
 			$cite,
-			esc_html( $quote )
+			esc_html( $quote ),
+			$clamped ? ' dvdm-t__quote--clamped' : ''
 		);
 
 		// Treatments that need a real element rather than a pseudo-element.
@@ -383,6 +566,30 @@ final class Renderer {
 				. '<span class="dvdm-t__rule dvdm-t__rule--bottom" aria-hidden="true"></span>',
 			default   => $blockquote,
 		};
+	}
+
+	/**
+	 * The Read more control.
+	 *
+	 * A real link to the testimonial, which the script upgrades into a dialog.
+	 * That way it still does something useful with scripting unavailable, and
+	 * middle-clicking it opens the testimonial in a tab as a link should.
+	 *
+	 * @param \WP_Post $post Testimonial.
+	 * @param string   $name Author name, for the accessible label.
+	 */
+	private static function read_more_link( \WP_Post $post, string $name ): string {
+		$label = '' !== $name
+			/* translators: %s: person who gave the testimonial. */
+			? sprintf( __( 'Read the full testimonial from %s', 'devadigm-testimonials' ), $name )
+			: __( 'Read the full testimonial', 'devadigm-testimonials' );
+
+		return sprintf(
+			'<a class="dvdm-t__more" href="%1$s" aria-label="%2$s" data-wp-on--click="actions.openDialog">%3$s</a>',
+			esc_url( (string) get_permalink( $post ) ),
+			esc_attr( $label ),
+			esc_html__( 'Read more', 'devadigm-testimonials' )
+		);
 	}
 
 	/**

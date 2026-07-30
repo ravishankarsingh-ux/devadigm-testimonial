@@ -156,15 +156,19 @@
 }
 
 /*
- * Row: a few side by side, equal height.
+ * Grid: cards side by side.
  *
- * The track floor is the wider of a readable card and the width one column
- * would get at the requested count. In a container wide enough, that resolves
- * to exactly --dvdm-columns tracks; in a narrower one, auto-fit drops to
- * however many still fit. So the column setting is honoured where there is room
- * for it, and cards never get crushed where there is not.
+ * Row and Wall used to be separate layouts. They only ever differed in whether
+ * cards align to a shared row baseline or pack by height, which is one switch,
+ * so this is now Grid plus an optional masonry modifier.
+ *
+ * The track floor is the wider of a readable card and the width one column would
+ * get at the requested count. In a container wide enough that resolves to
+ * exactly --dvdm-columns tracks; in a narrower one, auto-fit drops to however
+ * many still fit. So the column setting is honoured where there is room for it,
+ * and cards never get crushed where there is not.
  */
-.dvdm-t--row .dvdm-t__items {
+.dvdm-t--grid .dvdm-t__items {
 	grid-template-columns: repeat(
 		auto-fit,
 		minmax(
@@ -183,33 +187,38 @@
 	);
 }
 
-.dvdm-t--row .dvdm-t__item,
-.dvdm-t--wall .dvdm-t__item {
+.dvdm-t--grid .dvdm-t__item,
+.dvdm-t--marquee .dvdm-t__item {
 	background: var( --dvdm-surface, transparent );
 	border: 1px solid var( --dvdm-border, currentColor );
 	border-color: color-mix( in srgb, var( --dvdm-border, currentColor ) 22%, transparent );
 	padding: 1.35em;
-	height: 100%;
 }
 
 /*
- * Wall: masonry, so cards of unequal height pack tightly. The shorthand reads
- * as "at most --dvdm-columns columns, each at least --dvdm-card-min wide", so
- * it steps down on its own rather than needing breakpoints.
+ * Equal height. `align-items: stretch` is the grid default, so the cell is
+ * already full height; the card has to be told to fill it, and the attribution
+ * pushed to the bottom, or short quotes leave the name floating mid-card.
  */
-.dvdm-t--wall .dvdm-t__items {
+.dvdm-t--grid:not( .dvdm-t--masonry ) .dvdm-t__item {
+	height: 100%;
+}
+
+/* Masonry: cards of unequal height pack tightly instead of aligning. */
+.dvdm-t--masonry .dvdm-t__items {
 	display: block;
 	columns: var( --dvdm-card-min, 15rem ) var( --dvdm-columns, 3 );
 	column-gap: var( --dvdm-gap, 1.5rem );
 }
 
-.dvdm-t--wall .dvdm-t__item {
+.dvdm-t--masonry .dvdm-t__item {
 	break-inside: avoid;
 	margin-bottom: var( --dvdm-gap, 1.5rem );
 	display: block;
+	height: auto;
 }
 
-.dvdm-t--wall .dvdm-t__attribution {
+.dvdm-t--masonry .dvdm-t__attribution {
 	margin-top: 1em;
 }
 
@@ -220,33 +229,59 @@
 	max-width: 52ch;
 }
 
-/* Slideshow. */
-.dvdm-t--slideshow .dvdm-t__items {
+/*
+ * Slider.
+ *
+ * Applies to Spotlight and Grid alike, which is why the slide width comes from
+ * --dvdm-per-view rather than being fixed at one. Scroll snapping does all the
+ * moving, so it works by touch and trackpad with no script involved; the script
+ * only drives the arrows, the dots and the announcement.
+ */
+.dvdm-t--slider .dvdm-t__items {
 	display: flex;
 	grid-template-columns: none;
-	gap: 0;
+	columns: auto;
+	gap: var( --dvdm-gap, 1.5rem );
 	overflow-x: auto;
 	scroll-snap-type: x mandatory;
 	scroll-behavior: smooth;
 	scrollbar-width: none;
+	padding-bottom: 2px;
 }
 
-.dvdm-t--slideshow .dvdm-t__items::-webkit-scrollbar {
+.dvdm-t--slider .dvdm-t__items::-webkit-scrollbar {
 	display: none;
 }
 
-.dvdm-t--slideshow .dvdm-t__slide {
-	flex: 0 0 100%;
-	scroll-snap-align: center;
-	padding-inline: 0.5rem;
+.dvdm-t--slider .dvdm-t__slide {
+	flex: 0 0
+		calc(
+			( 100% - ( var( --dvdm-per-view, 1 ) - 1 ) * var( --dvdm-gap, 1.5rem ) ) /
+				var( --dvdm-per-view, 1 )
+		);
+	min-width: 0;
+	scroll-snap-align: start;
+	display: flex;
 }
 
-.dvdm-t--slideshow .dvdm-t__nav {
+.dvdm-t--slider .dvdm-t__slide > .dvdm-t__item {
+	flex: 1;
+}
+
+/* Below this width a multi-slide view is unreadable, so it drops to one. */
+@media ( max-width: 40rem ) {
+	.dvdm-t--slider .dvdm-t__slide {
+		flex-basis: 100%;
+	}
+}
+
+.dvdm-t__nav {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	gap: 0.6rem;
 	margin-top: 1.4rem;
+	flex-wrap: wrap;
 }
 
 .dvdm-t__arrow {
@@ -264,9 +299,15 @@
 	transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-.dvdm-t__arrow:hover {
+.dvdm-t__arrow:hover:not( :disabled ) {
 	background: var( --dvdm-accent, currentColor );
 	color: var( --dvdm-accent-contrast, canvas );
+}
+
+/* Only reachable with looping off, where the ends are genuine dead stops. */
+.dvdm-t__arrow:disabled {
+	opacity: 0.35;
+	cursor: default;
 }
 
 .dvdm-t__dots {
@@ -329,10 +370,6 @@
 
 .dvdm-t--marquee .dvdm-t__item {
 	flex: 0 0 20rem;
-	background: var( --dvdm-surface, transparent );
-	border: 1px solid var( --dvdm-border, currentColor );
-	border-color: color-mix( in srgb, var( --dvdm-border, currentColor ) 22%, transparent );
-	padding: 1.2em;
 }
 
 .dvdm-t__pause {
@@ -387,14 +424,12 @@
 }
 
 /* In a card the mark shares a narrow measure with the text, so it is set back. */
-.dvdm-t--row.dvdm-mark--ledger .dvdm-t__quote::before,
-.dvdm-t--wall.dvdm-mark--ledger .dvdm-t__quote::before,
+.dvdm-t--grid.dvdm-mark--ledger .dvdm-t__quote::before,
 .dvdm-t--marquee.dvdm-mark--ledger .dvdm-t__quote::before {
 	font-size: calc( 2.2em * var( --dvdm-mark-scale, 1 ) );
 }
 
-.dvdm-t--row.dvdm-mark--slab .dvdm-t__slab,
-.dvdm-t--wall.dvdm-mark--slab .dvdm-t__slab,
+.dvdm-t--grid.dvdm-mark--slab .dvdm-t__slab,
 .dvdm-t--marquee.dvdm-mark--slab .dvdm-t__slab {
 	width: 2em;
 	height: 2em;
@@ -527,6 +562,85 @@
 	color: var( --dvdm-accent-contrast, canvas );
 }
 
+/* ------------------------------------------------- long quotes */
+
+/*
+ * Trimming is visual only. The whole quote is in the document; this just limits
+ * how much of it takes up room in a card, so cards beside each other stay a
+ * sensible height whatever length the quotes happen to be.
+ */
+.dvdm-t__quote--clamped p {
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: var( --dvdm-clamp-lines, 6 );
+	line-clamp: var( --dvdm-clamp-lines, 6 );
+	overflow: hidden;
+}
+
+.dvdm-t__more {
+	align-self: start;
+	font-size: 0.82em;
+	font-weight: 600;
+	color: var( --dvdm-accent-text, inherit );
+	text-underline-offset: 0.25em;
+	cursor: pointer;
+	background: none;
+	border: 0;
+	padding: 0;
+}
+
+.dvdm-t__dialog {
+	max-width: min( 44rem, calc( 100vw - 2.5rem ) );
+	max-height: min( 80vh, 44rem );
+	overflow-y: auto;
+	border: 1px solid var( --dvdm-border, currentColor );
+	border-color: color-mix( in srgb, var( --dvdm-border, currentColor ) 30%, transparent );
+	background: var( --dvdm-surface, canvas );
+	color: inherit;
+	padding: clamp( 1.5rem, 4vw, 2.75rem );
+}
+
+.dvdm-t__dialog::backdrop {
+	background: rgba( 0, 0, 0, 0.55 );
+}
+
+/*
+ * Inside the dialog there is room, so the quote is shown whole and set larger.
+ * The clamp is undone here rather than the markup being duplicated.
+ */
+.dvdm-t__dialog .dvdm-t__quote--clamped p {
+	display: block;
+	-webkit-line-clamp: none;
+	line-clamp: none;
+	overflow: visible;
+}
+
+.dvdm-t__dialog .dvdm-t__quote {
+	font-size: calc( 1.2em * var( --dvdm-quote-scale, 1 ) );
+	line-height: 1.5;
+}
+
+.dvdm-t__dialog .dvdm-t__attribution {
+	margin-top: 1.5rem;
+}
+
+.dvdm-t__dialog-close {
+	font: inherit;
+	font-size: 0.85em;
+	margin-top: 1.75rem;
+	background: none;
+	color: inherit;
+	border: 1px solid var( --dvdm-border, currentColor );
+	border-color: color-mix( in srgb, var( --dvdm-border, currentColor ) 40%, transparent );
+	padding: 0.4em 1em;
+	cursor: pointer;
+}
+
+.dvdm-t__dialog-close:hover {
+	background: var( --dvdm-accent, currentColor );
+	color: var( --dvdm-accent-contrast, canvas );
+}
+
 /* ------------------------------------------------------- interaction */
 
 .dvdm-t :focus-visible {
@@ -536,7 +650,7 @@
 
 @media ( prefers-reduced-motion: reduce ) {
 	/* Matches the specificity of the rule that sets smooth scrolling above. */
-	.dvdm-t--slideshow .dvdm-t__items {
+	.dvdm-t--slider .dvdm-t__items {
 		scroll-behavior: auto;
 	}
 

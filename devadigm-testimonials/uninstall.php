@@ -15,6 +15,7 @@ if ( ! defined( 'WP_UNINSTALL_PLUGIN' ) ) {
 }
 
 delete_option( 'devadigm_testimonials_settings' );
+delete_option( 'devadigm_testimonials_version' );
 
 foreach ( array( 'administrator', 'editor' ) as $role_name ) {
 	$role = get_role( $role_name );

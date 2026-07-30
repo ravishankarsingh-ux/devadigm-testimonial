@@ -146,6 +146,7 @@ final class Tokens {
 			'--dvdm-mark-scale'     => (string) $s['mark_scale'],
 			'--dvdm-mark-opacity'   => (string) $s['mark_opacity'],
 			'--dvdm-avatar-radius'  => $radius,
+			'--dvdm-clamp-lines'    => (string) (int) $s['clamp_lines'],
 			'--dvdm-glyph'          => '"' . self::escape_css_string( self::glyph() ) . '"',
 		);
 

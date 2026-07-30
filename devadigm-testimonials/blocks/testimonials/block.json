@@ -5,8 +5,8 @@
 	"title": "Testimonials",
 	"category": "devadigm",
 	"icon": "format-quote",
-	"description": "Show testimonials as a spotlight, a row, a slideshow, a wall, a marquee or a single inline pull-quote.",
-	"keywords": [ "testimonial", "review", "quote", "social proof" ],
+	"description": "Show testimonials as a spotlight, a grid, a marquee or a single inline pull-quote. Any spotlight or grid can be turned into a slider.",
+	"keywords": [ "testimonial", "review", "quote", "social proof", "slider", "carousel" ],
 	"textdomain": "devadigm-testimonials",
 	"supports": {
 		"html": false,
@@ -36,8 +36,28 @@
 			"default": 3
 		},
 		"columns": {
-			"type": "number",
-			"default": 3
+			"type": "number"
+		},
+		"masonry": {
+			"type": "boolean"
+		},
+		"slider": {
+			"type": "boolean"
+		},
+		"slidesPerView": {
+			"type": "number"
+		},
+		"loop": {
+			"type": "boolean"
+		},
+		"autoplay": {
+			"type": "number"
+		},
+		"readMore": {
+			"type": "boolean"
+		},
+		"clampLines": {
+			"type": "number"
 		},
 		"service": {
 			"type": "string",

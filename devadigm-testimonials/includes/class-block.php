@@ -101,8 +101,13 @@ final class Block {
 				'sources'       => $to_options( $sources ),
 				'palette'       => Settings::theme_palette(),
 				'fonts'         => Settings::theme_fonts(),
-				'defaultLayout' => Settings::get( 'default_layout', 'spotlight' ),
-				'defaultMark'   => Settings::get( 'default_mark', 'ledger' ),
+				'defaultLayout'  => Settings::get( 'default_layout', 'spotlight' ),
+				'defaultMark'    => Settings::get( 'default_mark', 'ledger' ),
+				'defaultColumns' => (int) Settings::get( 'default_columns', 3 ),
+				'defaultLoop'    => (bool) Settings::get( 'slider_loop', true ),
+				'defaultAutoplay' => (int) Settings::get( 'slider_autoplay', 0 ),
+				'defaultReadMore' => (bool) Settings::get( 'read_more', true ),
+				'legacyLayouts'  => array_keys( Settings::legacy_layouts() ),
 				'settingsUrl'   => admin_url( 'edit.php?post_type=' . POST_TYPE . '&page=dvdm-testimonials-design' ),
 			)
 		);
@@ -168,6 +173,9 @@ final class Block {
 		}
 		if ( isset( $attributes['columns'] ) && is_numeric( $attributes['columns'] ) ) {
 			$out .= '--dvdm-columns:' . max( 1, min( 6, (int) $attributes['columns'] ) ) . ';';
+		}
+		if ( isset( $attributes['clampLines'] ) && is_numeric( $attributes['clampLines'] ) ) {
+			$out .= '--dvdm-clamp-lines:' . max( 2, min( 20, (int) $attributes['clampLines'] ) ) . ';';
 		}
 
 		return $out;

@@ -48,11 +48,38 @@ final class Settings {
 	public static function layouts(): array {
 		return array(
 			'spotlight' => __( 'Spotlight - one large testimonial', 'devadigm-testimonials' ),
-			'row'       => __( 'Row - a few side by side', 'devadigm-testimonials' ),
-			'slideshow' => __( 'Slideshow - one at a time', 'devadigm-testimonials' ),
-			'wall'      => __( 'Wall - masonry grid', 'devadigm-testimonials' ),
+			'grid'      => __( 'Grid - columns side by side', 'devadigm-testimonials' ),
 			'marquee'   => __( 'Marquee - continuous drift', 'devadigm-testimonials' ),
 			'inline'    => __( 'Inline proof - single pull-quote', 'devadigm-testimonials' ),
+		);
+	}
+
+	/**
+	 * Layout names from version 1.0 and what they mean now.
+	 *
+	 * Row and Wall were never really two layouts: they differed only in whether
+	 * cards share a baseline grid or pack by height, which is one switch. And
+	 * Slideshow was a layout that hardcoded "one at a time", which is why a
+	 * two-column slider was impossible to ask for. Sliding is a property of a
+	 * layout, not a layout of its own.
+	 *
+	 * Content saved against the old names keeps rendering, so existing pages do
+	 * not need editing.
+	 *
+	 * @return array<string,array<string,mixed>>
+	 */
+	public static function legacy_layouts(): array {
+		return array(
+			'row'       => array( 'layout' => 'grid' ),
+			'wall'      => array(
+				'layout'  => 'grid',
+				'masonry' => true,
+			),
+			'slideshow' => array(
+				'layout'        => 'spotlight',
+				'slider'        => true,
+				'slidesPerView' => 1,
+			),
 		);
 	}
 
@@ -96,6 +123,16 @@ final class Settings {
 			// Layout.
 			'default_layout'   => 'spotlight',
 			'default_mark'     => 'ledger',
+			'default_columns'  => '3',
+
+			// Slider.
+			'slider_loop'      => true,
+			'slider_autoplay'  => '0',
+
+			// Long quotes.
+			'read_more'        => true,
+			'excerpt_words'    => '28',
+			'clamp_lines'      => '6',
 
 			// Colours. Empty string means "inherit from the theme".
 			'quote_color'      => '',
@@ -263,6 +300,10 @@ final class Settings {
 				'star_set'        => ( 'custom' === $value || array_key_exists( (string) $value, self::star_sets() ) ) ? (string) $value : $defaults[ $key ],
 				'avatar_shape'    => in_array( $value, array( 'circle', 'rounded', 'square' ), true ) ? (string) $value : $defaults[ $key ],
 				'quote_scale', 'mark_scale' => (string) self::clamp_float( $value, 0.5, 3.0, 1.0 ),
+				'default_columns' => (string) (int) self::clamp_float( $value, 1, 6, 3 ),
+				'slider_autoplay' => (string) (int) self::clamp_float( $value, 0, 30, 0 ),
+				'excerpt_words'   => (string) (int) self::clamp_float( $value, 8, 120, 28 ),
+				'clamp_lines'     => (string) (int) self::clamp_float( $value, 2, 20, 6 ),
 				'mark_opacity'    => (string) self::clamp_float( $value, 0.0, 1.0, 1.0 ),
 				'quote_weight'    => '' === (string) $value ? '' : (string) self::clamp_float( $value, 100, 900, 400 ),
 				'custom_css'      => wp_strip_all_tags( (string) $value ),
@@ -397,6 +438,15 @@ final class Settings {
 		?>
 		<div class="wrap dvdm-settings">
 			<h1><?php esc_html_e( 'Testimonial design', 'devadigm-testimonials' ); ?></h1>
+			<p class="dvdm-version">
+				<?php
+				printf(
+					/* translators: %s: plugin version number. */
+					esc_html__( 'Devadigm Testimonials version %s', 'devadigm-testimonials' ),
+					esc_html( VERSION )
+				);
+				?>
+			</p>
 			<p class="description dvdm-intro">
 				<?php esc_html_e( 'Every field below defaults to inheriting from your theme. Override only what you need. Individual blocks can override these values again in the editor.', 'devadigm-testimonials' ); ?>
 			</p>
@@ -409,6 +459,60 @@ final class Settings {
 					<?php
 					self::select_row( __( 'Default layout', 'devadigm-testimonials' ), 'default_layout', self::layouts(), (string) $s['default_layout'] );
 					self::select_row( __( 'Default quotation mark', 'devadigm-testimonials' ), 'default_mark', self::mark_styles(), (string) $s['default_mark'] );
+					self::number_row( __( 'Default columns', 'devadigm-testimonials' ), 'default_columns', (string) $s['default_columns'], '1', '6', '1', __( 'Used by the Grid layout. Columns drop automatically when there is not room for them.', 'devadigm-testimonials' ) );
+					?>
+				</table>
+
+				<h2 class="title"><?php esc_html_e( 'Slider', 'devadigm-testimonials' ); ?></h2>
+				<p class="description dvdm-note">
+					<?php esc_html_e( 'Sliding is a property of a layout, not a layout of its own. Turn it on per block for Spotlight or Grid, and set how many testimonials are visible at once. These are the site-wide defaults for how a slider behaves.', 'devadigm-testimonials' ); ?>
+				</p>
+				<table class="form-table" role="presentation">
+					<?php
+					self::checkbox_row(
+						__( 'Loop back to the start', 'devadigm-testimonials' ),
+						'slider_loop',
+						(bool) $s['slider_loop'],
+						__( 'With this off, the arrows stop at the first and last slide.', 'devadigm-testimonials' )
+					);
+					self::number_row(
+						__( 'Advance automatically after', 'devadigm-testimonials' ),
+						'slider_autoplay',
+						(string) $s['slider_autoplay'],
+						'0',
+						'30',
+						'1',
+						__( 'Seconds. Zero switches autoplay off, which is the default. When on, a pause button appears, autoplay stops as soon as anyone interacts, and it never starts for visitors who ask for reduced motion.', 'devadigm-testimonials' )
+					);
+					?>
+				</table>
+
+				<h2 class="title"><?php esc_html_e( 'Long quotes', 'devadigm-testimonials' ); ?></h2>
+				<table class="form-table" role="presentation">
+					<?php
+					self::checkbox_row(
+						__( 'Shorten long quotes in cards', 'devadigm-testimonials' ),
+						'read_more',
+						(bool) $s['read_more'],
+						__( 'Applies to the Grid and Marquee layouts, where uneven quote lengths make cards ragged. Long quotes are trimmed to a set number of lines with a Read more link that opens the full quote. Short quotes are left alone.', 'devadigm-testimonials' )
+					);
+					self::number_row(
+						__( 'Treat as long past', 'devadigm-testimonials' ),
+						'excerpt_words',
+						(string) $s['excerpt_words'],
+						'8',
+						'120',
+						'1',
+						__( 'Words. Quotes shorter than this never get a Read more link.', 'devadigm-testimonials' )
+					);
+					self::number_row(
+						__( 'Lines shown before trimming', 'devadigm-testimonials' ),
+						'clamp_lines',
+						(string) $s['clamp_lines'],
+						'2',
+						'20',
+						'1'
+					);
 					?>
 				</table>
 
