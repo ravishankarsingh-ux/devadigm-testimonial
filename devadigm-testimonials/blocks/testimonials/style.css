@@ -626,6 +626,15 @@
  * A class-and-attribute selector outranks a bare element selector, so this
  * rule wins that fight regardless of what the theme's reset says.
  */
+/*
+ * font-size: 1rem re-establishes a plain baseline for everything inside.
+ * Without it, a block given a large custom font size (its Typography panel
+ * writes that as an inline style on the very wrapper this dialog lives
+ * inside) leaks into the dialog's own em-based sizing below, since inline
+ * dialogs stay in the document for inheritance even while positioned fixed
+ * out of its flow - the quote inside would render far larger than intended,
+ * wrapping to a handful of oversized words per line.
+ */
 .dvdm-t__dialog[open] {
 	display: flex;
 	flex-direction: column;
@@ -638,6 +647,7 @@
 	height: fit-content;
 	max-height: min( 80vh, 44rem );
 	overflow-y: auto;
+	font-size: 1rem;
 	border: 1px solid var( --dvdm-border, currentColor );
 	border-color: color-mix( in srgb, var( --dvdm-border, currentColor ) 30%, transparent );
 	background: var( --dvdm-surface, canvas );

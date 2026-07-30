@@ -136,7 +136,6 @@ final class Tokens {
 			'--dvdm-accent-contrast' => self::resolve( (string) $s['accent_contrast'], 'color', 'canvas' ),
 			'--dvdm-accent-text'    => self::resolve( (string) $s['accent_text'], 'color', 'inherit' ),
 			'--dvdm-star-color'     => self::resolve( (string) $s['star_color'], 'color', 'var(--dvdm-accent)' ),
-			'--dvdm-surface'        => self::resolve( (string) $s['surface_color'], 'color', 'transparent' ),
 			'--dvdm-border'         => self::resolve( (string) $s['border_color'], 'color', 'currentColor' ),
 			'--dvdm-mark-color'     => self::resolve( (string) $s['mark_color'], 'color', 'var(--dvdm-accent)' ),
 			'--dvdm-quote-font'     => self::resolve( (string) $s['quote_font'], 'font-family', 'inherit' ),
@@ -153,6 +152,22 @@ final class Tokens {
 
 		if ( '' !== (string) $s['quote_weight'] ) {
 			$tokens['--dvdm-quote-weight'] = (string) $s['quote_weight'];
+		}
+
+		/*
+		 * Left unset rather than resolved to a literal 'transparent' fallback
+		 * here, because two different consumers need two different defaults
+		 * for "no surface colour chosen": a bare card (`var(--dvdm-surface,
+		 * transparent)`) and the Read more dialog, which needs a solid
+		 * background to be legible over the page behind it (`var(
+		 * --dvdm-surface, canvas)`). A custom property that is actually
+		 * defined - even to the string "transparent" - is never replaced by a
+		 * var() fallback, so writing one default here silently overrode the
+		 * dialog's, leaving it see-through whenever no surface colour had
+		 * been set.
+		 */
+		if ( '' !== (string) $s['surface_color'] ) {
+			$tokens['--dvdm-surface'] = self::resolve( (string) $s['surface_color'], 'color', 'transparent' );
 		}
 
 		/**

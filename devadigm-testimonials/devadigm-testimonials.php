@@ -3,7 +3,7 @@
  * Plugin Name:       Devadigm Testimonials
  * Plugin URI:        https://devadigm.com/
  * Description:       Testimonials with six display layouts, six quotation-mark treatments, and a settings screen for colours, fonts and icons.
- * Version:           1.4.0
+ * Version:           1.4.1
  * Requires at least: 6.7
  * Requires PHP:      8.1
  * Author:            Devadigm
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const VERSION     = '1.4.0';
+const VERSION     = '1.4.1';
 const VERSION_KEY = 'devadigm_testimonials_version';
 const OPTION_KEY  = 'devadigm_testimonials_settings';
 const POST_TYPE   = 'dvdm_testimonial';

@@ -4,6 +4,39 @@ All notable changes to this plugin are documented here. Version numbers follow
 [Semantic Versioning](https://semver.org/): MAJOR for breaking changes, MINOR
 for new features that stay backward-compatible, PATCH for fixes.
 
+## 1.4.1 - 2026-07-30
+
+### Fixed
+
+- **The Read More dialog could render with a huge, wrapped-to-a-few-words
+  quote and no visible box behind it** - reported against the live site
+  after v1.3.0 was already installed, so this is a genuine second look, not
+  a repeat of the earlier dialog-positioning fix. Two separate real bugs,
+  both now fixed:
+  - The dialog's quote is deliberately sized a little larger than the card's
+    own text (`1.2em`), but `em` is relative to whatever font-size the
+    dialog inherits - and the dialog lives inside the same wrapper a
+    block's Typography panel writes a custom font-size onto. A block given
+    a large display size (a plausible, real setting to reach for on a
+    single hero-style testimonial) inflated the dialog's quote by that same
+    multiple, wrapping it to a handful of oversized words per line and
+    making it look like it was overflowing its box. The dialog now resets
+    its own font-size to a plain `1rem` baseline first, so its sizing is
+    always relative to that, never to whatever the block happens to be
+    displayed at.
+  - The dialog's background was meant to fall back to an opaque `canvas`
+    only when no Surface colour is configured - but the Design screen's
+    "unset" default was being written out as the literal string
+    `transparent` (not left undefined), and a CSS custom property that has
+    any value at all, including that string, is never replaced by a var()
+    fallback. Every dialog was therefore transparent whenever no Surface
+    colour had been explicitly chosen, which is the common case, since a
+    transparent surface is the right default for a bare Spotlight-style
+    *card* but the wrong one for a dialog sitting over page content. The
+    site-wide default is now left unset in that case, so the card and the
+    dialog each fall back to their own correct default, and a colour that
+    is explicitly chosen still reaches both exactly as before.
+
 ## 1.4.0 - 2026-07-30
 
 ### Added
