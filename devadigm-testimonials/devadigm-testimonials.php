@@ -3,7 +3,7 @@
  * Plugin Name:       Devadigm Testimonials
  * Plugin URI:        https://devadigm.com/
  * Description:       Testimonials with six display layouts, six quotation-mark treatments, and a settings screen for colours, fonts and icons.
- * Version:           1.3.0
+ * Version:           1.4.0
  * Requires at least: 6.7
  * Requires PHP:      8.1
  * Author:            Devadigm
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-const VERSION     = '1.3.0';
+const VERSION     = '1.4.0';
 const VERSION_KEY = 'devadigm_testimonials_version';
 const OPTION_KEY  = 'devadigm_testimonials_settings';
 const POST_TYPE   = 'dvdm_testimonial';
@@ -40,6 +40,7 @@ require_once PLUGIN_DIR . 'includes/class-post-type.php';
 require_once PLUGIN_DIR . 'includes/class-meta.php';
 require_once PLUGIN_DIR . 'includes/class-renderer.php';
 require_once PLUGIN_DIR . 'includes/class-block.php';
+require_once PLUGIN_DIR . 'includes/class-updater.php';
 
 /**
  * Boot every subsystem once WordPress is ready.
@@ -50,6 +51,7 @@ function bootstrap(): void {
 	Settings::init();
 	Tokens::init();
 	Block::init();
+	Updater::init( PLUGIN_FILE );
 
 	add_action( 'admin_init', __NAMESPACE__ . '\\maybe_upgrade' );
 }

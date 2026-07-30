@@ -4,6 +4,21 @@ All notable changes to this plugin are documented here. Version numbers follow
 [Semantic Versioning](https://semver.org/): MAJOR for breaking changes, MINOR
 for new features that stay backward-compatible, PATCH for fixes.
 
+## 1.4.0 - 2026-07-30
+
+### Added
+
+- **Update straight from GitHub.** The plugin now checks the public
+  `ravishankarsingh-ux/devadigm-testimonial` repository's tags for a newer
+  version and, when one exists, shows the normal "update available" notice
+  in Plugins and Dashboard > Updates - the same UI a wordpress.org-hosted
+  plugin uses, including "View version x.y.z details" with the changelog for
+  that release. Clicking Update now installs it directly, with no manual zip
+  download and upload. The repository holds more than this plugin (docs,
+  sample data), so the downloaded archive's real plugin folder is relocated
+  into place automatically before WordPress installs it - see
+  `includes/class-updater.php`. Update checks are cached for twelve hours.
+
 ## 1.3.0 - 2026-07-30
 
 ### Added

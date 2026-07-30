@@ -4,7 +4,7 @@ Tags: testimonials, reviews, social proof, block, slider
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.3.0
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -91,6 +91,11 @@ front-end script is a plain ES module, so the plugin runs straight from the zip.
 == Changelog ==
 
 See CHANGELOG.md for full detail. Summary:
+
+= 1.4.0 =
+* Added: the plugin now checks GitHub for a newer release and offers it
+  through the normal Plugins > Update now flow, instead of needing a zip
+  uploaded by hand each time.
 
 = 1.3.0 =
 * Added a block toolbar alignment control (left/center/right), matching core
