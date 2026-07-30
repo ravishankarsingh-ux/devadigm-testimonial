@@ -76,9 +76,9 @@ final class Settings {
 				'masonry' => true,
 			),
 			'slideshow' => array(
-				'layout'        => 'spotlight',
-				'slider'        => true,
-				'slidesPerView' => 1,
+				'layout'  => 'spotlight',
+				'slider'  => true,
+				'columns' => 1,
 			),
 		);
 	}
@@ -459,13 +459,13 @@ final class Settings {
 					<?php
 					self::select_row( __( 'Default layout', 'devadigm-testimonials' ), 'default_layout', self::layouts(), (string) $s['default_layout'] );
 					self::select_row( __( 'Default quotation mark', 'devadigm-testimonials' ), 'default_mark', self::mark_styles(), (string) $s['default_mark'] );
-					self::number_row( __( 'Default columns', 'devadigm-testimonials' ), 'default_columns', (string) $s['default_columns'], '1', '6', '1', __( 'Used by the Grid layout. Columns drop automatically when there is not room for them.', 'devadigm-testimonials' ) );
+					self::number_row( __( 'Default columns', 'devadigm-testimonials' ), 'default_columns', (string) $s['default_columns'], '1', '6', '1', __( 'How many sit in a row, on any layout except Marquee - Spotlight and Inline included. Columns drop automatically when there is not room for them. Any block can set its own count instead.', 'devadigm-testimonials' ) );
 					?>
 				</table>
 
 				<h2 class="title"><?php esc_html_e( 'Slider', 'devadigm-testimonials' ); ?></h2>
 				<p class="description dvdm-note">
-					<?php esc_html_e( 'Sliding is a property of a layout, not a layout of its own. Turn it on per block for Spotlight or Grid, and set how many testimonials are visible at once. These are the site-wide defaults for how a slider behaves.', 'devadigm-testimonials' ); ?>
+					<?php esc_html_e( 'Sliding is a property of a layout, not a layout of its own, and works on any of them except Marquee. Turn it on per block; how many are visible at once comes from the Columns setting on that same block. These are the site-wide defaults for how a slider behaves.', 'devadigm-testimonials' ); ?>
 				</p>
 				<table class="form-table" role="presentation">
 					<?php
@@ -494,7 +494,7 @@ final class Settings {
 						__( 'Shorten long quotes in cards', 'devadigm-testimonials' ),
 						'read_more',
 						(bool) $s['read_more'],
-						__( 'Applies to the Grid and Marquee layouts, where uneven quote lengths make cards ragged. Long quotes are trimmed to a set number of lines with a Read more link that opens the full quote. Short quotes are left alone.', 'devadigm-testimonials' )
+						__( 'Applies whenever a testimonial has others beside it - more than one column, on any layout, or Marquee - where uneven quote lengths make the row ragged. Long quotes are trimmed to a set number of lines with a Read more link that opens the full quote. Short quotes are left alone.', 'devadigm-testimonials' )
 					);
 					self::number_row(
 						__( 'Treat as long past', 'devadigm-testimonials' ),

@@ -4,7 +4,7 @@ Tags: testimonials, reviews, social proof, block, slider
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.1.0
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -15,21 +15,28 @@ Testimonials with four display layouts, an optional slider on any of them, six q
 A block-first testimonials plugin. It renders on the server, hydrates with the
 WordPress Interactivity API, and ships no jQuery and no bundled slider library.
 
-**Four layouts, any of them a slider**
+**Four layouts, and columns and sliding apply to three of them**
 
-* Spotlight - one large testimonial, on its own or as a slider
-* Grid - columns side by side (1 to 6), with an optional Masonry mode that packs
-  cards by height instead of aligning them, and an optional slider showing any
-  number of columns at once
+* Spotlight - one or more large testimonials
+* Grid - columns side by side, with an optional Masonry mode that packs cards
+  by height instead of aligning them
+* Inline proof - one or more pull-quotes for beside a call to action
 * Marquee - continuous drift with a pause control
-* Inline proof - a single pull-quote for beside a call to action
+
+Columns (1 to 6) and an optional slider work the same way on Spotlight, Grid
+and Inline alike - layout decides what a card looks like, columns and sliding
+decide how many show and whether they page through. At columns: 1 with no
+slider, an extra testimonial simply stacks on the row below.
 
 A slider loops by default, can autoplay on a timer with a pause control, and
-long quotes in Grid or Marquee cards get a Read more link that opens the full
-quote in a dialog rather than stretching the card.
+long quotes get a Read more link that opens the full quote in a dialog rather
+than stretching the card, wherever a testimonial actually has others beside
+it.
 
 Blocks saved with an earlier version's Row, Wall or Slideshow layout keep
-rendering exactly as before - nothing needs re-editing after an upgrade.
+rendering exactly as before - nothing needs re-editing after an upgrade, and
+the editor shows their real current columns, masonry and slider state rather
+than hiding those controls until the layout is manually switched.
 
 **Six quotation-mark treatments**
 
@@ -85,6 +92,22 @@ front-end script is a plain ES module, so the plugin runs straight from the zip.
 
 See CHANGELOG.md for full detail. Summary:
 
+= 1.2.0 =
+* Columns and sliding now work on Spotlight and Inline as well as Grid - not
+  just Grid as in 1.1.0 - so a plain Spotlight or Inline block can become a
+  2- or 3-column arrangement, sliding or static.
+* One Columns setting drives both roles: how many sit in a row when static,
+  and how many a slider shows per page. The separate "slides per view"
+  control from 1.1.0 is gone.
+* Fixed: the Slider toggle and Columns control were invisible for any block
+  still carrying a pre-1.1.0 layout name (Row, Wall, Slideshow) until the
+  layout was manually re-picked from the dropdown.
+* Fixed: the "Default columns" Design screen setting silently did nothing
+  unless a block's own Columns control had already been touched once.
+* Fixed: the site-wide Loop and Read More toggles were being ignored by the
+  editor due to a WordPress data-passing quirk that stringifies settings
+  values - a switched-off setting was read as still on.
+
 = 1.1.0 =
 * Row and Wall merged into one Grid layout with a Masonry toggle - they only
   ever differed in one switch, not two layouts.
@@ -104,6 +127,12 @@ See CHANGELOG.md for full detail. Summary:
   and marquee.
 
 == Upgrade Notice ==
+
+= 1.2.0 =
+Columns and sliding now work on Spotlight and Inline too, not just Grid, and
+several bugs are fixed - most notably the Slider toggle and Columns control
+not appearing for blocks saved under a pre-1.1.0 layout name. Existing
+content is unaffected either way.
 
 = 1.1.0 =
 Row, Wall and Slideshow are replaced by Grid (with a Masonry option) and a

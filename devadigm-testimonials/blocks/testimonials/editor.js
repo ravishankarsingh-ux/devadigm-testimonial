@@ -115,31 +115,59 @@
 			var set = props.setAttributes;
 			var blockProps = useBlockProps();
 
-			var layout = a.layout || settings.defaultLayout || 'spotlight';
-			var mark = a.markStyle || settings.defaultMark || 'ledger';
+			var defaults = settings.defaults || {};
+			var rawLayout = a.layout || defaults.layout || 'spotlight';
+			var mark = a.markStyle || defaults.mark || 'ledger';
 
-			// Blocks saved before the layouts were reorganised keep working, but
-			// their old names are not offered as choices any more.
-			var isLegacy = ( settings.legacyLayouts || [] ).indexOf( layout ) !== -1;
+			/*
+			 * Blocks saved before the layouts were reorganised (Row, Wall,
+			 * Slideshow) keep working, and now also keep showing working
+			 * controls: the effective layout, columns, masonry and slider state
+			 * are computed the same way PHP's Renderer::normalise() computes
+			 * them for rendering, rather than reading the raw stored layout
+			 * name directly. Reading the raw name is what previously hid the
+			 * Columns and Slider controls entirely for any block still tagged
+			 * with an old name - they only appeared once someone happened to
+			 * re-pick a layout from the dropdown, which had no reason to be
+			 * obvious.
+			 *
+			 * An attribute that has actually been set on the block always wins;
+			 * the legacy default only fills in what is still unset, matching
+			 * Renderer::normalise() exactly, so partially customising an old
+			 * block (say, just its column count) works without first switching
+			 * it to a new layout name.
+			 */
+			var legacyEntry = ( settings.legacyLayouts || {} )[ rawLayout ];
+			var isLegacy = !! legacyEntry;
+			var layout = isLegacy ? legacyEntry.layout : rawLayout;
 
-			var isGrid = layout === 'grid';
-			var canSlide = ! isLegacy && [ 'spotlight', 'grid' ].indexOf( layout ) !== -1;
-			var canTrim = ! isLegacy && [ 'grid', 'marquee' ].indexOf( layout ) !== -1;
-			var isMultiple = isLegacy || [ 'grid', 'marquee' ].indexOf( layout ) !== -1 || !! a.slider;
+			function effective( key, fallback ) {
+				if ( a[ key ] !== undefined ) {
+					return a[ key ];
+				}
+				if ( legacyEntry && legacyEntry[ key ] !== undefined ) {
+					return legacyEntry[ key ];
+				}
+				return fallback;
+			}
 
-			var columns = a.columns || settings.defaultColumns || 3;
-			var isSlider = !! a.slider;
-			var perView = a.slidesPerView || ( isGrid ? columns : 1 );
-			var loop =
-				a.loop === undefined
-					? settings.defaultLoop !== false
-					: !! a.loop;
-			var autoplay =
-				a.autoplay === undefined ? settings.defaultAutoplay || 0 : a.autoplay;
-			var readMore =
-				a.readMore === undefined
-					? settings.defaultReadMore !== false
-					: !! a.readMore;
+			// Columns and sliding are arrangement properties, independent of
+			// which card style was picked, so they apply to any layout except
+			// Marquee - already a continuous strip with no page to slide or
+			// arrange columns within.
+			var isMarquee = layout === 'marquee';
+
+			var columns = effective( 'columns', defaults.columns || 3 );
+			var masonry = !! effective( 'masonry', false );
+			var isSlider = !! effective( 'slider', false );
+			var loop = !! effective( 'loop', defaults.loop !== false );
+			var autoplay = effective( 'autoplay', defaults.autoplay || 0 );
+			var readMore = !! effective( 'readMore', defaults.readMore !== false );
+
+			// Cards have others beside them whenever more than one column shows,
+			// on any layout, and always for Marquee. That is when a long quote
+			// needs trimming to keep the row even.
+			var sideBySide = isMarquee || columns > 1;
 
 			var inspector = el(
 				InspectorControls,
@@ -151,9 +179,9 @@
 					isLegacy
 						? el(
 								Notice,
-								{ status: 'warning', isDismissible: false },
+								{ status: 'info', isDismissible: false },
 								__(
-									'This block still uses an older layout name. It renders the same, but pick a layout below to get the newer controls.',
+									'This block still carries an older layout name. It already shows the columns, masonry and slider it effectively has - change anything below and it keeps working exactly the same. Picking a layout here is only needed if you actually want a different card style.',
 									'devadigm-testimonials'
 								)
 						  )
@@ -162,8 +190,8 @@
 						label: __( 'Display as', 'devadigm-testimonials' ),
 						value: isLegacy ? '' : layout,
 						options: ( isLegacy
-							? [ { label: __( 'Older layout', 'devadigm-testimonials' ), value: '' } ]
-							: [] 
+							? [ { label: __( 'Older layout (' + rawLayout + ')', 'devadigm-testimonials' ), value: '' } ]
+							: []
 						).concat( settings.layouts || [] ),
 						__nextHasNoMarginBottom: true,
 						onChange: function ( next ) {
@@ -181,7 +209,7 @@
 							set( { markStyle: next } );
 						},
 					} ),
-					isGrid
+					! isMarquee
 						? el( RangeControl, {
 								label: __( 'Columns', 'devadigm-testimonials' ),
 								value: columns,
@@ -189,7 +217,7 @@
 								max: 6,
 								__nextHasNoMarginBottom: true,
 								help: __(
-									'Columns drop automatically when the space cannot fit them.',
+									'How many sit in a row. At 1, extra testimonials stack below instead of beside it. Columns drop automatically when the space cannot fit them, and this same number is how many a slider shows per page.',
 									'devadigm-testimonials'
 								),
 								onChange: function ( next ) {
@@ -197,12 +225,12 @@
 								},
 						  } )
 						: null,
-					isGrid
+					! isMarquee && ! isSlider
 						? el( ToggleControl, {
 								label: __( 'Masonry', 'devadigm-testimonials' ),
-								checked: !! a.masonry,
+								checked: masonry,
 								__nextHasNoMarginBottom: true,
-								help: a.masonry
+								help: masonry
 									? __( 'Cards pack by height.', 'devadigm-testimonials' )
 									: __( 'Cards in a row share the same height.', 'devadigm-testimonials' ),
 								onChange: function ( next ) {
@@ -210,21 +238,19 @@
 								},
 						  } )
 						: null,
-					isMultiple
-						? el( RangeControl, {
-								label: __( 'How many to show', 'devadigm-testimonials' ),
-								value: a.count,
-								min: 1,
-								max: 24,
-								__nextHasNoMarginBottom: true,
-								onChange: function ( next ) {
-									set( { count: next } );
-								},
-						  } )
-						: null
+					el( RangeControl, {
+						label: __( 'How many to show', 'devadigm-testimonials' ),
+						value: a.count,
+						min: 1,
+						max: 24,
+						__nextHasNoMarginBottom: true,
+						onChange: function ( next ) {
+							set( { count: next } );
+						},
+					} )
 				),
 
-				canSlide
+				! isMarquee
 					? el(
 							PanelBody,
 							{ title: __( 'Slider', 'devadigm-testimonials' ), initialOpen: false },
@@ -233,29 +259,13 @@
 								checked: isSlider,
 								__nextHasNoMarginBottom: true,
 								help: __(
-									'Available on Spotlight and Grid. Set how many are visible at once below.',
+									'Works on any layout above except Marquee, which already scrolls continuously. Uses the Columns setting for how many show per page - set it there, not here.',
 									'devadigm-testimonials'
 								),
 								onChange: function ( next ) {
 									set( { slider: next } );
 								},
 							} ),
-							isSlider
-								? el( RangeControl, {
-										label: __( 'Visible at once', 'devadigm-testimonials' ),
-										value: perView,
-										min: 1,
-										max: 6,
-										__nextHasNoMarginBottom: true,
-										help: __(
-											'Drops to one on narrow screens.',
-											'devadigm-testimonials'
-										),
-										onChange: function ( next ) {
-											set( { slidesPerView: next } );
-										},
-								  } )
-								: null,
 							isSlider
 								? el( ToggleControl, {
 										label: __( 'Loop back to the start', 'devadigm-testimonials' ),
@@ -290,7 +300,7 @@
 					  )
 					: null,
 
-				canTrim
+				sideBySide
 					? el(
 							PanelBody,
 							{ title: __( 'Long quotes', 'devadigm-testimonials' ), initialOpen: false },
@@ -546,13 +556,19 @@
 			name: 'spotlight',
 			title: __( 'Spotlight', 'devadigm-testimonials' ),
 			description: __( 'One large testimonial.', 'devadigm-testimonials' ),
-			attributes: { layout: 'spotlight', count: 1 },
+			attributes: { layout: 'spotlight', columns: 1, count: 1 },
+		},
+		{
+			name: 'spotlight-columns',
+			title: __( 'Spotlight, two up', 'devadigm-testimonials' ),
+			description: __( 'Two large testimonials side by side, wrapping to a new row beyond that.', 'devadigm-testimonials' ),
+			attributes: { layout: 'spotlight', columns: 2, count: 4 },
 		},
 		{
 			name: 'spotlight-slider',
 			title: __( 'Spotlight slider', 'devadigm-testimonials' ),
 			description: __( 'One large testimonial at a time, with arrows.', 'devadigm-testimonials' ),
-			attributes: { layout: 'spotlight', slider: true, slidesPerView: 1, count: 6 },
+			attributes: { layout: 'spotlight', slider: true, columns: 1, count: 6 },
 		},
 		{
 			name: 'grid',
@@ -564,13 +580,13 @@
 			name: 'grid-slider-2',
 			title: __( 'Two-column slider', 'devadigm-testimonials' ),
 			description: __( 'Two cards at a time, with arrows.', 'devadigm-testimonials' ),
-			attributes: { layout: 'grid', slider: true, slidesPerView: 2, columns: 2, count: 8 },
+			attributes: { layout: 'grid', slider: true, columns: 2, count: 8 },
 		},
 		{
 			name: 'grid-slider-3',
 			title: __( 'Three-column slider', 'devadigm-testimonials' ),
 			description: __( 'Three cards at a time, with arrows.', 'devadigm-testimonials' ),
-			attributes: { layout: 'grid', slider: true, slidesPerView: 3, columns: 3, count: 9 },
+			attributes: { layout: 'grid', slider: true, columns: 3, count: 9 },
 		},
 		{
 			name: 'masonry',
@@ -588,7 +604,13 @@
 			name: 'inline',
 			title: __( 'Inline proof', 'devadigm-testimonials' ),
 			description: __( 'A single pull-quote to sit beside a call to action.', 'devadigm-testimonials' ),
-			attributes: { layout: 'inline', count: 1 },
+			attributes: { layout: 'inline', columns: 1, count: 1 },
+		},
+		{
+			name: 'inline-slider',
+			title: __( 'Inline slider', 'devadigm-testimonials' ),
+			description: __( 'Pull-quotes one at a time, with arrows.', 'devadigm-testimonials' ),
+			attributes: { layout: 'inline', slider: true, columns: 1, count: 6 },
 		},
 	].forEach( function ( variation ) {
 		wp.blocks.registerBlockVariation( 'devadigm/testimonials', {

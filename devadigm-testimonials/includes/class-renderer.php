@@ -113,8 +113,13 @@ final class Renderer {
 		$layout = (string) $attrs['layout'];
 		$mark   = (string) $attrs['markStyle'];
 
-		// Sliding is a property, so it can apply to more than one layout.
-		$slider = ! empty( $attrs['slider'] ) && in_array( $layout, array( 'spotlight', 'grid' ), true );
+		/*
+		 * Columns and sliding are arrangement properties, independent of which
+		 * card style was picked, so they apply to any layout except Marquee.
+		 * Marquee is already a continuous strip with no discrete page to slide
+		 * between, so it keeps its own dedicated behaviour.
+		 */
+		$slider = ! empty( $attrs['slider'] ) && 'marquee' !== $layout;
 
 		$items = array();
 		foreach ( $posts as $post ) {
@@ -165,23 +170,43 @@ final class Renderer {
 		}
 		$attrs['markStyle'] = $mark;
 
+		/*
+		 * One column count drives both roles: how many cards sit in a row when
+		 * static, and how many are visible per page when sliding. A separate
+		 * "slides per view" setting alongside it was one control too many for
+		 * what is really one idea - how wide the arrangement is.
+		 */
 		$attrs['columns'] = max( 1, min( 6, (int) ( $attrs['columns'] ?? Settings::get( 'default_columns', 3 ) ) ) );
-
-		$per_view = (int) ( $attrs['slidesPerView'] ?? ( 'spotlight' === $layout ? 1 : $attrs['columns'] ) );
-		$attrs['slidesPerView'] = max( 1, min( 6, $per_view ) );
 
 		$attrs['loop']     = array_key_exists( 'loop', $attrs ) ? (bool) $attrs['loop'] : (bool) Settings::get( 'slider_loop', true );
 		$attrs['autoplay'] = max( 0, min( 30, (int) ( $attrs['autoplay'] ?? Settings::get( 'slider_autoplay', 0 ) ) ) );
+
+		// Settled to plain booleans, same as every other key here, so nothing
+		// downstream needs its own isset()/empty() guard to read them safely.
+		$attrs['slider']  = ! empty( $attrs['slider'] );
+		$attrs['masonry'] = ! empty( $attrs['masonry'] );
 
 		return $attrs;
 	}
 
 	/**
-	 * Whether long quotes should be trimmed for this layout.
+	 * Whether this testimonial has others sitting beside it.
 	 *
-	 * Only the layouts where quote length actually causes a problem: cards sat
-	 * beside each other. A spotlight or an inline pull-quote has nothing to line
-	 * up with, so trimming there would just hide words for no reason.
+	 * True whenever more than one column is showing, on any layout, and always
+	 * true for Marquee, whose cards are inherently side by side. False for a
+	 * single Spotlight or Inline quote with nothing beside it to line up
+	 * against. Two things depend on this: whether a long quote needs trimming
+	 * to keep a row even, and whether an oversized mark - sized for a wide,
+	 * solitary quote - needs scaling back down to fit a narrower column.
+	 *
+	 * @param array<string,mixed> $attrs Settled attributes.
+	 */
+	private static function is_side_by_side( array $attrs ): bool {
+		return 'marquee' === $attrs['layout'] || (int) $attrs['columns'] > 1;
+	}
+
+	/**
+	 * Whether long quotes should be trimmed.
 	 *
 	 * @param array<string,mixed> $attrs Settled attributes.
 	 */
@@ -191,7 +216,7 @@ final class Renderer {
 		} else {
 			$enabled = (bool) Settings::get( 'read_more', true );
 		}
-		return $enabled && in_array( (string) $attrs['layout'], array( 'grid', 'marquee' ), true );
+		return $enabled && self::is_side_by_side( $attrs );
 	}
 
 	/**
@@ -207,11 +232,22 @@ final class Renderer {
 			'dvdm-mark--' . $attrs['markStyle'],
 		);
 
-		if ( ! empty( $attrs['masonry'] ) && 'grid' === $attrs['layout'] ) {
+		$applies = 'marquee' !== $attrs['layout'];
+		$slider  = $applies && ! empty( $attrs['slider'] );
+
+		// Masonry packs by height across a flow; a slider moves by whole pages.
+		// The two ideas do not combine, so masonry only applies while static.
+		if ( $applies && ! $slider && ! empty( $attrs['masonry'] ) ) {
 			$classes[] = 'dvdm-t--masonry';
 		}
-		if ( ! empty( $attrs['slider'] ) && in_array( (string) $attrs['layout'], array( 'spotlight', 'grid' ), true ) ) {
+		if ( $slider ) {
 			$classes[] = 'dvdm-t--slider';
+		}
+		if ( self::is_side_by_side( $attrs ) ) {
+			// Lets a mark sized for one wide, solitary quote (Ledger, Slab) scale
+			// back down once that quote has neighbours narrowing its column,
+			// regardless of which layout put it there.
+			$classes[] = 'dvdm-t--multi';
 		}
 		if ( self::trims_quotes( $attrs ) ) {
 			$classes[] = 'dvdm-t--trimmed';
@@ -302,7 +338,7 @@ final class Renderer {
 		$prev     = (string) Settings::get( 'arrow_prev', '←' );
 		$next     = (string) Settings::get( 'arrow_next', '→' );
 		$total    = count( $items );
-		$per_view = min( (int) $attrs['slidesPerView'], max( 1, $total ) );
+		$per_view = min( (int) $attrs['columns'], max( 1, $total ) );
 		$pages    = (int) ceil( $total / $per_view );
 
 		$slides = '';

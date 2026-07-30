@@ -139,36 +139,25 @@
 
 /* ------------------------------------------------------------- layouts */
 
+/*
+ * Columns are an arrangement property, not something tied to one layout: how
+ * many cards sit in a row applies the same way whether the card itself looks
+ * like Spotlight, Grid or Inline. Only Marquee opts out, because it is
+ * already a continuous strip with no row to arrange.
+ *
+ * The track floor is the wider of a readable card and the width one column
+ * would get at the requested count. In a container wide enough that resolves
+ * to exactly --dvdm-columns tracks; in a narrower one, auto-fit drops to
+ * however many still fit - so at columns:1 there is nothing to fit beside a
+ * card and the next one simply falls to the row below, with no separate
+ * "stacked" mode needed.
+ *
+ * Sliding (.dvdm-t--slider, further down) and packing by height
+ * (.dvdm-t--masonry, further down) both override this with a later, equally
+ * specific rule, so source order is what makes either of them win.
+ */
 .dvdm-t__items {
 	display: grid;
-	grid-template-columns: minmax( 0, 1fr );
-	gap: var( --dvdm-gap, 1.5rem );
-	margin: 0;
-	padding: 0;
-	list-style: none;
-}
-
-/* Spotlight: one large testimonial. */
-.dvdm-t--spotlight .dvdm-t__quote {
-	font-size: calc( clamp( 1.4rem, 1.05rem + 1.6vw, 2.3rem ) * var( --dvdm-quote-scale, 1 ) );
-	line-height: 1.3;
-	max-width: 26ch;
-}
-
-/*
- * Grid: cards side by side.
- *
- * Row and Wall used to be separate layouts. They only ever differed in whether
- * cards align to a shared row baseline or pack by height, which is one switch,
- * so this is now Grid plus an optional masonry modifier.
- *
- * The track floor is the wider of a readable card and the width one column would
- * get at the requested count. In a container wide enough that resolves to
- * exactly --dvdm-columns tracks; in a narrower one, auto-fit drops to however
- * many still fit. So the column setting is honoured where there is room for it,
- * and cards never get crushed where there is not.
- */
-.dvdm-t--grid .dvdm-t__items {
 	grid-template-columns: repeat(
 		auto-fit,
 		minmax(
@@ -185,8 +174,31 @@
 			1fr
 		)
 	);
+	gap: var( --dvdm-gap, 1.5rem );
+	margin: 0;
+	padding: 0;
+	list-style: none;
 }
 
+/*
+ * Equal height by default. `align-items: stretch` is the grid default, so the
+ * cell is already full height; the card has to be told to fill it, and the
+ * attribution pushed to the bottom, or short quotes leave the name floating
+ * mid-card. Masonry cancels this back to `auto`, further down, since packing
+ * by height is the opposite intent.
+ */
+.dvdm-t__item {
+	height: 100%;
+}
+
+/* Spotlight: one large testimonial, no card chrome. */
+.dvdm-t--spotlight .dvdm-t__quote {
+	font-size: calc( clamp( 1.4rem, 1.05rem + 1.6vw, 2.3rem ) * var( --dvdm-quote-scale, 1 ) );
+	line-height: 1.3;
+	max-width: 26ch;
+}
+
+/* Grid and Marquee share the same boxed-card look. */
 .dvdm-t--grid .dvdm-t__item,
 .dvdm-t--marquee .dvdm-t__item {
 	background: var( --dvdm-surface, transparent );
@@ -196,15 +208,14 @@
 }
 
 /*
- * Equal height. `align-items: stretch` is the grid default, so the cell is
- * already full height; the card has to be told to fill it, and the attribution
- * pushed to the bottom, or short quotes leave the name floating mid-card.
+ * Masonry: cards of unequal height pack tightly instead of aligning. Row and
+ * Wall used to be separate layouts; they only ever differed in whether cards
+ * share a row baseline or pack by height, which is this one switch, available
+ * on any card style. It does not combine with a slider - a slider moves by
+ * whole pages, which packing by height has no fixed shape for - so the two
+ * are mutually exclusive at the PHP level and this rule only needs to beat
+ * the plain column rule above it.
  */
-.dvdm-t--grid:not( .dvdm-t--masonry ) .dvdm-t__item {
-	height: 100%;
-}
-
-/* Masonry: cards of unequal height pack tightly instead of aligning. */
 .dvdm-t--masonry .dvdm-t__items {
 	display: block;
 	columns: var( --dvdm-card-min, 15rem ) var( --dvdm-columns, 3 );
@@ -222,7 +233,12 @@
 	margin-top: 1em;
 }
 
-/* Inline proof: a single pull-quote to sit beside a call to action. */
+/*
+ * Inline proof: a pull-quote accent instead of a boxed card. The reading
+ * measure is capped even in a multi-column arrangement - at columns:1 the
+ * grid cell is the full container width, and an uncapped pull-quote would
+ * stretch edge to edge, which is the one thing this style exists to avoid.
+ */
 .dvdm-t--inline .dvdm-t__item {
 	border-inline-start: 2px solid var( --dvdm-accent, currentColor );
 	padding-inline-start: 1.1em;
@@ -423,14 +439,17 @@
 	font-size: calc( 2.6em * var( --dvdm-mark-scale, 1 ) );
 }
 
-/* In a card the mark shares a narrow measure with the text, so it is set back. */
-.dvdm-t--grid.dvdm-mark--ledger .dvdm-t__quote::before,
-.dvdm-t--marquee.dvdm-mark--ledger .dvdm-t__quote::before {
+/*
+ * Once a quote has neighbours narrowing its column - whichever layout put it
+ * there - the mark shares that narrower measure with the text, so it is set
+ * back. .dvdm-t--multi is set whenever columns > 1 or the layout is Marquee,
+ * not tied to any one layout's name.
+ */
+.dvdm-t--multi.dvdm-mark--ledger .dvdm-t__quote::before {
 	font-size: calc( 2.2em * var( --dvdm-mark-scale, 1 ) );
 }
 
-.dvdm-t--grid.dvdm-mark--slab .dvdm-t__slab,
-.dvdm-t--marquee.dvdm-mark--slab .dvdm-t__slab {
+.dvdm-t--multi.dvdm-mark--slab .dvdm-t__slab {
 	width: 2em;
 	height: 2em;
 }

@@ -95,19 +95,43 @@ final class Block {
 			'devadigm-testimonials-editor-script',
 			'dvdmTestimonials',
 			array(
-				'layouts'       => $to_choices( Settings::layouts() ),
-				'markStyles'    => $to_choices( Settings::mark_styles() ),
-				'services'      => $to_options( $services ),
-				'sources'       => $to_options( $sources ),
-				'palette'       => Settings::theme_palette(),
-				'fonts'         => Settings::theme_fonts(),
-				'defaultLayout'  => Settings::get( 'default_layout', 'spotlight' ),
-				'defaultMark'    => Settings::get( 'default_mark', 'ledger' ),
-				'defaultColumns' => (int) Settings::get( 'default_columns', 3 ),
-				'defaultLoop'    => (bool) Settings::get( 'slider_loop', true ),
-				'defaultAutoplay' => (int) Settings::get( 'slider_autoplay', 0 ),
-				'defaultReadMore' => (bool) Settings::get( 'read_more', true ),
-				'legacyLayouts'  => array_keys( Settings::legacy_layouts() ),
+				'layouts'    => $to_choices( Settings::layouts() ),
+				'markStyles' => $to_choices( Settings::mark_styles() ),
+				'services'   => $to_options( $services ),
+				'sources'    => $to_options( $sources ),
+				'palette'    => Settings::theme_palette(),
+				'fonts'      => Settings::theme_fonts(),
+				/*
+				 * Nested rather than flattened into top-level keys, because
+				 * wp_localize_script() casts every top-level scalar value to a
+				 * string before it reaches the browser - a long-standing
+				 * WordPress behaviour, not a bug in this call. A value nested
+				 * inside an array survives with its real type intact, which is
+				 * the only reason legacyLayouts' booleans below come through
+				 * correctly. Flattened as they were before, `defaultLoop` and
+				 * `defaultReadMore` arrived as the strings "1" or "", and
+				 * `"" !== false` is true in JavaScript - so a site with either
+				 * setting switched off still had the editor believe it was on,
+				 * silently ignoring the Design screen. Every number and boolean
+				 * the editor reads is nested here for that reason.
+				 */
+				'defaults'   => array(
+					'layout'    => Settings::get( 'default_layout', 'spotlight' ),
+					'mark'      => Settings::get( 'default_mark', 'ledger' ),
+					'columns'   => (int) Settings::get( 'default_columns', 3 ),
+					'loop'      => (bool) Settings::get( 'slider_loop', true ),
+					'autoplay'  => (int) Settings::get( 'slider_autoplay', 0 ),
+					'readMore'  => (bool) Settings::get( 'read_more', true ),
+				),
+				/*
+				 * The full translation table, not just the legacy names. The
+				 * editor needs to compute the same effective layout, columns
+				 * and slider state that the PHP renderer does, so a block still
+				 * carrying an old name shows its real current controls instead
+				 * of hiding them until someone happens to re-pick a layout from
+				 * the dropdown.
+				 */
+				'legacyLayouts' => Settings::legacy_layouts(),
 				'settingsUrl'   => admin_url( 'edit.php?post_type=' . POST_TYPE . '&page=dvdm-testimonials-design' ),
 			)
 		);
@@ -116,25 +140,37 @@ final class Block {
 	/**
 	 * Render the block on the front end.
 	 *
+	 * Attributes are normalised once, here, and the same settled array is
+	 * handed to both the style builder and the markup renderer. Normalising
+	 * twice with two different call paths is how a fresh block - one where
+	 * nobody has touched the Columns slider, so the raw attribute is simply
+	 * absent - ended up with its arrangement decided one way in PHP (which
+	 * defaults an unset column count from the Design screen) and a different
+	 * way in CSS (which had no property to read and fell back to a number
+	 * hardcoded in the stylesheet). Settling the attributes before either
+	 * consumer sees them keeps both reading the same value.
+	 *
 	 * @param array<string,mixed> $attributes Block attributes.
 	 */
 	public static function render( array $attributes ): string {
-		$overrides = self::instance_tokens( $attributes );
+		$settled   = Renderer::normalise( $attributes );
+		$overrides = self::instance_tokens( $settled );
 
 		$wrapper = get_block_wrapper_attributes(
 			'' !== $overrides ? array( 'style' => $overrides ) : array()
 		);
 
-		return Renderer::render( $attributes, $wrapper );
+		return Renderer::render( $settled, $wrapper );
 	}
 
 	/**
-	 * Turn per-block colour and font overrides into inline custom properties.
+	 * Turn per-block colour, font and arrangement overrides into inline custom
+	 * properties.
 	 *
 	 * These sit above the settings screen in the cascade, so one block can look
 	 * different without changing the site-wide defaults.
 	 *
-	 * @param array<string,mixed> $attributes Block attributes.
+	 * @param array<string,mixed> $attributes Settled block attributes.
 	 */
 	private static function instance_tokens( array $attributes ): string {
 		$map = array(
@@ -171,9 +207,20 @@ final class Block {
 		if ( isset( $attributes['markScale'] ) && is_numeric( $attributes['markScale'] ) && (float) $attributes['markScale'] > 0 ) {
 			$out .= '--dvdm-mark-scale:' . (float) $attributes['markScale'] . ';';
 		}
-		if ( isset( $attributes['columns'] ) && is_numeric( $attributes['columns'] ) ) {
-			$out .= '--dvdm-columns:' . max( 1, min( 6, (int) $attributes['columns'] ) ) . ';';
-		}
+		/*
+		 * Unlike the scales above, columns is always written. $attributes has
+		 * already been through Renderer::normalise() by the time it reaches
+		 * here, which defaults an unset column count from the Design screen -
+		 * so there is no "unset" state left to distinguish, and the value that
+		 * decided how many testimonials PHP fits per slider page needs to be
+		 * the same value CSS uses to size the grid track. Leaving this
+		 * conditional, as it was, meant a block that had never had its Columns
+		 * control touched wrote nothing here at all, and the grid silently
+		 * fell back to a number hardcoded in the stylesheet instead of
+		 * whatever the Design screen said - the direct cause of a site-wide
+		 * column default appearing to do nothing.
+		 */
+		$out .= '--dvdm-columns:' . max( 1, min( 6, (int) $attributes['columns'] ) ) . ';';
 		if ( isset( $attributes['clampLines'] ) && is_numeric( $attributes['clampLines'] ) ) {
 			$out .= '--dvdm-clamp-lines:' . max( 2, min( 20, (int) $attributes['clampLines'] ) ) . ';';
 		}
