@@ -4,7 +4,7 @@ Tags: testimonials, reviews, social proof, block, slider
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.4.2
+Stable tag: 1.4.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -91,6 +91,12 @@ front-end script is a plain ES module, so the plugin runs straight from the zip.
 == Changelog ==
 
 See CHANGELOG.md for full detail. Summary:
+
+= 1.4.3 =
+* Fixed: the Read More dialog's quote wrapped to a narrow column instead of
+  using the dialog's full width, on Spotlight in particular - it was
+  inheriting the card's own 26-character line-length cap, meant to keep the
+  compact card readable, not the wide-open dialog.
 
 = 1.4.2 =
 * Fixed: the Read More dialog could render pinned to the left edge with a

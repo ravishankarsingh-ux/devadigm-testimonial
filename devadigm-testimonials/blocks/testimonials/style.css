@@ -684,9 +684,18 @@
 	overflow: visible;
 }
 
+/*
+ * The dialog is a descendant of the same wrapper that carries the layout
+ * class (`.dvdm-t--spotlight` and so on), and the quote it shows is a clone
+ * of the card's own - so a per-layout width limit meant to keep the card's
+ * line lengths readable (Spotlight's 26ch, in particular) applies here too
+ * unless it is explicitly undone, leaving most of the dialog's own width
+ * empty and the text wrapping far narrower than the box around it.
+ */
 .dvdm-t__dialog .dvdm-t__quote {
 	font-size: calc( 1.2em * var( --dvdm-quote-scale, 1 ) );
 	line-height: 1.5;
+	max-width: none;
 }
 
 .dvdm-t__dialog .dvdm-t__attribution {

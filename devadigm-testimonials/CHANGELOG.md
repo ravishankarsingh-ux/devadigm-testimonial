@@ -4,6 +4,22 @@ All notable changes to this plugin are documented here. Version numbers follow
 [Semantic Versioning](https://semver.org/): MAJOR for breaking changes, MINOR
 for new features that stay backward-compatible, PATCH for fixes.
 
+## 1.4.3 - 2026-07-30
+
+### Fixed
+
+- **The Read More dialog's quote wrapped to a narrow column, leaving most of
+  the dialog's width empty**, on Spotlight in particular. Spotlight caps its
+  own card's quote at `max-width: 26ch` to keep the big pull-quote's line
+  lengths readable - a sensible limit for the card, but the dialog is a
+  clone of that same quote sitting inside the same layout wrapper, so it
+  inherited that same 26-character cap with nothing around 2.75x the
+  width of the box it was sitting in going unused. `.dvdm-t__dialog
+  .dvdm-t__quote` now explicitly resets `max-width: none`, spotted and
+  confirmed by direct measurement (614px of the dialog's 704px, versus the
+  568px-wide card quote it was wrongly matching before) - the card itself is
+  untouched.
+
 ## 1.4.2 - 2026-07-30
 
 ### Fixed
