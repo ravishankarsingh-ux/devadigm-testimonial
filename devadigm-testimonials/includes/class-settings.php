@@ -152,8 +152,12 @@ final class Settings {
 			'quote_weight'     => '',
 			'quote_italic'     => false,
 
-			// Quotation mark.
-			'mark_glyph_set'   => 'curly',
+			// Quotation mark. "heavy" is a dedicated ornamental glyph (dingbat
+			// range), so it draws as a rounded, curled mark consistently
+			// across quote fonts - "curly" is the correct Unicode character
+			// for a curly quote too, but exactly how curved it looks still
+			// depends on the quote font's own design of that character.
+			'mark_glyph_set'   => 'heavy',
 			'mark_glyph_custom' => '',
 			'mark_opacity'     => '1',
 			'mark_scale'       => '1',

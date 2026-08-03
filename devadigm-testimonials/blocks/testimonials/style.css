@@ -198,6 +198,17 @@
 	max-width: 26ch;
 }
 
+/*
+ * The base 0.75em gap between quote, Read more and attribution (set on
+ * .dvdm-t__item, further up) is sized for Grid's compact cards. Next to
+ * Spotlight's much larger quote it read as a bigger gap than it actually
+ * is - the same absolute-ish spacing looks sparse against small card text
+ * but leaves visibly more air beneath a big pull-quote.
+ */
+.dvdm-t--spotlight .dvdm-t__item {
+	gap: 0.4em;
+}
+
 /* Grid and Marquee share the same boxed-card look. */
 .dvdm-t--grid .dvdm-t__item,
 .dvdm-t--marquee .dvdm-t__item {
@@ -384,6 +395,26 @@
 	animation-play-state: paused;
 }
 
+/*
+ * Off by default, since a strip of cards each sized to their own content is
+ * the more common look for a marquee - but flex's own cross-axis stretch
+ * (align-items normally does this on its own) never actually engages here,
+ * because .dvdm-t__item's height: 100% two rules up is meant for the Grid's
+ * equal-height cells and, being a percentage against a track with no fixed
+ * height of its own, resolves to nothing rather than to "auto" - which is
+ * what stretch needs to size against. Turning this on replaces that with an
+ * explicit height: auto and align-items: stretch, letting the track's own
+ * tallest card set the height every other card stretches to fill.
+ */
+.dvdm-t--marquee.dvdm-t--equal-height .dvdm-t__track {
+	align-items: stretch;
+}
+
+.dvdm-t--marquee.dvdm-t--equal-height .dvdm-t__item {
+	height: auto;
+	align-self: stretch;
+}
+
 .dvdm-t--marquee .dvdm-t__item {
 	flex: 0 0 20rem;
 }
@@ -435,6 +466,20 @@
 	margin-top: -0.06em;
 }
 
+/*
+ * The glyph is sized well past its own line box on purpose (that is the
+ * point of Ledger), which leaves it prone to visually overlapping whatever
+ * sits directly above - the star rating, when one is shown. The item's own
+ * gap already puts space between them, but not consistently enough headroom
+ * for how far this particular mark's ink reaches above its box, across
+ * every quote font it might be paired with. This margin is the fix, kept on
+ * the rating rather than the glyph since the glyph is a ::before with no
+ * box of its own to add real margin to.
+ */
+.dvdm-mark--ledger .dvdm-t__rating {
+	margin-bottom: 0.4em;
+}
+
 .dvdm-t--spotlight.dvdm-mark--ledger .dvdm-t__quote::before {
 	font-size: calc( 2.6em * var( --dvdm-mark-scale, 1 ) );
 }
@@ -443,10 +488,18 @@
  * Once a quote has neighbours narrowing its column - whichever layout put it
  * there - the mark shares that narrower measure with the text, so it is set
  * back. .dvdm-t--multi is set whenever columns > 1 or the layout is Marquee,
- * not tied to any one layout's name.
+ * not tied to any one layout's name. The gap between mark and text is pulled
+ * in too - 0.35em plus the glyph's own reserved column width reads as a
+ * sensible gap next to a wide, solitary Spotlight quote, but the same
+ * distance looks like the mark has drifted away from the text once that
+ * quote is narrowed down to a slide or a card sharing the row with others.
  */
 .dvdm-t--multi.dvdm-mark--ledger .dvdm-t__quote::before {
 	font-size: calc( 2.2em * var( --dvdm-mark-scale, 1 ) );
+}
+
+.dvdm-t--multi.dvdm-mark--ledger .dvdm-t__quote {
+	gap: 0.15em;
 }
 
 .dvdm-t--multi.dvdm-mark--slab .dvdm-t__slab {

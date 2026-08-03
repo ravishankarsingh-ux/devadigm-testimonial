@@ -4,7 +4,7 @@ Tags: testimonials, reviews, social proof, block, slider
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.4.3
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -91,6 +91,19 @@ front-end script is a plain ES module, so the plugin runs straight from the zip.
 == Changelog ==
 
 See CHANGELOG.md for full detail. Summary:
+
+= 1.5.0 =
+* Added: an "Equal card height" toggle for Marquee, so every card in the
+  strip can match the tallest one instead of sizing to its own content.
+* Changed: Spotlight uses a tighter gap between its quote and attribution.
+* Changed: new installs now recommend the "Heavy" quotation mark glyph
+  instead of "Curly", since it draws as a consistently curved, rounded mark
+  regardless of the quote font - existing sites keep their own choice and
+  can switch from the same Design screen dropdown.
+* Fixed: the Ledger quotation mark could visually overlap the star rating
+  shown above it, on Grid and Marquee in particular.
+* Fixed: on a multi-card Spotlight slider, Ledger's mark could read as
+  detached from the quote text sharing its narrower column.
 
 = 1.4.3 =
 * Fixed: the Read More dialog's quote wrapped to a narrow column instead of

@@ -4,6 +4,57 @@ All notable changes to this plugin are documented here. Version numbers follow
 [Semantic Versioning](https://semver.org/): MAJOR for breaking changes, MINOR
 for new features that stay backward-compatible, PATCH for fixes.
 
+## 1.5.0 - 2026-08-03
+
+### Added
+
+- **Equal card height for Marquee.** A new "Equal card height" toggle in the
+  block's Layout panel (Marquee only) makes every card in the strip match
+  the height of the tallest one. Off by default, since a strip of cards each
+  sized to their own content is the more common look. The reason this needed
+  real code rather than just flipping a CSS property: flexbox's own
+  cross-axis stretch should already do this by default, but never actually
+  engaged, because `.dvdm-t__item`'s `height: 100%` - written for the Grid's
+  equal-height cells - is a percentage against a track with no fixed height
+  of its own, which resolves to nothing rather than to the `auto` that
+  stretch needs to size against. Turning the new toggle on replaces that
+  with an explicit `height: auto` and `align-items: stretch`, which is what
+  actually makes the track's tallest card set the height every other card
+  stretches to fill. Off, nothing changes from before.
+
+### Changed
+
+- **Reduced the space between a Spotlight quote and its attribution.** The
+  base gap between a card's quote, Read more and attribution is sized for
+  Grid's compact cards; next to Spotlight's much larger quote the same gap
+  reads as noticeably more air. Spotlight now uses a tighter gap of its own.
+- **The recommended Quotation mark glyph is now "Heavy" instead of "Curly"**
+  for new installs. "Curly" is the correct Unicode character for a curly
+  quote, but exactly how curved it looks still depends on the quote font's
+  own design of that character; "Heavy" is a dedicated ornamental glyph
+  (the dingbat range) that draws as a rounded, curled mark consistently
+  regardless of the quote font. This only changes the default a fresh
+  install starts with - an existing site that already has a Glyph chosen in
+  Design keeps it, and can switch to Heavy from that same dropdown.
+
+### Fixed
+
+- **The Ledger quotation mark could visually overlap the star rating shown
+  above it**, on Grid and Marquee in particular. Ledger's mark is sized well
+  past its own line box on purpose, which leaves it prone to reaching up
+  into whatever sits directly above it - the rating, when shown - and the
+  space between them was not consistently enough headroom for how far this
+  particular mark's ink reaches, across every quote font it might be paired
+  with. The rating now carries its own margin beneath it whenever Ledger is
+  the active mark, on every layout.
+- **On a multi-card Spotlight slider ("Slideshow"), Ledger's mark could
+  read as noticeably detached from the quote text next to it.** The gap
+  between mark and text is sized for a single, wide Spotlight quote; the
+  same absolute distance looks larger, proportionally, once that quote is
+  narrowed down to one slide sharing a row with others. That gap is now
+  pulled in specifically wherever the mark is already scaled down for a
+  narrower column.
+
 ## 1.4.3 - 2026-07-30
 
 ### Fixed

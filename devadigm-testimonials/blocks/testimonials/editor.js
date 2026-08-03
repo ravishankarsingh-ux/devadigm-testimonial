@@ -165,6 +165,7 @@
 			var loop = !! effective( 'loop', defaults.loop !== false );
 			var autoplay = effective( 'autoplay', defaults.autoplay || 0 );
 			var readMore = !! effective( 'readMore', defaults.readMore !== false );
+			var marqueeEqualHeight = !! effective( 'marqueeEqualHeight', false );
 
 			var inspector = el(
 				InspectorControls,
@@ -232,6 +233,19 @@
 									: __( 'Cards in a row share the same height.', 'devadigm-testimonials' ),
 								onChange: function ( next ) {
 									set( { masonry: next } );
+								},
+						  } )
+						: null,
+					isMarquee
+						? el( ToggleControl, {
+								label: __( 'Equal card height', 'devadigm-testimonials' ),
+								checked: marqueeEqualHeight,
+								__nextHasNoMarginBottom: true,
+								help: marqueeEqualHeight
+									? __( 'Every card matches the tallest one in the strip.', 'devadigm-testimonials' )
+									: __( 'Cards size to their own content.', 'devadigm-testimonials' ),
+								onChange: function ( next ) {
+									set( { marqueeEqualHeight: next } );
 								},
 						  } )
 						: null,

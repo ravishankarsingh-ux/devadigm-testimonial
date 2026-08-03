@@ -186,6 +186,8 @@ final class Renderer {
 		$attrs['slider']  = ! empty( $attrs['slider'] );
 		$attrs['masonry'] = ! empty( $attrs['masonry'] );
 
+		$attrs['marqueeEqualHeight'] = ! empty( $attrs['marqueeEqualHeight'] );
+
 		return $attrs;
 	}
 
@@ -263,6 +265,9 @@ final class Renderer {
 		}
 		if ( self::trims_quotes( $attrs ) ) {
 			$classes[] = 'dvdm-t--trimmed';
+		}
+		if ( ! $applies && ! empty( $attrs['marqueeEqualHeight'] ) ) {
+			$classes[] = 'dvdm-t--equal-height';
 		}
 
 		return implode( ' ', $classes );

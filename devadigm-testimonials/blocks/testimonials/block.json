@@ -41,6 +41,9 @@
 		"masonry": {
 			"type": "boolean"
 		},
+		"marqueeEqualHeight": {
+			"type": "boolean"
+		},
 		"slider": {
 			"type": "boolean"
 		},
