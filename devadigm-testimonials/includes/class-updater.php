@@ -40,6 +40,28 @@ class Updater {
 		add_filter( 'pre_set_site_transient_update_plugins', array( __CLASS__, 'check_for_update' ) );
 		add_filter( 'plugins_api', array( __CLASS__, 'plugin_info' ), 10, 3 );
 		add_filter( 'upgrader_source_selection', array( __CLASS__, 'fix_source_dir' ), 10, 4 );
+
+		/*
+		 * "Check again" on Dashboard > Updates (and WordPress' own scheduled
+		 * check) both work by deleting WordPress' own update_plugins
+		 * transient, which is what makes every plugin's update check re-run -
+		 * but our own GitHub lookup is cached in a second, separate transient
+		 * with its own twelve-hour lifetime, so a "check again" click did not
+		 * reach it: WordPress' cache cleared, ours did not, and
+		 * check_for_update() kept returning whatever version was cached
+		 * against WordPress' now-fresh check. Clearing ours on the same
+		 * action WordPress fires when its own transient is deleted is what
+		 * makes "check again" actually mean "check again" here too.
+		 */
+		add_action( 'delete_site_transient_update_plugins', array( __CLASS__, 'clear_cache' ) );
+	}
+
+	/**
+	 * Drop the cached GitHub lookup so the next update check hits the API
+	 * again instead of reusing a possibly-stale result.
+	 */
+	public static function clear_cache(): void {
+		delete_site_transient( self::VERSION_CACHE_KEY );
 	}
 
 	/**

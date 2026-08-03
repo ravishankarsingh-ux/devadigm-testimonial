@@ -4,6 +4,26 @@ All notable changes to this plugin are documented here. Version numbers follow
 [Semantic Versioning](https://semver.org/): MAJOR for breaking changes, MINOR
 for new features that stay backward-compatible, PATCH for fixes.
 
+## 1.5.1 - 2026-08-03
+
+### Fixed
+
+- **"Check again" on Dashboard > Updates did not actually check again.**
+  WordPress' own update check works by deleting its `update_plugins`
+  transient, which is what makes every plugin's update check re-run - but
+  this plugin's GitHub lookup was cached in a second, separate transient
+  with its own twelve-hour lifetime, and nothing cleared that one when
+  WordPress cleared its own. A site sitting on an older version, checking
+  again after a new release was tagged, could keep seeing "no update
+  available" for up to twelve hours regardless of how many times "check
+  again" was clicked. The plugin now clears its own cached result whenever
+  WordPress clears its, so a manual check-again (or WordPress' own
+  scheduled check) reaches GitHub immediately rather than reusing a
+  possibly-stale answer. Verified directly: seeded a stale cached result,
+  triggered WordPress' own cache-clear, and confirmed both the plugin's
+  cache clears and the very next lookup reaches GitHub and finds the real
+  latest tag.
+
 ## 1.5.0 - 2026-08-03
 
 ### Added

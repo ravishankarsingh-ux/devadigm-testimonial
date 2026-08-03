@@ -4,7 +4,7 @@ Tags: testimonials, reviews, social proof, block, slider
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.5.0
+Stable tag: 1.5.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -91,6 +91,13 @@ front-end script is a plain ES module, so the plugin runs straight from the zip.
 == Changelog ==
 
 See CHANGELOG.md for full detail. Summary:
+
+= 1.5.1 =
+* Fixed: "Check again" on Dashboard > Updates did not actually re-check
+  GitHub for a new release, because the plugin's own GitHub lookup was
+  cached separately from WordPress' own update check and nothing cleared it
+  at the same time. A site could see "no update available" for up to twelve
+  hours after a new release, no matter how many times it checked again.
 
 = 1.5.0 =
 * Added: an "Equal card height" toggle for Marquee, so every card in the
