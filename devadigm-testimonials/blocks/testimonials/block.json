@@ -136,6 +136,12 @@
 		"quoteScale": {
 			"type": "number"
 		},
+		"quoteWeight": {
+			"type": "number"
+		},
+		"quoteItalic": {
+			"type": "boolean"
+		},
 		"markScale": {
 			"type": "number"
 		}

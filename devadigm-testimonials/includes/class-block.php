@@ -208,6 +208,18 @@ final class Block {
 		if ( isset( $attributes['markScale'] ) && is_numeric( $attributes['markScale'] ) && (float) $attributes['markScale'] > 0 ) {
 			$out .= '--dvdm-mark-scale:' . (float) $attributes['markScale'] . ';';
 		}
+		if ( isset( $attributes['quoteWeight'] ) && is_numeric( $attributes['quoteWeight'] ) ) {
+			$out .= '--dvdm-quote-weight:' . max( 100, min( 900, (int) $attributes['quoteWeight'] ) ) . ';';
+		}
+		/*
+		 * `isset()`, not `!empty()` - `false` is a real, deliberate choice here
+		 * (force upright even if the site default is italic), not an absent
+		 * one, and `!empty()` would treat it the same as never having touched
+		 * the toggle at all.
+		 */
+		if ( isset( $attributes['quoteItalic'] ) ) {
+			$out .= '--dvdm-quote-style:' . ( $attributes['quoteItalic'] ? 'italic' : 'normal' ) . ';';
+		}
 		/*
 		 * Unlike the scales above, columns is always written. $attributes has
 		 * already been through Renderer::normalise() by the time it reaches

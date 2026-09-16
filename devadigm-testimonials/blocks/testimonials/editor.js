@@ -550,6 +550,27 @@
 						},
 					} ),
 					el( RangeControl, {
+						label: __( 'Quote weight', 'devadigm-testimonials' ),
+						value: a.quoteWeight,
+						min: 100,
+						max: 900,
+						step: 50,
+						allowReset: true,
+						help: __( 'Leave unset to use the site default.', 'devadigm-testimonials' ),
+						__nextHasNoMarginBottom: true,
+						onChange: function ( next ) {
+							set( { quoteWeight: next } );
+						},
+					} ),
+					el( ToggleControl, {
+						label: __( 'Italic quote', 'devadigm-testimonials' ),
+						checked: !! a.quoteItalic,
+						__nextHasNoMarginBottom: true,
+						onChange: function ( next ) {
+							set( { quoteItalic: next } );
+						},
+					} ),
+					el( RangeControl, {
 						label: __( 'Mark size scale', 'devadigm-testimonials' ),
 						value: a.markScale || 1,
 						min: 0.5,

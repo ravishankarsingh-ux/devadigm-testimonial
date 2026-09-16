@@ -4,6 +4,17 @@ All notable changes to this plugin are documented here. Version numbers follow
 [Semantic Versioning](https://semver.org/): MAJOR for breaking changes, MINOR
 for new features that stay backward-compatible, PATCH for fixes.
 
+## 1.8.0 - 2026-09-16
+
+### Added
+
+- **Quote weight and italic, as a per-block override.** Both already existed
+  as site-wide defaults on the Design screen; they now also appear in the
+  block's own Appearance panel ("Quote weight", "Italic quote"), matching
+  quote size, quote colour and quote typeface, which already worked in both
+  places. A single block can now override every aspect of its own quote
+  typography without touching the site-wide default.
+
 ## 1.7.4 - 2026-09-16
 
 ### Fixed

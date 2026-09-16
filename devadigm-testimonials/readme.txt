@@ -4,7 +4,7 @@ Tags: testimonials, reviews, social proof, block, slider
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.7.4
+Stable tag: 1.8.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,11 @@ front-end script is a plain ES module, so the plugin runs straight from the zip.
 == Changelog ==
 
 See CHANGELOG.md for full detail. Summary:
+
+= 1.8.0 =
+* Added: Quote weight and italic are now also available as a per-block
+  override in the Appearance panel, alongside quote size, colour and
+  typeface, which already worked both site-wide and per block.
 
 = 1.7.4 =
 * Fixed: Twin corners' marks were still overlapping the quote after two
