@@ -225,6 +225,12 @@ final class Block {
 		if ( isset( $attributes['clampLines'] ) && is_numeric( $attributes['clampLines'] ) ) {
 			$out .= '--dvdm-clamp-lines:' . max( 2, min( 20, (int) $attributes['clampLines'] ) ) . ';';
 		}
+		if ( isset( $attributes['borderWidth'] ) && is_numeric( $attributes['borderWidth'] ) ) {
+			$out .= '--dvdm-border-width:' . max( 0, min( 12, (int) $attributes['borderWidth'] ) ) . 'px;';
+		}
+		if ( isset( $attributes['borderRadius'] ) && is_numeric( $attributes['borderRadius'] ) ) {
+			$out .= '--dvdm-border-radius:' . max( 0, min( 48, (int) $attributes['borderRadius'] ) ) . 'px;';
+		}
 
 		return $out;
 	}

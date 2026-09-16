@@ -4,7 +4,7 @@ Tags: testimonials, reviews, social proof, block, slider
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.6.0
+Stable tag: 1.7.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,16 @@ front-end script is a plain ES module, so the plugin runs straight from the zip.
 == Changelog ==
 
 See CHANGELOG.md for full detail. Summary:
+
+= 1.7.0 =
+* Fixed: Ledger and Drop-cap fusion could render the quotation mark on top
+  of the quote text when a theme's own blockquote styling overrode the
+  layout this plugin needs for them. Both are now protected against that.
+* Added: Border width and border radius, as a site-wide default and as a
+  per-block override.
+* Changed: The Design screen now shows layout, colours and the quote
+  typeface up front; slider timing, glyph tuning, icon sets and other
+  less common settings move into collapsed sections lower on the page.
 
 = 1.6.0 =
 * Added: Twin corners quotation mark - a bordered card with the opening

@@ -4,6 +4,40 @@ All notable changes to this plugin are documented here. Version numbers follow
 [Semantic Versioning](https://semver.org/): MAJOR for breaking changes, MINOR
 for new features that stay backward-compatible, PATCH for fixes.
 
+## 1.7.0 - 2026-09-16
+
+### Fixed
+
+- **Ledger and Drop-cap fusion could render the quotation mark on top of the
+  quote text instead of beside it.** Both rely on the `<blockquote>` running
+  a specific layout (a two-column grid for Ledger, a float for Drop-cap
+  fusion) that a theme's own typography reset can silently override, since
+  `blockquote` is one of the most commonly styled elements in a theme. Once
+  overridden, the oversized mark - sized well past a normal line box on
+  purpose - had no column or float to sit inside and printed straight over
+  the first lines of the quote instead. Both layout properties are now
+  `!important`, along with the quote's own margin/padding/border reset,
+  so this plugin's own layout for the mark cannot be quietly overridden by
+  the surrounding theme.
+
+### Added
+
+- **Border width and radius, site-wide and per block.** New "Border width"
+  and "Border radius" fields on the Design screen (Colours section), plus
+  matching controls in the block's own Appearance panel for a per-instance
+  override - covers Grid, Marquee and Twin corners cards.
+
+### Changed
+
+- **The Design screen is reorganised around how often a field actually gets
+  touched.** Layout, colours (including the two new border fields) and the
+  quote typeface stay on the main screen. Everything else - slider timing,
+  long-quote thresholds, quotation-mark glyph tuning, icon sets, avatar
+  shape, schema and custom CSS - moves into named, collapsed sections
+  further down the same page. Nothing is removed; a project that needs one
+  of those still has it, without it competing for attention with the
+  handful of fields every project touches.
+
 ## 1.6.0 - 2026-09-16
 
 ### Added

@@ -46,3 +46,39 @@
 .dvdm-settings select {
 	max-width: 24em;
 }
+
+/*
+ * The rarely-touched sections (glyph tuning, icon sets, slider timing and so
+ * on) are real settings, not clutter to delete - a specific client project
+ * does sometimes need one of them. Collapsing them behind <summary> keeps the
+ * screen a handful of fields for the common case (layout, colours, font)
+ * without removing anything a less common one needs.
+ */
+.dvdm-more {
+	max-width: 62em;
+	margin-top: 1.5em;
+	padding: 0.9em 1.2em;
+	background: #fff;
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+}
+
+.dvdm-more + .dvdm-more {
+	margin-top: 0.75em;
+}
+
+.dvdm-more summary {
+	cursor: pointer;
+	font-weight: 600;
+	padding: 0.2em 0;
+}
+
+.dvdm-more[open] summary {
+	margin-bottom: 0.5em;
+	border-bottom: 1px solid #dcdcde;
+	padding-bottom: 0.7em;
+}
+
+.dvdm-more .form-table {
+	margin-top: 0;
+}

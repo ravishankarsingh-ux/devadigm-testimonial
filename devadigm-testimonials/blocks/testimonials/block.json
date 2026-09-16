@@ -119,6 +119,12 @@
 			"type": "string",
 			"default": ""
 		},
+		"borderWidth": {
+			"type": "number"
+		},
+		"borderRadius": {
+			"type": "number"
+		},
 		"quoteFont": {
 			"type": "string",
 			"default": ""

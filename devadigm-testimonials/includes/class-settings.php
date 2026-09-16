@@ -163,6 +163,8 @@ final class Settings {
 			'star_color'       => '',
 			'surface_color'    => '',
 			'border_color'     => '',
+			'border_width'     => '1',
+			'border_radius'    => '0',
 
 			// Typography.
 			'quote_font'       => '',
@@ -323,6 +325,8 @@ final class Settings {
 				'star_set'        => ( 'custom' === $value || array_key_exists( (string) $value, self::star_sets() ) ) ? (string) $value : $defaults[ $key ],
 				'avatar_shape'    => in_array( $value, array( 'circle', 'rounded', 'square' ), true ) ? (string) $value : $defaults[ $key ],
 				'quote_scale', 'mark_scale' => (string) self::clamp_float( $value, 0.5, 3.0, 1.0 ),
+				'border_width'    => (string) (int) self::clamp_float( $value, 0, 12, 1 ),
+				'border_radius'   => (string) (int) self::clamp_float( $value, 0, 48, 0 ),
 				'default_columns' => (string) (int) self::clamp_float( $value, 1, 6, 3 ),
 				'slider_autoplay' => (string) (int) self::clamp_float( $value, 0, 30, 0 ),
 				'excerpt_words'   => (string) (int) self::clamp_float( $value, 8, 120, 28 ),
@@ -471,7 +475,7 @@ final class Settings {
 				?>
 			</p>
 			<p class="description dvdm-intro">
-				<?php esc_html_e( 'Every field below defaults to inheriting from your theme. Override only what you need. Individual blocks can override these values again in the editor.', 'devadigm-testimonials' ); ?>
+				<?php esc_html_e( 'Every field below defaults to inheriting from your theme. Override only what you need here for a site-wide default - an individual block can override any of it again for just that one placement, from its own Appearance panel in the editor.', 'devadigm-testimonials' ); ?>
 			</p>
 
 			<form method="post" action="options.php">
@@ -483,59 +487,6 @@ final class Settings {
 					self::select_row( __( 'Default layout', 'devadigm-testimonials' ), 'default_layout', self::layouts(), (string) $s['default_layout'] );
 					self::select_row( __( 'Default quotation mark', 'devadigm-testimonials' ), 'default_mark', self::mark_styles(), (string) $s['default_mark'] );
 					self::number_row( __( 'Default columns', 'devadigm-testimonials' ), 'default_columns', (string) $s['default_columns'], '1', '6', '1', __( 'How many sit in a row, on any layout except Marquee - Spotlight and Inline included. Columns drop automatically when there is not room for them. Any block can set its own count instead.', 'devadigm-testimonials' ) );
-					?>
-				</table>
-
-				<h2 class="title"><?php esc_html_e( 'Slider', 'devadigm-testimonials' ); ?></h2>
-				<p class="description dvdm-note">
-					<?php esc_html_e( 'Sliding is a property of a layout, not a layout of its own, and works on any of them except Marquee. Turn it on per block; how many are visible at once comes from the Columns setting on that same block. These are the site-wide defaults for how a slider behaves.', 'devadigm-testimonials' ); ?>
-				</p>
-				<table class="form-table" role="presentation">
-					<?php
-					self::checkbox_row(
-						__( 'Loop back to the start', 'devadigm-testimonials' ),
-						'slider_loop',
-						(bool) $s['slider_loop'],
-						__( 'With this off, the arrows stop at the first and last slide.', 'devadigm-testimonials' )
-					);
-					self::number_row(
-						__( 'Advance automatically after', 'devadigm-testimonials' ),
-						'slider_autoplay',
-						(string) $s['slider_autoplay'],
-						'0',
-						'30',
-						'1',
-						__( 'Seconds. Zero switches autoplay off, which is the default. When on, a pause button appears, autoplay stops as soon as anyone interacts, and it never starts for visitors who ask for reduced motion.', 'devadigm-testimonials' )
-					);
-					?>
-				</table>
-
-				<h2 class="title"><?php esc_html_e( 'Long quotes', 'devadigm-testimonials' ); ?></h2>
-				<table class="form-table" role="presentation">
-					<?php
-					self::checkbox_row(
-						__( 'Shorten long quotes in cards', 'devadigm-testimonials' ),
-						'read_more',
-						(bool) $s['read_more'],
-						__( 'Applies whenever a testimonial has others beside it - more than one column, on any layout, or Marquee - where uneven quote lengths make the row ragged. Long quotes are trimmed to a set number of lines with a Read more link that opens the full quote. Short quotes are left alone.', 'devadigm-testimonials' )
-					);
-					self::number_row(
-						__( 'Treat as long past', 'devadigm-testimonials' ),
-						'excerpt_words',
-						(string) $s['excerpt_words'],
-						'8',
-						'120',
-						'1',
-						__( 'Words. Quotes shorter than this never get a Read more link.', 'devadigm-testimonials' )
-					);
-					self::number_row(
-						__( 'Lines shown before trimming', 'devadigm-testimonials' ),
-						'clamp_lines',
-						(string) $s['clamp_lines'],
-						'2',
-						'20',
-						'1'
-					);
 					?>
 				</table>
 
@@ -562,6 +513,8 @@ final class Settings {
 					self::colour_row( __( 'Rating icons', 'devadigm-testimonials' ), 'star_color', (string) $s['star_color'] );
 					self::colour_row( __( 'Card background', 'devadigm-testimonials' ), 'surface_color', (string) $s['surface_color'] );
 					self::colour_row( __( 'Borders', 'devadigm-testimonials' ), 'border_color', (string) $s['border_color'] );
+					self::number_row( __( 'Border width', 'devadigm-testimonials' ), 'border_width', (string) $s['border_width'], '0', '12', '1', __( 'Pixels. Applies to Grid, Marquee and Twin corners cards. Zero removes the border entirely.', 'devadigm-testimonials' ) );
+					self::number_row( __( 'Border radius', 'devadigm-testimonials' ), 'border_radius', (string) $s['border_radius'], '0', '48', '1', __( 'Pixels, on card corners and the rating/badge ring.', 'devadigm-testimonials' ) );
 					?>
 				</table>
 				<p class="description dvdm-note">
@@ -574,72 +527,148 @@ final class Settings {
 					self::font_row( __( 'Quote typeface', 'devadigm-testimonials' ), 'quote_font', (string) $s['quote_font'] );
 					self::font_row( __( 'Name and meta typeface', 'devadigm-testimonials' ), 'body_font', (string) $s['body_font'] );
 					self::number_row( __( 'Quote size scale', 'devadigm-testimonials' ), 'quote_scale', (string) $s['quote_scale'], '0.5', '3', '0.05', __( 'Multiplies the quote size. 1 keeps the built-in scale.', 'devadigm-testimonials' ) );
-					self::number_row( __( 'Quote weight', 'devadigm-testimonials' ), 'quote_weight', (string) $s['quote_weight'], '100', '900', '50', __( 'Leave empty to inherit the typeface default.', 'devadigm-testimonials' ) );
-					self::checkbox_row( __( 'Italic quotes', 'devadigm-testimonials' ), 'quote_italic', (bool) $s['quote_italic'] );
 					?>
 				</table>
 
-				<h2 class="title"><?php esc_html_e( 'Quotation mark', 'devadigm-testimonials' ); ?></h2>
-				<table class="form-table" role="presentation">
-					<?php
-					$glyphs = array();
-					foreach ( self::glyph_presets() as $key => $glyph ) {
-						$glyphs[ $key ] = $glyph . '  ' . $key;
-					}
-					$glyphs['custom'] = __( 'Custom character', 'devadigm-testimonials' );
-					self::select_row( __( 'Glyph', 'devadigm-testimonials' ), 'mark_glyph_set', $glyphs, (string) $s['mark_glyph_set'] );
-					self::text_row( __( 'Custom glyph', 'devadigm-testimonials' ), 'mark_glyph_custom', (string) $s['mark_glyph_custom'], __( 'Used when Glyph is set to Custom character.', 'devadigm-testimonials' ) );
-					self::checkbox_row( __( 'Pick the glyph from the site language', 'devadigm-testimonials' ), 'mark_auto_locale', (bool) $s['mark_auto_locale'], __( 'German opens with a low quote, French uses guillemets. Overrides the glyph choice above.', 'devadigm-testimonials' ) );
-					self::colour_row( __( 'Mark colour', 'devadigm-testimonials' ), 'mark_color', (string) $s['mark_color'], __( 'Falls back to the accent colour.', 'devadigm-testimonials' ) );
-					self::number_row( __( 'Mark size scale', 'devadigm-testimonials' ), 'mark_scale', (string) $s['mark_scale'], '0.5', '3', '0.05' );
-					self::number_row( __( 'Mark opacity', 'devadigm-testimonials' ), 'mark_opacity', (string) $s['mark_opacity'], '0', '1', '0.01' );
-					?>
-				</table>
+				<h2 class="title"><?php esc_html_e( 'More settings', 'devadigm-testimonials' ); ?></h2>
+				<p class="description dvdm-note">
+					<?php esc_html_e( 'Everything above covers most sites. These are here when a specific project needs them - each one is still a plain site-wide default, and any block can override it.', 'devadigm-testimonials' ); ?>
+				</p>
 
-				<h2 class="title"><?php esc_html_e( 'Icons', 'devadigm-testimonials' ); ?></h2>
-				<table class="form-table" role="presentation">
-					<?php
-					$sets = array();
-					foreach ( self::star_sets() as $key => $set ) {
-						$sets[ $key ] = $set[0] . $set[1] . '  ' . $set['label'];
-					}
-					$sets['custom'] = __( 'Custom characters', 'devadigm-testimonials' );
-					self::select_row( __( 'Rating icons', 'devadigm-testimonials' ), 'star_set', $sets, (string) $s['star_set'] );
-					self::text_row( __( 'Custom filled icon', 'devadigm-testimonials' ), 'star_custom_full', (string) $s['star_custom_full'] );
-					self::text_row( __( 'Custom empty icon', 'devadigm-testimonials' ), 'star_custom_empty', (string) $s['star_custom_empty'] );
-					self::select_row(
-						__( 'Avatar shape', 'devadigm-testimonials' ),
-						'avatar_shape',
-						array(
-							'circle'  => __( 'Circle', 'devadigm-testimonials' ),
-							'rounded' => __( 'Rounded', 'devadigm-testimonials' ),
-							'square'  => __( 'Square', 'devadigm-testimonials' ),
-						),
-						(string) $s['avatar_shape']
-					);
-					self::text_row( __( 'Previous arrow', 'devadigm-testimonials' ), 'arrow_prev', (string) $s['arrow_prev'] );
-					self::text_row( __( 'Next arrow', 'devadigm-testimonials' ), 'arrow_next', (string) $s['arrow_next'] );
-					?>
-				</table>
+				<details class="dvdm-more">
+					<summary><?php esc_html_e( 'Typography details - weight, italics', 'devadigm-testimonials' ); ?></summary>
+					<table class="form-table" role="presentation">
+						<?php
+						self::number_row( __( 'Quote weight', 'devadigm-testimonials' ), 'quote_weight', (string) $s['quote_weight'], '100', '900', '50', __( 'Leave empty to inherit the typeface default.', 'devadigm-testimonials' ) );
+						self::checkbox_row( __( 'Italic quotes', 'devadigm-testimonials' ), 'quote_italic', (bool) $s['quote_italic'] );
+						?>
+					</table>
+				</details>
 
-				<h2 class="title"><?php esc_html_e( 'Advanced', 'devadigm-testimonials' ); ?></h2>
-				<table class="form-table" role="presentation">
-					<?php
-					self::checkbox_row(
-						__( 'Output review schema', 'devadigm-testimonials' ),
-						'enable_schema',
-						(bool) $s['enable_schema'],
-						__( 'Off by default on purpose. Google treats review markup on your own business pages as self-serving and will not show stars for it, and marking up imported third-party reviews as first-party breaks their policy. Turn this on only for pages reviewing a specific product or service.', 'devadigm-testimonials' )
-					);
-					?>
-					<tr>
-						<th scope="row"><label for="dvdm_custom_css"><?php esc_html_e( 'Custom CSS', 'devadigm-testimonials' ); ?></label></th>
-						<td>
-							<textarea id="dvdm_custom_css" name="<?php echo esc_attr( OPTION_KEY ); ?>[custom_css]" rows="6" class="large-text code"><?php echo esc_textarea( (string) $s['custom_css'] ); ?></textarea>
-							<p class="description"><?php esc_html_e( 'Applied after the plugin stylesheet. Scope rules to .dvdm-t so they cannot leak into the rest of the page.', 'devadigm-testimonials' ); ?></p>
-						</td>
-					</tr>
-				</table>
+				<details class="dvdm-more">
+					<summary><?php esc_html_e( 'Slider behaviour', 'devadigm-testimonials' ); ?></summary>
+					<p class="description dvdm-note">
+						<?php esc_html_e( 'Sliding is a property of a layout, not a layout of its own, and works on any of them except Marquee. Turn it on per block; how many are visible at once comes from the Columns setting on that same block. These are the site-wide defaults for how a slider behaves.', 'devadigm-testimonials' ); ?>
+					</p>
+					<table class="form-table" role="presentation">
+						<?php
+						self::checkbox_row(
+							__( 'Loop back to the start', 'devadigm-testimonials' ),
+							'slider_loop',
+							(bool) $s['slider_loop'],
+							__( 'With this off, the arrows stop at the first and last slide.', 'devadigm-testimonials' )
+						);
+						self::number_row(
+							__( 'Advance automatically after', 'devadigm-testimonials' ),
+							'slider_autoplay',
+							(string) $s['slider_autoplay'],
+							'0',
+							'30',
+							'1',
+							__( 'Seconds. Zero switches autoplay off, which is the default. When on, a pause button appears, autoplay stops as soon as anyone interacts, and it never starts for visitors who ask for reduced motion.', 'devadigm-testimonials' )
+						);
+						self::text_row( __( 'Previous arrow', 'devadigm-testimonials' ), 'arrow_prev', (string) $s['arrow_prev'] );
+						self::text_row( __( 'Next arrow', 'devadigm-testimonials' ), 'arrow_next', (string) $s['arrow_next'] );
+						?>
+					</table>
+				</details>
+
+				<details class="dvdm-more">
+					<summary><?php esc_html_e( 'Long quotes', 'devadigm-testimonials' ); ?></summary>
+					<table class="form-table" role="presentation">
+						<?php
+						self::checkbox_row(
+							__( 'Shorten long quotes in cards', 'devadigm-testimonials' ),
+							'read_more',
+							(bool) $s['read_more'],
+							__( 'Applies whenever a testimonial has others beside it - more than one column, on any layout, or Marquee - where uneven quote lengths make the row ragged. Long quotes are trimmed to a set number of lines with a Read more link that opens the full quote. Short quotes are left alone.', 'devadigm-testimonials' )
+						);
+						self::number_row(
+							__( 'Treat as long past', 'devadigm-testimonials' ),
+							'excerpt_words',
+							(string) $s['excerpt_words'],
+							'8',
+							'120',
+							'1',
+							__( 'Words. Quotes shorter than this never get a Read more link.', 'devadigm-testimonials' )
+						);
+						self::number_row(
+							__( 'Lines shown before trimming', 'devadigm-testimonials' ),
+							'clamp_lines',
+							(string) $s['clamp_lines'],
+							'2',
+							'20',
+							'1'
+						);
+						?>
+					</table>
+				</details>
+
+				<details class="dvdm-more">
+					<summary><?php esc_html_e( 'Quotation mark details - glyph, size, opacity', 'devadigm-testimonials' ); ?></summary>
+					<table class="form-table" role="presentation">
+						<?php
+						$glyphs = array();
+						foreach ( self::glyph_presets() as $key => $glyph ) {
+							$glyphs[ $key ] = $glyph . '  ' . $key;
+						}
+						$glyphs['custom'] = __( 'Custom character', 'devadigm-testimonials' );
+						self::select_row( __( 'Glyph', 'devadigm-testimonials' ), 'mark_glyph_set', $glyphs, (string) $s['mark_glyph_set'] );
+						self::text_row( __( 'Custom glyph', 'devadigm-testimonials' ), 'mark_glyph_custom', (string) $s['mark_glyph_custom'], __( 'Used when Glyph is set to Custom character.', 'devadigm-testimonials' ) );
+						self::checkbox_row( __( 'Pick the glyph from the site language', 'devadigm-testimonials' ), 'mark_auto_locale', (bool) $s['mark_auto_locale'], __( 'German opens with a low quote, French uses guillemets. Overrides the glyph choice above.', 'devadigm-testimonials' ) );
+						self::colour_row( __( 'Mark colour', 'devadigm-testimonials' ), 'mark_color', (string) $s['mark_color'], __( 'Falls back to the accent colour.', 'devadigm-testimonials' ) );
+						self::number_row( __( 'Mark size scale', 'devadigm-testimonials' ), 'mark_scale', (string) $s['mark_scale'], '0.5', '3', '0.05' );
+						self::number_row( __( 'Mark opacity', 'devadigm-testimonials' ), 'mark_opacity', (string) $s['mark_opacity'], '0', '1', '0.01' );
+						?>
+					</table>
+				</details>
+
+				<details class="dvdm-more">
+					<summary><?php esc_html_e( 'Icons and avatar', 'devadigm-testimonials' ); ?></summary>
+					<table class="form-table" role="presentation">
+						<?php
+						$sets = array();
+						foreach ( self::star_sets() as $key => $set ) {
+							$sets[ $key ] = $set[0] . $set[1] . '  ' . $set['label'];
+						}
+						$sets['custom'] = __( 'Custom characters', 'devadigm-testimonials' );
+						self::select_row( __( 'Rating icons', 'devadigm-testimonials' ), 'star_set', $sets, (string) $s['star_set'] );
+						self::text_row( __( 'Custom filled icon', 'devadigm-testimonials' ), 'star_custom_full', (string) $s['star_custom_full'] );
+						self::text_row( __( 'Custom empty icon', 'devadigm-testimonials' ), 'star_custom_empty', (string) $s['star_custom_empty'] );
+						self::select_row(
+							__( 'Avatar shape', 'devadigm-testimonials' ),
+							'avatar_shape',
+							array(
+								'circle'  => __( 'Circle', 'devadigm-testimonials' ),
+								'rounded' => __( 'Rounded', 'devadigm-testimonials' ),
+								'square'  => __( 'Square', 'devadigm-testimonials' ),
+							),
+							(string) $s['avatar_shape']
+						);
+						?>
+					</table>
+				</details>
+
+				<details class="dvdm-more">
+					<summary><?php esc_html_e( 'Advanced - schema, custom CSS', 'devadigm-testimonials' ); ?></summary>
+					<table class="form-table" role="presentation">
+						<?php
+						self::checkbox_row(
+							__( 'Output review schema', 'devadigm-testimonials' ),
+							'enable_schema',
+							(bool) $s['enable_schema'],
+							__( 'Off by default on purpose. Google treats review markup on your own business pages as self-serving and will not show stars for it, and marking up imported third-party reviews as first-party breaks their policy. Turn this on only for pages reviewing a specific product or service.', 'devadigm-testimonials' )
+						);
+						?>
+						<tr>
+							<th scope="row"><label for="dvdm_custom_css"><?php esc_html_e( 'Custom CSS', 'devadigm-testimonials' ); ?></label></th>
+							<td>
+								<textarea id="dvdm_custom_css" name="<?php echo esc_attr( OPTION_KEY ); ?>[custom_css]" rows="6" class="large-text code"><?php echo esc_textarea( (string) $s['custom_css'] ); ?></textarea>
+								<p class="description"><?php esc_html_e( 'Applied after the plugin stylesheet. Scope rules to .dvdm-t so they cannot leak into the rest of the page.', 'devadigm-testimonials' ); ?></p>
+							</td>
+						</tr>
+					</table>
+				</details>
 
 				<?php submit_button(); ?>
 			</form>

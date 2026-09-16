@@ -57,15 +57,27 @@
 	}
 
 	$( function () {
+		/*
+		 * The less common fields live inside a collapsed <details> (see
+		 * class-settings.php). A colour field already set to a custom value
+		 * still needs wiring on page load - wpColorPicker() just cannot
+		 * actually build the widget yet: Iris measures the container's width
+		 * to lay itself out, and a closed <details> reports zero for
+		 * anything inside it, leaving the picker with a collapsed, broken
+		 * layout even after the section is opened. Building it the moment
+		 * its own <details> opens instead avoids ever measuring a hidden
+		 * container.
+		 */
 		$( '.dvdm-colour-cell' ).each( function () {
 			var $cell = $( this );
-			var started = false;
+			var $details = $cell.closest( '.dvdm-more' );
+			var built = false;
 
-			var sync = wire( $cell, 'colour', function ( $custom ) {
-				if ( started ) {
+			function build( $custom ) {
+				if ( built || ( $details.length && ! $details.prop( 'open' ) ) ) {
 					return;
 				}
-				started = true;
+				built = true;
 
 				$custom.wpColorPicker( {
 					change: function ( event, ui ) {
@@ -75,9 +87,18 @@
 						$cell.find( '.dvdm-colour-value' ).val( '' );
 					},
 				} );
-			} );
+			}
 
+			var sync = wire( $cell, 'colour', build );
 			sync();
+
+			if ( $details.length ) {
+				$details.on( 'toggle', function () {
+					if ( this.open ) {
+						build( $cell.find( '.dvdm-colour-custom' ) );
+					}
+				} );
+			}
 		} );
 
 		$( '.dvdm-font-cell' ).each( function () {

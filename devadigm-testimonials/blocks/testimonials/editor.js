@@ -496,6 +496,30 @@
 							set( { borderColor: next } );
 						},
 					} ),
+					el( RangeControl, {
+						label: __( 'Border width', 'devadigm-testimonials' ),
+						value: a.borderWidth,
+						min: 0,
+						max: 12,
+						allowReset: true,
+						help: __( 'Leave unset to use the site default.', 'devadigm-testimonials' ),
+						__nextHasNoMarginBottom: true,
+						onChange: function ( next ) {
+							set( { borderWidth: next } );
+						},
+					} ),
+					el( RangeControl, {
+						label: __( 'Border radius', 'devadigm-testimonials' ),
+						value: a.borderRadius,
+						min: 0,
+						max: 48,
+						allowReset: true,
+						help: __( 'Leave unset to use the site default.', 'devadigm-testimonials' ),
+						__nextHasNoMarginBottom: true,
+						onChange: function ( next ) {
+							set( { borderRadius: next } );
+						},
+					} ),
 					el( PairedControl, {
 						label: __( 'Quote typeface', 'devadigm-testimonials' ),
 						value: a.quoteFont || '',

@@ -40,10 +40,21 @@
 	color: inherit;
 }
 
+/*
+ * `!important` on the reset properties only. A `<blockquote>` is one of the
+ * most commonly theme-styled elements on the web - client themes routinely
+ * give it a left border, a background tint or generous margin as part of the
+ * theme's own typography defaults - and those rules can carry higher
+ * specificity or simply load after this stylesheet. Without `!important`
+ * here, a theme's own blockquote styling has silently bled into a card on
+ * more than one real install: a stray border down the side, a margin pushing
+ * the quote off-centre, or theme-supplied quote marks doubling up with this
+ * plugin's own. This block owns its own reset unconditionally.
+ */
 .dvdm-t__quote {
-	margin: 0;
-	padding: 0;
-	border: 0;
+	margin: 0 !important;
+	padding: 0 !important;
+	border: 0 !important;
 	quotes: none;
 	color: var( --dvdm-quote-color, inherit );
 	font-family: var( --dvdm-quote-font, inherit );
@@ -213,8 +224,10 @@
 .dvdm-t--grid .dvdm-t__item,
 .dvdm-t--marquee .dvdm-t__item {
 	background: var( --dvdm-surface, transparent );
-	border: 1px solid var( --dvdm-border, currentColor );
+	border-style: solid;
+	border-width: var( --dvdm-border-width, 1px );
 	border-color: color-mix( in srgb, var( --dvdm-border, currentColor ) 22%, transparent );
+	border-radius: var( --dvdm-border-radius, 0 );
 	padding: 1.35em;
 }
 
@@ -448,9 +461,19 @@
  * "left double quotation mark" before every testimonial.
  */
 
-/* Ledger: oversized mark hanging outside the text measure. */
+/*
+ * Ledger: oversized mark hanging outside the text measure.
+ *
+ * `display: grid !important` for the same reason the reset above needs it: a
+ * theme's own `blockquote { display: block; }` (common - many typography
+ * resets touch it) otherwise wins the cascade and collapses this to a single
+ * column. Collapsed, the ::before glyph below - sized at over 2em and given
+ * no box of its own to occupy - stops reserving a column and instead prints
+ * as oversized inline content directly in front of the first line of the
+ * quote, appearing to sit on top of the text rather than beside it.
+ */
 .dvdm-mark--ledger .dvdm-t__quote {
-	display: grid;
+	display: grid !important;
 	grid-template-columns: auto minmax( 0, 1fr );
 	gap: 0.35em;
 	align-items: start;
@@ -567,10 +590,16 @@
 	opacity: var( --dvdm-mark-opacity, 1 );
 }
 
-/* Drop-cap fusion: the mark and the first letter set as one cluster. */
+/*
+ * Drop-cap fusion: the mark and the first letter set as one cluster.
+ * `float` is `!important` for the same theme-collision reason as Ledger's
+ * `display` above - a theme resetting `blockquote { float: none; }` would
+ * otherwise leave this oversized glyph sitting inline at full size rather
+ * than floated beside the text it belongs next to.
+ */
 .dvdm-mark--dropcap .dvdm-t__quote::before {
 	content: var( --dvdm-glyph, "\201C" );
-	float: inline-start;
+	float: inline-start !important;
 	font-family: var( --dvdm-quote-font, inherit );
 	font-size: calc( 3em * var( --dvdm-mark-scale, 1 ) );
 	line-height: 0.85;
@@ -647,8 +676,17 @@
 .dvdm-mark--twin .dvdm-t__item {
 	position: relative;
 	overflow: hidden;
-	border: 2px solid var( --dvdm-accent, currentColor );
-	border-radius: 0.6em;
+	/*
+	 * One pixel thicker than the shared border-width setting rather than the
+	 * setting alone - Twin corners reads as a deliberately drawn frame, and
+	 * matching Grid's default 1px made it look like an accidental outline
+	 * rather than the frame the style is named for. Still scales with the
+	 * shared control instead of being a fixed, disconnected number.
+	 */
+	border-style: solid;
+	border-width: calc( var( --dvdm-border-width, 1px ) + 1px );
+	border-color: var( --dvdm-accent, currentColor );
+	border-radius: var( --dvdm-border-radius, 0.6em );
 	padding: 2em 1.75em;
 	background: var( --dvdm-surface, transparent );
 }

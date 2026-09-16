@@ -173,6 +173,8 @@ final class Tokens {
 			'--dvdm-accent-text'    => self::resolve( (string) $s['accent_text'], 'color', 'inherit' ),
 			'--dvdm-star-color'     => self::resolve( (string) $s['star_color'], 'color', 'var(--dvdm-accent)' ),
 			'--dvdm-border'         => self::resolve( (string) $s['border_color'], 'color', 'currentColor' ),
+			'--dvdm-border-width'   => (int) $s['border_width'] . 'px',
+			'--dvdm-border-radius'  => (int) $s['border_radius'] . 'px',
 			'--dvdm-mark-color'     => self::resolve( (string) $s['mark_color'], 'color', 'var(--dvdm-accent)' ),
 			'--dvdm-quote-font'     => self::resolve( (string) $s['quote_font'], 'font-family', 'inherit' ),
 			'--dvdm-body-font'      => self::resolve( (string) $s['body_font'], 'font-family', 'inherit' ),
