@@ -4,7 +4,7 @@ Tags: testimonials, reviews, social proof, block, slider
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.7.2
+Stable tag: 1.7.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,12 @@ front-end script is a plain ES module, so the plugin runs straight from the zip.
 == Changelog ==
 
 See CHANGELOG.md for full detail. Summary:
+
+= 1.7.3 =
+* Fixed: Twin corners' marks were an oversized solid block and the quote
+  text could still overlap them. Marks are now small round icons inset
+  from the card's edges, with padding that fully clears them so the quote
+  and attribution never share their row.
 
 = 1.7.2 =
 * Fixed: Twin corners' marks could vanish behind a theme or page-builder

@@ -664,24 +664,19 @@
 }
 
 /*
- * Twin corners: a bordered card with the opening mark at one corner and its
- * closing counterpart at the diagonally opposite one, each set flush into the
- * corner so it reads as part of the frame rather than floating loose in the
- * padding. Cards alternate which of the two accents leads, on the border,
- * the card's own background tint and both marks, so a row or grid reads as a
- * two-tone checker rather than every card looking identical.
+ * Twin corners: a bordered card with a small round opening-mark icon inset
+ * near one corner and its closing counterpart inset near the diagonally
+ * opposite one. Cards alternate which of the two accents leads, on the
+ * border, the card's own background tint and both icons, so a row or grid
+ * reads as a two-tone checker rather than every card looking identical.
  *
- * The marks are positioned at `inset: 0` with no negative offset and no
- * transform, deliberately - unlike Watermark, which bleeds off the card on
- * purpose and needs its own `overflow: hidden` to clip cleanly, this style
- * cannot assume it owns the nearest clipping box. A theme or page-builder
- * wrapper placed around the block is entirely capable of setting its own
- * `overflow: hidden` somewhere between this card and the viewport - for its
- * own scroll-reveal animation, say - and this plugin has no way to reach out
- * and change a container it did not render. Content is only ever guaranteed
- * to be visible while it stays fully inside this element's own box, which is
- * why every mark here is drawn flush against the inside of the border rather
- * than straddling it.
+ * The icon sits inset from the edges rather than flush against the border -
+ * a first version drawn flush filled most of the corner with a large solid
+ * square, which read as a heavy block rather than a mark. It also stays
+ * fully inside the card's own box with no negative offset or transform, so
+ * it renders correctly regardless of what a theme or page-builder wrapper
+ * around the block sets its own `overflow` to - this plugin has no way to
+ * reach out and change a container it did not render.
  */
 .dvdm-mark--twin .dvdm-t__item {
 	position: relative;
@@ -696,26 +691,27 @@
 	border-width: calc( var( --dvdm-border-width, 1px ) + 1px );
 	border-color: var( --dvdm-accent, currentColor );
 	border-radius: var( --dvdm-border-radius, 0.6em );
-	padding: 3.1em 1.75em;
+	/*
+	 * Top and bottom padding clears the icon's own inset plus its diameter
+	 * (0.9em + 1.9em) with a little air to spare, so the quote and the
+	 * attribution line start below/above the icon rather than beside it -
+	 * the two never occupy the same row, which is what keeps them from
+	 * overlapping regardless of how long the name or quote runs.
+	 */
+	padding: 3.2em 1.75em;
 	background: color-mix( in srgb, var( --dvdm-accent, currentColor ) 6%, var( --dvdm-surface, canvas ) );
 }
 
-/*
- * Each mark is a filled corner tile rather than a circular badge - a shape
- * that can sit flush against two edges of the card at once and still read as
- * "attached to the frame" without needing to cross the border to do it. The
- * matching corner of the border is squared off underneath it (below) so the
- * tile's own square corner lines up with the card's, instead of a rounded
- * card corner poking out from behind a square tile.
- */
 .dvdm-mark--twin .dvdm-t__item::before,
 .dvdm-mark--twin .dvdm-t__item::after {
 	position: absolute;
-	width: 2.6em;
-	height: 2.6em;
+	width: 1.9em;
+	height: 1.9em;
 	display: grid;
+	place-items: center;
+	border-radius: 50%;
 	font-family: var( --dvdm-quote-font, inherit );
-	font-size: calc( 1.05em * var( --dvdm-mark-scale, 1 ) );
+	font-size: calc( 0.95em * var( --dvdm-mark-scale, 1 ) );
 	line-height: 1;
 	opacity: var( --dvdm-mark-opacity, 1 );
 	pointer-events: none;
@@ -723,25 +719,16 @@
 
 .dvdm-mark--twin .dvdm-t__item::before {
 	content: var( --dvdm-glyph, "\201C" );
-	top: 0;
-	inset-inline-start: 0;
-	place-items: start start;
-	padding: 0.3em;
-	/* The tile's own outer corner - the one coinciding with the card's
-	   top-left corner - takes the card's radius, so a rounded card corner
-	   never pokes out from behind a square tile. */
-	border-start-start-radius: var( --dvdm-border-radius, 0.6em );
+	top: 0.9em;
+	inset-inline-start: 0.9em;
 	background: var( --dvdm-accent, currentColor );
 	color: var( --dvdm-accent-contrast, canvas );
 }
 
 .dvdm-mark--twin .dvdm-t__item::after {
 	content: var( --dvdm-glyph-close, "\201D" );
-	bottom: 0;
-	inset-inline-end: 0;
-	place-items: end end;
-	padding: 0.3em;
-	border-end-end-radius: var( --dvdm-border-radius, 0.6em );
+	bottom: 0.9em;
+	inset-inline-end: 0.9em;
 	background: var( --dvdm-accent-b, var( --dvdm-accent, currentColor ) );
 	color: var( --dvdm-accent-contrast, canvas );
 }

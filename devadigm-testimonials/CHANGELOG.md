@@ -4,6 +4,20 @@ All notable changes to this plugin are documented here. Version numbers follow
 [Semantic Versioning](https://semver.org/): MAJOR for breaking changes, MINOR
 for new features that stay backward-compatible, PATCH for fixes.
 
+## 1.7.3 - 2026-09-16
+
+### Fixed
+
+- **Twin corners' marks were an oversized solid block covering much of the
+  corner, and the quote text could still overlap them.** The flush corner
+  tile from 1.7.2 filled a large square right up to the card's edges rather
+  than reading as a mark, and the card's own padding did not clear its full
+  height. Marks are now small round icons (1.9em) inset a fixed distance
+  from the edges rather than flush against them, and the card's top and
+  bottom padding now clears the icon's inset plus its diameter with room to
+  spare - the quote and the attribution line always start below/above the
+  icon's row rather than sharing it, whatever length the name or quote runs.
+
 ## 1.7.2 - 2026-09-16
 
 ### Fixed
