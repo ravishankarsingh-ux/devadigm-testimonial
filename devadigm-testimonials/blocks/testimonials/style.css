@@ -777,20 +777,28 @@
 	content: var( --dvdm-glyph-close, "\201D" );
 }
 
-/* Every other card swaps which accent leads: border, background tint and both marks. */
-.dvdm-mark--twin .dvdm-t__items > .dvdm-t__item:nth-child( even ),
-.dvdm-mark--twin .dvdm-t__slide:nth-child( even ) > .dvdm-t__item {
+/*
+ * Every other card swaps which accent leads: border, background tint and
+ * both marks. `.dvdm-t__item--alt` is added by Renderer::item() from that
+ * item's actual row and column - worked out against the real column count
+ * the grid renders with - rather than by `:nth-child(even)` on its own.
+ * Alternating purely by position in the flat list agrees with a genuine
+ * checkerboard only when the grid happens to have an odd number of columns;
+ * with an even count (2, the common case, included) it produces solid
+ * colour columns instead; row 1's cards and row 2's cards land on the same
+ * side of the odd/even split in every column, because each row simply
+ * continues the previous row's sequence rather than starting counting over.
+ */
+.dvdm-mark--twin .dvdm-t__item--alt {
 	border-color: var( --dvdm-accent-b, var( --dvdm-accent, currentColor ) );
 	background: color-mix( in srgb, var( --dvdm-accent-b, var( --dvdm-accent, currentColor ) ) 6%, var( --dvdm-surface, canvas ) );
 }
 
-.dvdm-mark--twin .dvdm-t__items > .dvdm-t__item:nth-child( even ) .dvdm-t__twin-mark--open,
-.dvdm-mark--twin .dvdm-t__slide:nth-child( even ) > .dvdm-t__item .dvdm-t__twin-mark--open {
+.dvdm-mark--twin .dvdm-t__item--alt .dvdm-t__twin-mark--open {
 	background: var( --dvdm-accent-b, var( --dvdm-accent, currentColor ) );
 }
 
-.dvdm-mark--twin .dvdm-t__items > .dvdm-t__item:nth-child( even ) .dvdm-t__twin-mark--close,
-.dvdm-mark--twin .dvdm-t__slide:nth-child( even ) > .dvdm-t__item .dvdm-t__twin-mark--close {
+.dvdm-mark--twin .dvdm-t__item--alt .dvdm-t__twin-mark--close {
 	background: var( --dvdm-accent, currentColor );
 }
 

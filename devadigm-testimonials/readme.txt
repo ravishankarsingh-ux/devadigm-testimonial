@@ -4,7 +4,7 @@ Tags: testimonials, reviews, social proof, block, slider
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.8.3
+Stable tag: 1.8.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,13 @@ front-end script is a plain ES module, so the plugin runs straight from the zip.
 == Changelog ==
 
 See CHANGELOG.md for full detail. Summary:
+
+= 1.8.4 =
+* Fixed: Twin corners alternated by position in the list, which produced
+  two solid-coloured columns instead of a checkerboard once a grid had an
+  even number of columns (2, most commonly). Now works out each card's
+  real row and column and flips the accent on both axes for a genuine
+  checkerboard at any column count.
 
 = 1.8.3 =
 * Changed: Twin corners' attribution row now uses justify-content:

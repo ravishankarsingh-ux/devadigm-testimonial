@@ -121,9 +121,30 @@ final class Renderer {
 		 */
 		$slider = ! empty( $attrs['slider'] ) && 'marquee' !== $layout;
 
+		/*
+		 * Twin corners' two accents need to alternate the way a real
+		 * checkerboard does - which, once a grid wraps to more than one
+		 * column, is not the same thing as alternating by position in the
+		 * flat list. `nth-child(even)` alone gives every item in an odd
+		 * column the first accent and every item in an even column the
+		 * second, regardless of row: a 2-column grid of four cards reads as
+		 * two solid-coloured columns, not a checkerboard, because column 1's
+		 * 1st and 3rd cards are both odd-indexed and column 2's 2nd and 4th
+		 * are both even-indexed. Working out each item's actual row and
+		 * column here, from the same column count the grid itself renders
+		 * with, is what makes $alt flip on both axes - matching a real
+		 * checkerboard for any column count, not just an odd one (where
+		 * flat-list parity happens to already agree with row+column parity
+		 * by coincidence).
+		 */
+		$alt_columns = 'marquee' === $layout ? 1 : max( 1, (int) $attrs['columns'] );
+
 		$items = array();
-		foreach ( $posts as $post ) {
-			$items[] = self::item( $post, $mark, $layout, $attrs );
+		foreach ( $posts as $index => $post ) {
+			$row = intdiv( $index, $alt_columns );
+			$col = $index % $alt_columns;
+			$alt = 1 === ( ( $row + $col ) % 2 );
+			$items[] = self::item( $post, $mark, $layout, $attrs, $alt );
 		}
 
 		if ( 'marquee' === $layout ) {
@@ -543,8 +564,15 @@ final class Renderer {
 	 * @param string              $mark   Quotation-mark key.
 	 * @param string              $layout Layout key.
 	 * @param array<string,mixed> $attrs  Block attributes.
+	 * @param bool                $alt    Whether this item takes the second
+	 *                                    accent in a two-tone treatment -
+	 *                                    only Twin corners reads this, worked
+	 *                                    out by the caller from this item's
+	 *                                    actual row and column so it forms a
+	 *                                    real checkerboard rather than just
+	 *                                    alternating by position in the list.
 	 */
-	public static function item( \WP_Post $post, string $mark, string $layout, array $attrs = array() ): string {
+	public static function item( \WP_Post $post, string $mark, string $layout, array $attrs = array(), bool $alt = false ): string {
 		$quote   = trim( wp_strip_all_tags( (string) $post->post_content ) );
 		$name    = (string) get_post_meta( $post->ID, 'dvdm_author_name', true );
 		$role    = (string) get_post_meta( $post->ID, 'dvdm_author_role', true );
@@ -605,7 +633,8 @@ final class Renderer {
 		$parts[] = self::attribution( $post, $name, $role, $company, $url, $show_avatar, $closing_mark );
 
 		return sprintf(
-			'<figure class="dvdm-t__item">%s</figure>',
+			'<figure class="dvdm-t__item%s">%s</figure>',
+			( 'twin' === $mark && $alt ) ? ' dvdm-t__item--alt' : '',
 			implode( '', $parts )
 		);
 	}

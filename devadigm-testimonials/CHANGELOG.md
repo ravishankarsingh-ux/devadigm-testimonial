@@ -4,6 +4,23 @@ All notable changes to this plugin are documented here. Version numbers follow
 [Semantic Versioning](https://semver.org/): MAJOR for breaking changes, MINOR
 for new features that stay backward-compatible, PATCH for fixes.
 
+## 1.8.4 - 2026-09-16
+
+### Fixed
+
+- **Twin corners alternated by position in the flat list, which is not the
+  same thing as a real checkerboard once a grid has more than one column.**
+  With 2 columns specifically, `nth-child(even)` gave every card in the
+  first column the same accent and every card in the second column the
+  other one - two solid-coloured columns, not the alternating red/blue/blue/
+  red pattern a checkerboard implies, because row 2 simply continued row
+  1's odd/even sequence instead of starting over. `Renderer::render()` now
+  works out each item's actual row and column from the real column count
+  the grid renders with, and flips the accent on both axes - a true
+  checkerboard for any column count, including even ones, not only the odd
+  counts where flat-list order happened to already agree with it. Applies
+  the same way to Grid and to a slider's pages.
+
 ## 1.8.3 - 2026-09-16
 
 ### Changed
