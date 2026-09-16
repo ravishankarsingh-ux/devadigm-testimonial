@@ -88,6 +88,41 @@ final class Tokens {
 	}
 
 	/**
+	 * The closing counterpart of glyph(), for treatments that print both ends
+	 * of a quotation pair (Twin corners).
+	 */
+	public static function closing_glyph(): string {
+		$settings = Settings::all();
+
+		if ( ! empty( $settings['mark_auto_locale'] ) ) {
+			$locale = strtolower( (string) get_locale() );
+			$lang   = substr( $locale, 0, 2 );
+			$by_lang = array(
+				'de' => '“',
+				'fr' => '»',
+				'es' => '»',
+				'it' => '»',
+				'ru' => '»',
+				'pl' => '“',
+				'ja' => '」',
+				'zh' => '」',
+			);
+			if ( isset( $by_lang[ $lang ] ) ) {
+				return $by_lang[ $lang ];
+			}
+		}
+
+		$set = (string) $settings['mark_glyph_set'];
+		if ( 'custom' === $set ) {
+			$custom = trim( (string) $settings['mark_glyph_custom'] );
+			return '' !== $custom ? mb_substr( $custom, 0, 2 ) : '”';
+		}
+
+		$presets = Settings::closing_glyph_presets();
+		return $presets[ $set ] ?? '”';
+	}
+
+	/**
 	 * The filled and empty rating icons.
 	 *
 	 * @return array{0:string,1:string}
@@ -133,6 +168,7 @@ final class Tokens {
 			'--dvdm-name-color'     => self::resolve( (string) $s['name_color'], 'color', 'inherit' ),
 			'--dvdm-meta-color'     => self::resolve( (string) $s['meta_color'], 'color', 'inherit' ),
 			'--dvdm-accent'         => $accent,
+			'--dvdm-accent-b'       => self::resolve( (string) $s['accent_color_b'], 'color', $accent ),
 			'--dvdm-accent-contrast' => self::resolve( (string) $s['accent_contrast'], 'color', 'canvas' ),
 			'--dvdm-accent-text'    => self::resolve( (string) $s['accent_text'], 'color', 'inherit' ),
 			'--dvdm-star-color'     => self::resolve( (string) $s['star_color'], 'color', 'var(--dvdm-accent)' ),
@@ -148,6 +184,7 @@ final class Tokens {
 			'--dvdm-clamp-lines'    => (string) (int) $s['clamp_lines'],
 			'--dvdm-columns'        => (string) max( 1, min( 6, (int) $s['default_columns'] ) ),
 			'--dvdm-glyph'          => '"' . self::escape_css_string( self::glyph() ) . '"',
+			'--dvdm-glyph-close'    => '"' . self::escape_css_string( self::closing_glyph() ) . '"',
 		);
 
 		if ( '' !== (string) $s['quote_weight'] ) {

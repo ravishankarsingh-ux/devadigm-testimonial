@@ -4,11 +4,11 @@ Tags: testimonials, reviews, social proof, block, slider
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.5.1
+Stable tag: 1.6.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Testimonials with four display layouts, an optional slider on any of them, six quotation-mark treatments, and a settings screen for colours, fonts and icons.
+Testimonials with four display layouts, an optional slider on any of them, seven quotation-mark treatments, and a settings screen for colours, fonts and icons.
 
 == Description ==
 
@@ -38,7 +38,7 @@ rendering exactly as before - nothing needs re-editing after an upgrade, and
 the editor shows their real current columns, masonry and slider state rather
 than hiding those controls until the layout is manually switched.
 
-**Six quotation-mark treatments**
+**Seven quotation-mark treatments**
 
 * Ledger - oversized mark hanging at the left
 * Watermark - huge mark bled off the corner
@@ -46,6 +46,7 @@ than hiding those controls until the layout is manually switched.
 * Drop-cap fusion - mark set with the first letter
 * Bracket rules - two rules, no glyph
 * Filled slab - knocked-out mark on a solid block
+* Twin corners - opening and closing marks in two alternating accents, on a bordered card
 
 The mark is drawn from a CSS custom property and never enters the markup, so
 copying a quote copies only the words, the indexed text stays clean, and screen
@@ -91,6 +92,13 @@ front-end script is a plain ES module, so the plugin runs straight from the zip.
 == Changelog ==
 
 See CHANGELOG.md for full detail. Summary:
+
+= 1.6.0 =
+* Added: Twin corners quotation mark - a bordered card with the opening
+  glyph at one corner and its closing counterpart at the diagonally
+  opposite one. Neighbouring cards alternate between two accent colours,
+  the second set via the new "Accent 2 (Twin corners)" colour on the
+  Design screen or as a block-level override.
 
 = 1.5.1 =
 * Fixed: "Check again" on Dashboard > Updates did not actually re-check

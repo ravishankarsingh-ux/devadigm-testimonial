@@ -175,6 +175,7 @@ final class Block {
 	private static function instance_tokens( array $attributes ): string {
 		$map = array(
 			'accentColor' => '--dvdm-accent',
+			'accentColorB' => '--dvdm-accent-b',
 			'quoteColor'  => '--dvdm-quote-color',
 			'nameColor'   => '--dvdm-name-color',
 			'metaColor'   => '--dvdm-meta-color',

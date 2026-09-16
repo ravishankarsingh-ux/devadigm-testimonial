@@ -443,6 +443,15 @@
 						},
 					} ),
 					el( PairedControl, {
+						label: __( 'Accent 2 (Twin corners)', 'devadigm-testimonials' ),
+						value: a.accentColorB || '',
+						options: colourOptions(),
+						placeholder: '#2155cd',
+						onChange: function ( next ) {
+							set( { accentColorB: next } );
+						},
+					} ),
+					el( PairedControl, {
 						label: __( 'Quote text', 'devadigm-testimonials' ),
 						value: a.quoteColor || '',
 						options: colourOptions(),

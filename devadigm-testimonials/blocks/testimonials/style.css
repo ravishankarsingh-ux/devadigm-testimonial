@@ -634,6 +634,65 @@
 	color: var( --dvdm-accent-contrast, canvas );
 }
 
+/*
+ * Twin corners: a bordered card with the opening mark at one corner and its
+ * closing counterpart at the diagonally opposite one. Cards alternate which
+ * of the two accents leads, so a row or grid reads as a two-tone checker
+ * rather than every card looking identical.
+ *
+ * The marks sit on the item itself, like Watermark's, rather than the quote -
+ * anchored to the card corners regardless of what else (a rating, a metric)
+ * sits above the quote.
+ */
+.dvdm-mark--twin .dvdm-t__item {
+	position: relative;
+	overflow: hidden;
+	border: 2px solid var( --dvdm-accent, currentColor );
+	border-radius: 0.6em;
+	padding: 2em 1.75em;
+	background: var( --dvdm-surface, transparent );
+}
+
+.dvdm-mark--twin .dvdm-t__item::before,
+.dvdm-mark--twin .dvdm-t__item::after {
+	position: absolute;
+	font-family: var( --dvdm-quote-font, inherit );
+	font-size: calc( 1.9em * var( --dvdm-mark-scale, 1 ) );
+	line-height: 1;
+	opacity: var( --dvdm-mark-opacity, 1 );
+	pointer-events: none;
+}
+
+.dvdm-mark--twin .dvdm-t__item::before {
+	content: var( --dvdm-glyph, "\201C" );
+	top: 0.35em;
+	inset-inline-start: 0.4em;
+	color: var( --dvdm-accent, currentColor );
+}
+
+.dvdm-mark--twin .dvdm-t__item::after {
+	content: var( --dvdm-glyph-close, "\201D" );
+	bottom: 0.15em;
+	inset-inline-end: 0.4em;
+	color: var( --dvdm-accent-b, var( --dvdm-accent, currentColor ) );
+}
+
+/* Every other card swaps which accent is the border and which corner it leads from. */
+.dvdm-mark--twin .dvdm-t__items > .dvdm-t__item:nth-child( even ),
+.dvdm-mark--twin .dvdm-t__slide:nth-child( even ) > .dvdm-t__item {
+	border-color: var( --dvdm-accent-b, var( --dvdm-accent, currentColor ) );
+}
+
+.dvdm-mark--twin .dvdm-t__items > .dvdm-t__item:nth-child( even )::before,
+.dvdm-mark--twin .dvdm-t__slide:nth-child( even ) > .dvdm-t__item::before {
+	color: var( --dvdm-accent-b, var( --dvdm-accent, currentColor ) );
+}
+
+.dvdm-mark--twin .dvdm-t__items > .dvdm-t__item:nth-child( even )::after,
+.dvdm-mark--twin .dvdm-t__slide:nth-child( even ) > .dvdm-t__item::after {
+	color: var( --dvdm-accent, currentColor );
+}
+
 /* ------------------------------------------------- long quotes */
 
 /*

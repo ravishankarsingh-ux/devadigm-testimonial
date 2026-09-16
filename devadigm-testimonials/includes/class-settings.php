@@ -36,6 +36,7 @@ final class Settings {
 			'dropcap'   => __( 'Drop-cap fusion - mark set with the first letter', 'devadigm-testimonials' ),
 			'bracket'   => __( 'Bracket rules - two rules, no glyph', 'devadigm-testimonials' ),
 			'slab'      => __( 'Filled slab - knocked-out mark on a solid block', 'devadigm-testimonials' ),
+			'twin'      => __( 'Twin corners - opening and closing marks in two alternating accents, bordered card', 'devadigm-testimonials' ),
 			'none'      => __( 'None', 'devadigm-testimonials' ),
 		);
 	}
@@ -100,6 +101,23 @@ final class Settings {
 	}
 
 	/**
+	 * The closing counterpart of each opening glyph above, for treatments
+	 * (Twin corners) that print both ends of a quotation pair.
+	 *
+	 * @return array<string,string>
+	 */
+	public static function closing_glyph_presets(): array {
+		return array(
+			'curly'    => '”',
+			'straight' => '"',
+			'guillemet' => '»',
+			'german'   => '“',
+			'heavy'    => '❞',
+			'single'   => '’',
+		);
+	}
+
+	/**
 	 * Star icon sets, as full and empty glyph pairs.
 	 *
 	 * @return array<string,array{0:string,1:string,label:string}>
@@ -139,6 +157,7 @@ final class Settings {
 			'name_color'       => '',
 			'meta_color'       => '',
 			'accent_color'     => '',
+			'accent_color_b'   => '',
 			'accent_contrast'  => '',
 			'accent_text'      => '',
 			'star_color'       => '',
@@ -276,7 +295,7 @@ final class Settings {
 		$defaults = self::defaults();
 		$out      = array();
 
-		$colour_keys = array( 'quote_color', 'name_color', 'meta_color', 'accent_color', 'accent_contrast', 'accent_text', 'star_color', 'surface_color', 'border_color', 'mark_color' );
+		$colour_keys = array( 'quote_color', 'name_color', 'meta_color', 'accent_color', 'accent_color_b', 'accent_contrast', 'accent_text', 'star_color', 'surface_color', 'border_color', 'mark_color' );
 		$font_keys   = array( 'quote_font', 'body_font' );
 
 		foreach ( $defaults as $key => $default ) {
@@ -527,6 +546,12 @@ final class Settings {
 					self::colour_row( __( 'Author name', 'devadigm-testimonials' ), 'name_color', (string) $s['name_color'] );
 					self::colour_row( __( 'Role and company', 'devadigm-testimonials' ), 'meta_color', (string) $s['meta_color'] );
 					self::colour_row( __( 'Accent (marks and rules)', 'devadigm-testimonials' ), 'accent_color', (string) $s['accent_color'] );
+					self::colour_row(
+						__( 'Accent 2 (Twin corners)', 'devadigm-testimonials' ),
+						'accent_color_b',
+						(string) $s['accent_color_b'],
+						__( 'Only used by the Twin corners quotation mark, where cards alternate between this and the accent above.', 'devadigm-testimonials' )
+					);
 					self::colour_row( __( 'Accent contrast (knockout)', 'devadigm-testimonials' ), 'accent_contrast', (string) $s['accent_contrast'] );
 					self::colour_row(
 						__( 'Accent text (result metrics)', 'devadigm-testimonials' ),

@@ -4,6 +4,18 @@ All notable changes to this plugin are documented here. Version numbers follow
 [Semantic Versioning](https://semver.org/): MAJOR for breaking changes, MINOR
 for new features that stay backward-compatible, PATCH for fixes.
 
+## 1.6.0 - 2026-09-16
+
+### Added
+
+- **Twin corners quotation mark.** A new treatment for the "Quotation mark"
+  setting (and per-block override): a bordered card with the opening glyph at
+  one corner and its closing counterpart at the diagonally opposite one.
+  Neighbouring cards alternate which of two accent colours leads, so a grid
+  or row reads as a two-tone checker instead of every card looking identical.
+  Adds a second accent colour, "Accent 2 (Twin corners)", on the Design
+  screen and as a block-level colour override; only this mark style reads it.
+
 ## 1.5.1 - 2026-08-03
 
 ### Fixed

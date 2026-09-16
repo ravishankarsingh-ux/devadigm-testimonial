@@ -95,6 +95,10 @@
 			"type": "string",
 			"default": ""
 		},
+		"accentColorB": {
+			"type": "string",
+			"default": ""
+		},
 		"quoteColor": {
 			"type": "string",
 			"default": ""
