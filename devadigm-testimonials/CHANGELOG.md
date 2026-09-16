@@ -4,6 +4,24 @@ All notable changes to this plugin are documented here. Version numbers follow
 [Semantic Versioning](https://semver.org/): MAJOR for breaking changes, MINOR
 for new features that stay backward-compatible, PATCH for fixes.
 
+## 1.7.4 - 2026-09-16
+
+### Fixed
+
+- **Twin corners' marks were still overlapping the quote text on a real
+  site**, after two attempts at clearing them with padding sized in em units
+  against this card's own font-size - which this plugin does not control,
+  and which a site is free to set larger than assumed for its own
+  typography. The marks are now rendered as two real, in-flow elements in a
+  row above the quote (see `Renderer::quote_block()`), the same technique
+  the existing Hairline badge and Filled slab styles already use
+  successfully. Flow layout reserves their own space and the quote starts
+  below them unconditionally, so this cannot overlap regardless of
+  font-size, quote length, or any padding math - a structural fix rather
+  than another round of resizing. Both marks now sit side by side at the top
+  of the card instead of at diagonally opposite corners; the alternating
+  accent colours between neighbouring cards are unchanged.
+
 ## 1.7.3 - 2026-09-16
 
 ### Fixed

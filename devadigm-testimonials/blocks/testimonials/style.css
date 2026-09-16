@@ -664,22 +664,23 @@
 }
 
 /*
- * Twin corners: a bordered card with a small round opening-mark icon inset
- * near one corner and its closing counterpart inset near the diagonally
- * opposite one. Cards alternate which of the two accents leads, on the
- * border, the card's own background tint and both icons, so a row or grid
- * reads as a two-tone checker rather than every card looking identical.
+ * Twin corners: a bordered card with two small round marks in a row above
+ * the quote - the opening glyph, then the closing one. Cards alternate
+ * which of the two accents leads, on the border, the card's own background
+ * tint and both marks, so a row or grid reads as a two-tone checker rather
+ * than every card looking identical.
  *
- * The icon sits inset from the edges rather than flush against the border -
- * a first version drawn flush filled most of the corner with a large solid
- * square, which read as a heavy block rather than a mark. It also stays
- * fully inside the card's own box with no negative offset or transform, so
- * it renders correctly regardless of what a theme or page-builder wrapper
- * around the block sets its own `overflow` to - this plugin has no way to
- * reach out and change a container it did not render.
+ * Two earlier releases tried absolutely positioning the marks over the
+ * card's corners - flush against the border, then inset from it - sized and
+ * cleared in em units against whatever font-size the surrounding page gives
+ * this card, which this plugin does not control. Both still ended up with
+ * the mark overlapping the quote on a real site once that font-size was
+ * larger than assumed. Rendered as real, in-flow elements instead (see
+ * Renderer::quote_block()), the marks are laid out by the browser like any
+ * other content: they reserve their own space above the quote and the quote
+ * starts below them unconditionally, whatever font-size is in play.
  */
 .dvdm-mark--twin .dvdm-t__item {
-	position: relative;
 	/*
 	 * One pixel thicker than the shared border-width setting rather than the
 	 * setting alone - Twin corners reads as a deliberately drawn frame, and
@@ -691,46 +692,44 @@
 	border-width: calc( var( --dvdm-border-width, 1px ) + 1px );
 	border-color: var( --dvdm-accent, currentColor );
 	border-radius: var( --dvdm-border-radius, 0.6em );
-	/*
-	 * Top and bottom padding clears the icon's own inset plus its diameter
-	 * (0.9em + 1.9em) with a little air to spare, so the quote and the
-	 * attribution line start below/above the icon rather than beside it -
-	 * the two never occupy the same row, which is what keeps them from
-	 * overlapping regardless of how long the name or quote runs.
-	 */
-	padding: 3.2em 1.75em;
 	background: color-mix( in srgb, var( --dvdm-accent, currentColor ) 6%, var( --dvdm-surface, canvas ) );
 }
 
-.dvdm-mark--twin .dvdm-t__item::before,
-.dvdm-mark--twin .dvdm-t__item::after {
-	position: absolute;
-	width: 1.9em;
-	height: 1.9em;
+.dvdm-t__twin {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 0.9em;
+}
+
+.dvdm-t__twin-mark {
+	width: 2em;
+	height: 2em;
+	flex: none;
 	display: grid;
 	place-items: center;
 	border-radius: 50%;
 	font-family: var( --dvdm-quote-font, inherit );
-	font-size: calc( 0.95em * var( --dvdm-mark-scale, 1 ) );
+	font-size: calc( 1em * var( --dvdm-mark-scale, 1 ) );
 	line-height: 1;
 	opacity: var( --dvdm-mark-opacity, 1 );
-	pointer-events: none;
 }
 
-.dvdm-mark--twin .dvdm-t__item::before {
-	content: var( --dvdm-glyph, "\201C" );
-	top: 0.9em;
-	inset-inline-start: 0.9em;
+.dvdm-t__twin-mark--open {
 	background: var( --dvdm-accent, currentColor );
 	color: var( --dvdm-accent-contrast, canvas );
 }
 
-.dvdm-mark--twin .dvdm-t__item::after {
-	content: var( --dvdm-glyph-close, "\201D" );
-	bottom: 0.9em;
-	inset-inline-end: 0.9em;
+.dvdm-t__twin-mark--open::before {
+	content: var( --dvdm-glyph, "\201C" );
+}
+
+.dvdm-t__twin-mark--close {
 	background: var( --dvdm-accent-b, var( --dvdm-accent, currentColor ) );
 	color: var( --dvdm-accent-contrast, canvas );
+}
+
+.dvdm-t__twin-mark--close::before {
+	content: var( --dvdm-glyph-close, "\201D" );
 }
 
 /* Every other card swaps which accent leads: border, background tint and both marks. */
@@ -740,13 +739,13 @@
 	background: color-mix( in srgb, var( --dvdm-accent-b, var( --dvdm-accent, currentColor ) ) 6%, var( --dvdm-surface, canvas ) );
 }
 
-.dvdm-mark--twin .dvdm-t__items > .dvdm-t__item:nth-child( even )::before,
-.dvdm-mark--twin .dvdm-t__slide:nth-child( even ) > .dvdm-t__item::before {
+.dvdm-mark--twin .dvdm-t__items > .dvdm-t__item:nth-child( even ) .dvdm-t__twin-mark--open,
+.dvdm-mark--twin .dvdm-t__slide:nth-child( even ) > .dvdm-t__item .dvdm-t__twin-mark--open {
 	background: var( --dvdm-accent-b, var( --dvdm-accent, currentColor ) );
 }
 
-.dvdm-mark--twin .dvdm-t__items > .dvdm-t__item:nth-child( even )::after,
-.dvdm-mark--twin .dvdm-t__slide:nth-child( even ) > .dvdm-t__item::after {
+.dvdm-mark--twin .dvdm-t__items > .dvdm-t__item:nth-child( even ) .dvdm-t__twin-mark--close,
+.dvdm-mark--twin .dvdm-t__slide:nth-child( even ) > .dvdm-t__item .dvdm-t__twin-mark--close {
 	background: var( --dvdm-accent, currentColor );
 }
 

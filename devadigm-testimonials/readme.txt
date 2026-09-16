@@ -4,7 +4,7 @@ Tags: testimonials, reviews, social proof, block, slider
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.7.3
+Stable tag: 1.7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,15 @@ front-end script is a plain ES module, so the plugin runs straight from the zip.
 == Changelog ==
 
 See CHANGELOG.md for full detail. Summary:
+
+= 1.7.4 =
+* Fixed: Twin corners' marks were still overlapping the quote after two
+  padding-based attempts. They now render as real, in-flow elements in a
+  row above the quote - the same technique the Hairline badge style
+  already uses - so they cannot overlap regardless of font-size or quote
+  length. Both marks now sit side by side at the top of the card rather
+  than at diagonally opposite corners; the alternating accent colours are
+  unchanged.
 
 = 1.7.3 =
 * Fixed: Twin corners' marks were an oversized solid block and the quote

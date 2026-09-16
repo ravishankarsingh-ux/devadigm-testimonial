@@ -623,6 +623,23 @@ final class Renderer {
 			$clamped ? ' dvdm-t__quote--clamped' : ''
 		);
 
+		/*
+		 * Twin corners needs a real element for the same reason Badge and Slab
+		 * do, but for an extra reason of its own: an absolutely positioned
+		 * pair of marks, tried in earlier releases, computed their size and
+		 * clearance in em units against whatever font-size the surrounding
+		 * page happens to give this card - which this plugin does not
+		 * control, and which a site is free to set large for its own
+		 * typography. That left the marks overlapping the quote outright on
+		 * at least one real site. Two real, in-flow elements above the quote
+		 * cannot overlap it: flow layout reserves their own space and pushes
+		 * the quote below them unconditionally, whatever the font-size.
+		 */
+		$twin = '<span class="dvdm-t__twin" aria-hidden="true">'
+			. '<span class="dvdm-t__twin-mark dvdm-t__twin-mark--open"></span>'
+			. '<span class="dvdm-t__twin-mark dvdm-t__twin-mark--close"></span>'
+			. '</span>';
+
 		// Treatments that need a real element rather than a pseudo-element.
 		return match ( $mark ) {
 			'badge'   => '<span class="dvdm-t__badge" aria-hidden="true"></span>' . $blockquote,
@@ -630,6 +647,7 @@ final class Renderer {
 			'bracket' => '<span class="dvdm-t__rule dvdm-t__rule--top" aria-hidden="true"></span>'
 				. $blockquote
 				. '<span class="dvdm-t__rule dvdm-t__rule--bottom" aria-hidden="true"></span>',
+			'twin'    => $twin . $blockquote,
 			default   => $blockquote,
 		};
 	}
