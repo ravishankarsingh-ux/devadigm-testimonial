@@ -4,6 +4,19 @@ All notable changes to this plugin are documented here. Version numbers follow
 [Semantic Versioning](https://semver.org/): MAJOR for breaking changes, MINOR
 for new features that stay backward-compatible, PATCH for fixes.
 
+## 1.7.1 - 2026-09-16
+
+### Changed
+
+- **Twin corners now seats its marks on the border line itself, and
+  alternates the card's own background tint, not just the border.** Each
+  mark is a small filled disc centred exactly on its corner (half inside the
+  card, half outside), covering that stretch of the border so it reads as
+  set into the frame rather than floating inside the padding or crossed out
+  by the line. The card background now takes a faint tint of whichever
+  accent leads that card, alternating the same way the border already did,
+  instead of staying a flat, uninvolved surface colour on every card.
+
 ## 1.7.0 - 2026-09-16
 
 ### Fixed

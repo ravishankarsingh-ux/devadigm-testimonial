@@ -665,17 +665,20 @@
 
 /*
  * Twin corners: a bordered card with the opening mark at one corner and its
- * closing counterpart at the diagonally opposite one. Cards alternate which
- * of the two accents leads, so a row or grid reads as a two-tone checker
- * rather than every card looking identical.
+ * closing counterpart at the diagonally opposite one, each sitting astride
+ * the border line itself rather than floating inside the padding - the
+ * classic "seal on the frame" look the style is named for. Cards alternate
+ * which of the two accents leads, on both the border and the card's own
+ * background tint, so a row or grid reads as a two-tone checker rather than
+ * every card looking identical.
  *
- * The marks sit on the item itself, like Watermark's, rather than the quote -
- * anchored to the card corners regardless of what else (a rating, a metric)
- * sits above the quote.
+ * `overflow: visible` is deliberate - the marks are centred exactly on the
+ * border (via the -50%/+50% translate below), so half of each one has to
+ * render outside the card's own box to sit on the line instead of inside it.
  */
 .dvdm-mark--twin .dvdm-t__item {
 	position: relative;
-	overflow: hidden;
+	overflow: visible;
 	/*
 	 * One pixel thicker than the shared border-width setting rather than the
 	 * setting alone - Twin corners reads as a deliberately drawn frame, and
@@ -688,14 +691,39 @@
 	border-color: var( --dvdm-accent, currentColor );
 	border-radius: var( --dvdm-border-radius, 0.6em );
 	padding: 2em 1.75em;
-	background: var( --dvdm-surface, transparent );
+	background: color-mix( in srgb, var( --dvdm-accent, currentColor ) 6%, var( --dvdm-surface, canvas ) );
 }
 
+/*
+ * The odd/even split below sets each card's lead colour; this margin only
+ * keeps the badges (roughly 1em across, centred on the corner) from
+ * overlapping the quote or attribution text they sit that close to.
+ */
+.dvdm-mark--twin .dvdm-t__quote {
+	margin-top: 0.3em !important;
+}
+
+.dvdm-mark--twin .dvdm-t__attribution {
+	margin-bottom: 0.3em;
+}
+
+/*
+ * Each mark is a small filled disc, not a bare glyph, and is centred - via
+ * the -50%/+50% translate - exactly on the border's corner point. A bare
+ * glyph sitting there would have the border line drawn straight across it;
+ * the disc's own background covers that stretch of border so the mark reads
+ * as set into the frame rather than crossed out by it.
+ */
 .dvdm-mark--twin .dvdm-t__item::before,
 .dvdm-mark--twin .dvdm-t__item::after {
 	position: absolute;
+	width: 1.7em;
+	height: 1.7em;
+	display: grid;
+	place-items: center;
+	border-radius: 50%;
 	font-family: var( --dvdm-quote-font, inherit );
-	font-size: calc( 1.9em * var( --dvdm-mark-scale, 1 ) );
+	font-size: calc( 1.05em * var( --dvdm-mark-scale, 1 ) );
 	line-height: 1;
 	opacity: var( --dvdm-mark-opacity, 1 );
 	pointer-events: none;
@@ -703,32 +731,37 @@
 
 .dvdm-mark--twin .dvdm-t__item::before {
 	content: var( --dvdm-glyph, "\201C" );
-	top: 0.35em;
-	inset-inline-start: 0.4em;
-	color: var( --dvdm-accent, currentColor );
+	top: 0;
+	inset-inline-start: 0;
+	transform: translate( -50%, -50% );
+	background: var( --dvdm-accent, currentColor );
+	color: var( --dvdm-accent-contrast, canvas );
 }
 
 .dvdm-mark--twin .dvdm-t__item::after {
 	content: var( --dvdm-glyph-close, "\201D" );
-	bottom: 0.15em;
-	inset-inline-end: 0.4em;
-	color: var( --dvdm-accent-b, var( --dvdm-accent, currentColor ) );
+	bottom: 0;
+	inset-inline-end: 0;
+	transform: translate( 50%, 50% );
+	background: var( --dvdm-accent-b, var( --dvdm-accent, currentColor ) );
+	color: var( --dvdm-accent-contrast, canvas );
 }
 
-/* Every other card swaps which accent is the border and which corner it leads from. */
+/* Every other card swaps which accent leads: border, background tint and both marks. */
 .dvdm-mark--twin .dvdm-t__items > .dvdm-t__item:nth-child( even ),
 .dvdm-mark--twin .dvdm-t__slide:nth-child( even ) > .dvdm-t__item {
 	border-color: var( --dvdm-accent-b, var( --dvdm-accent, currentColor ) );
+	background: color-mix( in srgb, var( --dvdm-accent-b, var( --dvdm-accent, currentColor ) ) 6%, var( --dvdm-surface, canvas ) );
 }
 
 .dvdm-mark--twin .dvdm-t__items > .dvdm-t__item:nth-child( even )::before,
 .dvdm-mark--twin .dvdm-t__slide:nth-child( even ) > .dvdm-t__item::before {
-	color: var( --dvdm-accent-b, var( --dvdm-accent, currentColor ) );
+	background: var( --dvdm-accent-b, var( --dvdm-accent, currentColor ) );
 }
 
 .dvdm-mark--twin .dvdm-t__items > .dvdm-t__item:nth-child( even )::after,
 .dvdm-mark--twin .dvdm-t__slide:nth-child( even ) > .dvdm-t__item::after {
-	color: var( --dvdm-accent, currentColor );
+	background: var( --dvdm-accent, currentColor );
 }
 
 /* ------------------------------------------------- long quotes */
