@@ -768,8 +768,18 @@ final class Renderer {
 			$secondary = esc_html( $secondary );
 		}
 
+		/*
+		 * Avatar and name/role are grouped in their own wrapper so the row has
+		 * at most two top-level children: that group, and $trailing. With
+		 * `justify-content: space-between` on the row (see style.css), two
+		 * children land at opposite ends of the box - one child, when
+		 * $trailing is empty, just sits at the start, exactly as before.
+		 * Without this wrapper, space-between would spread the avatar, the
+		 * name/role and $trailing three ways instead of holding the first two
+		 * together on one side.
+		 */
 		return sprintf(
-			'<figcaption class="dvdm-t__attribution">%1$s<span class="dvdm-t__who">%2$s%3$s</span>%4$s</figcaption>',
+			'<figcaption class="dvdm-t__attribution"><span class="dvdm-t__who-group">%1$s<span class="dvdm-t__who">%2$s%3$s</span></span>%4$s</figcaption>',
 			$avatar,
 			'' !== $name ? sprintf( '<span class="dvdm-t__name">%s</span>', esc_html( $name ) ) : '',
 			'' !== $secondary ? sprintf( '<span class="dvdm-t__role">%s</span>', $secondary ) : '',

@@ -4,6 +4,21 @@ All notable changes to this plugin are documented here. Version numbers follow
 [Semantic Versioning](https://semver.org/): MAJOR for breaking changes, MINOR
 for new features that stay backward-compatible, PATCH for fixes.
 
+## 1.8.3 - 2026-09-16
+
+### Changed
+
+- **Twin corners' attribution row now uses `justify-content: space-between`
+  to place the closing mark**, rather than relying solely on a flexbox
+  auto-margin. The avatar and the name/role are grouped into their own
+  wrapper (`.dvdm-t__who-group`) so the row has at most two children for
+  space-between to place at opposite ends - without that grouping,
+  space-between would spread the avatar, the name/role and the mark three
+  ways instead of holding the first two together. The auto-margin stays as
+  the fallback for the one case space-between does not cover: a testimonial
+  with neither a name nor a company, where the mark renders outside any row
+  at all.
+
 ## 1.8.2 - 2026-09-16
 
 ### Fixed

@@ -92,12 +92,32 @@
 	color: var( --dvdm-star-color, var( --dvdm-accent, currentColor ) );
 }
 
+/*
+ * `justify-content: space-between` rather than the default packed start:
+ * with a single child (every mark style except Twin corners, which is the
+ * only one that ever renders a second child here) that is a no-op - space
+ * "between" one item and nothing is nothing, so it still sits at the start
+ * exactly as before. With two, it puts the second flush against the far
+ * end of the row instead of needing an auto margin to get it there.
+ */
 .dvdm-t__attribution {
 	display: flex;
 	align-items: center;
+	justify-content: space-between;
 	gap: 0.7em;
 	margin-top: auto;
 	padding-top: 0.25em;
+}
+
+/* Keeps the avatar and the name/role together as one group at the start of
+   the row, so justify-content: space-between above has at most two children
+   to place - this group, and Twin corners' closing mark - rather than
+   spreading the avatar, the name/role and the mark three ways. */
+.dvdm-t__who-group {
+	display: flex;
+	align-items: center;
+	gap: 0.7em;
+	min-width: 0;
 }
 
 .dvdm-t__avatar {
@@ -731,19 +751,21 @@
 }
 
 /*
- * Renderer::attribution() places this mark as the last child of the
- * attribution row itself (a flex row, already vertically centring the name
- * and role) whenever there is a name or company to build that row around -
- * `margin-inline-start: auto` there is the standard flexbox trick for
- * pushing one item to the far end of its row, landing the mark on the exact
- * same line as the name, centred with it, rather than on a line of its own
- * below it.
+ * Renderer::attribution() places this mark as the second child of the
+ * attribution row itself, alongside the avatar/name/role group (see
+ * .dvdm-t__who-group above), whenever there is a name or company to build
+ * that row around - `justify-content: space-between` on the row then lands
+ * the mark on the exact same line as the name, centred with it, at the
+ * opposite end from the group, rather than on a line of its own below it.
  *
- * When there is neither a name nor a company, attribution() has no row to
- * put it in and returns the mark bare instead - back as a lone child of the
- * card's own column, where that same auto margin still pushes it to the
- * right of the card on its own line, so it never depends on which case it
- * lands in.
+ * `margin-inline-start: auto` here is the fallback for the one case
+ * space-between does not cover: when there is neither a name nor a company,
+ * attribution() has no row to put the mark in and returns it bare instead -
+ * back as a lone child of the card's own column, where an auto margin still
+ * pushes it to the right of the card on its own line. Harmless alongside
+ * space-between in the normal case too, since an auto margin on a flex item
+ * already claims the same free space space-between would otherwise
+ * distribute.
  */
 .dvdm-t__twin-mark--close {
 	margin-inline-start: auto;

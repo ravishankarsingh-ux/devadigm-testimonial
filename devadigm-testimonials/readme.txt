@@ -4,7 +4,7 @@ Tags: testimonials, reviews, social proof, block, slider
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.8.2
+Stable tag: 1.8.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,12 @@ front-end script is a plain ES module, so the plugin runs straight from the zip.
 == Changelog ==
 
 See CHANGELOG.md for full detail. Summary:
+
+= 1.8.3 =
+* Changed: Twin corners' attribution row now uses justify-content:
+  space-between to place the closing mark at the opposite end from the
+  name/role, with the avatar and name/role grouped together so
+  space-between has just the two of them to place.
 
 = 1.8.2 =
 * Fixed: Twin corners' closing mark sat on its own line below the
