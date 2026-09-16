@@ -4,6 +4,22 @@ All notable changes to this plugin are documented here. Version numbers follow
 [Semantic Versioning](https://semver.org/): MAJOR for breaking changes, MINOR
 for new features that stay backward-compatible, PATCH for fixes.
 
+## 1.7.2 - 2026-09-16
+
+### Fixed
+
+- **Twin corners' marks could disappear behind a theme or page-builder
+  wrapper's own `overflow: hidden`.** The previous version centred each mark
+  on the border by pushing it half outside the card with a negative offset -
+  which only renders while every ancestor between the card and the viewport
+  leaves it unclipped, and this plugin has no way to guarantee that of a
+  wrapper it did not render. Marks are now filled corner tiles set flush
+  inside the border (`inset: 0`, no negative offset, no transform), with the
+  tile's own outer corner sharing the card's border-radius so it still reads
+  as part of the frame rather than a stray square. Fully contained inside
+  the card's own box, so it renders correctly regardless of what any
+  surrounding container's `overflow` is set to.
+
 ## 1.7.1 - 2026-09-16
 
 ### Changed

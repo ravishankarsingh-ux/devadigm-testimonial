@@ -665,20 +665,26 @@
 
 /*
  * Twin corners: a bordered card with the opening mark at one corner and its
- * closing counterpart at the diagonally opposite one, each sitting astride
- * the border line itself rather than floating inside the padding - the
- * classic "seal on the frame" look the style is named for. Cards alternate
- * which of the two accents leads, on both the border and the card's own
- * background tint, so a row or grid reads as a two-tone checker rather than
- * every card looking identical.
+ * closing counterpart at the diagonally opposite one, each set flush into the
+ * corner so it reads as part of the frame rather than floating loose in the
+ * padding. Cards alternate which of the two accents leads, on the border,
+ * the card's own background tint and both marks, so a row or grid reads as a
+ * two-tone checker rather than every card looking identical.
  *
- * `overflow: visible` is deliberate - the marks are centred exactly on the
- * border (via the -50%/+50% translate below), so half of each one has to
- * render outside the card's own box to sit on the line instead of inside it.
+ * The marks are positioned at `inset: 0` with no negative offset and no
+ * transform, deliberately - unlike Watermark, which bleeds off the card on
+ * purpose and needs its own `overflow: hidden` to clip cleanly, this style
+ * cannot assume it owns the nearest clipping box. A theme or page-builder
+ * wrapper placed around the block is entirely capable of setting its own
+ * `overflow: hidden` somewhere between this card and the viewport - for its
+ * own scroll-reveal animation, say - and this plugin has no way to reach out
+ * and change a container it did not render. Content is only ever guaranteed
+ * to be visible while it stays fully inside this element's own box, which is
+ * why every mark here is drawn flush against the inside of the border rather
+ * than straddling it.
  */
 .dvdm-mark--twin .dvdm-t__item {
 	position: relative;
-	overflow: visible;
 	/*
 	 * One pixel thicker than the shared border-width setting rather than the
 	 * setting alone - Twin corners reads as a deliberately drawn frame, and
@@ -690,38 +696,24 @@
 	border-width: calc( var( --dvdm-border-width, 1px ) + 1px );
 	border-color: var( --dvdm-accent, currentColor );
 	border-radius: var( --dvdm-border-radius, 0.6em );
-	padding: 2em 1.75em;
+	padding: 3.1em 1.75em;
 	background: color-mix( in srgb, var( --dvdm-accent, currentColor ) 6%, var( --dvdm-surface, canvas ) );
 }
 
 /*
- * The odd/even split below sets each card's lead colour; this margin only
- * keeps the badges (roughly 1em across, centred on the corner) from
- * overlapping the quote or attribution text they sit that close to.
- */
-.dvdm-mark--twin .dvdm-t__quote {
-	margin-top: 0.3em !important;
-}
-
-.dvdm-mark--twin .dvdm-t__attribution {
-	margin-bottom: 0.3em;
-}
-
-/*
- * Each mark is a small filled disc, not a bare glyph, and is centred - via
- * the -50%/+50% translate - exactly on the border's corner point. A bare
- * glyph sitting there would have the border line drawn straight across it;
- * the disc's own background covers that stretch of border so the mark reads
- * as set into the frame rather than crossed out by it.
+ * Each mark is a filled corner tile rather than a circular badge - a shape
+ * that can sit flush against two edges of the card at once and still read as
+ * "attached to the frame" without needing to cross the border to do it. The
+ * matching corner of the border is squared off underneath it (below) so the
+ * tile's own square corner lines up with the card's, instead of a rounded
+ * card corner poking out from behind a square tile.
  */
 .dvdm-mark--twin .dvdm-t__item::before,
 .dvdm-mark--twin .dvdm-t__item::after {
 	position: absolute;
-	width: 1.7em;
-	height: 1.7em;
+	width: 2.6em;
+	height: 2.6em;
 	display: grid;
-	place-items: center;
-	border-radius: 50%;
 	font-family: var( --dvdm-quote-font, inherit );
 	font-size: calc( 1.05em * var( --dvdm-mark-scale, 1 ) );
 	line-height: 1;
@@ -733,7 +725,12 @@
 	content: var( --dvdm-glyph, "\201C" );
 	top: 0;
 	inset-inline-start: 0;
-	transform: translate( -50%, -50% );
+	place-items: start start;
+	padding: 0.3em;
+	/* The tile's own outer corner - the one coinciding with the card's
+	   top-left corner - takes the card's radius, so a rounded card corner
+	   never pokes out from behind a square tile. */
+	border-start-start-radius: var( --dvdm-border-radius, 0.6em );
 	background: var( --dvdm-accent, currentColor );
 	color: var( --dvdm-accent-contrast, canvas );
 }
@@ -742,7 +739,9 @@
 	content: var( --dvdm-glyph-close, "\201D" );
 	bottom: 0;
 	inset-inline-end: 0;
-	transform: translate( 50%, 50% );
+	place-items: end end;
+	padding: 0.3em;
+	border-end-end-radius: var( --dvdm-border-radius, 0.6em );
 	background: var( --dvdm-accent-b, var( --dvdm-accent, currentColor ) );
 	color: var( --dvdm-accent-contrast, canvas );
 }

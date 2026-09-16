@@ -4,7 +4,7 @@ Tags: testimonials, reviews, social proof, block, slider
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.7.1
+Stable tag: 1.7.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,13 @@ front-end script is a plain ES module, so the plugin runs straight from the zip.
 == Changelog ==
 
 See CHANGELOG.md for full detail. Summary:
+
+= 1.7.2 =
+* Fixed: Twin corners' marks could vanish behind a theme or page-builder
+  wrapper's own `overflow: hidden`, since the previous version relied on
+  pushing them half outside the card. Marks are now filled corner tiles
+  fully contained inside the card's own box, so they render correctly no
+  matter what any surrounding container's overflow is set to.
 
 = 1.7.1 =
 * Changed: Twin corners now centres each mark directly on the border line
