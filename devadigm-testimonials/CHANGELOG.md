@@ -4,6 +4,19 @@ All notable changes to this plugin are documented here. Version numbers follow
 [Semantic Versioning](https://semver.org/): MAJOR for breaking changes, MINOR
 for new features that stay backward-compatible, PATCH for fixes.
 
+## 1.8.1 - 2026-09-16
+
+### Changed
+
+- **Twin corners' closing mark moves back to the bottom-right of the card**,
+  restoring the diagonal top-left/bottom-right placement the style is named
+  for. The previous release put both marks in one row at the top purely to
+  guarantee they could never overlap the quote; the opening mark now sits
+  before the quote and the closing one after the attribution, each still
+  ordinary flow content positioned with `align-self` rather than
+  `position: absolute` - so the diagonal layout is back without
+  reintroducing the overlap risk that caused it to be removed.
+
 ## 1.8.0 - 2026-09-16
 
 ### Added

@@ -592,6 +592,19 @@ final class Renderer {
 
 		$parts[] = self::attribution( $post, $name, $role, $company, $url, $show_avatar );
 
+		/*
+		 * The closing mark for Twin corners sits after everything else and
+		 * right-aligns itself with `align-self` (see style.css) rather than
+		 * `position: absolute` - the opening mark, added in quote_block(),
+		 * already sits at the start for the same reason. Both are ordinary
+		 * flow content the browser lays out like anything else, which is
+		 * what makes them structurally unable to overlap the quote or the
+		 * attribution: flow layout reserves each one its own space.
+		 */
+		if ( 'twin' === $mark ) {
+			$parts[] = '<span class="dvdm-t__twin-mark dvdm-t__twin-mark--close" aria-hidden="true"></span>';
+		}
+
 		return sprintf(
 			'<figure class="dvdm-t__item">%s</figure>',
 			implode( '', $parts )
@@ -631,14 +644,15 @@ final class Renderer {
 		 * page happens to give this card - which this plugin does not
 		 * control, and which a site is free to set large for its own
 		 * typography. That left the marks overlapping the quote outright on
-		 * at least one real site. Two real, in-flow elements above the quote
-		 * cannot overlap it: flow layout reserves their own space and pushes
-		 * the quote below them unconditionally, whatever the font-size.
+		 * at least one real site. Placed as ordinary flow content instead -
+		 * the opening mark here, before the quote, and the closing one added
+		 * in item(), after the attribution - each reserves its own space and
+		 * cannot overlap anything else regardless of font-size: the opening
+		 * mark pushes the quote below it, and the closing one, right-aligned
+		 * with `align-self` rather than positioned over anything, only ever
+		 * occupies its own row at the end of the card.
 		 */
-		$twin = '<span class="dvdm-t__twin" aria-hidden="true">'
-			. '<span class="dvdm-t__twin-mark dvdm-t__twin-mark--open"></span>'
-			. '<span class="dvdm-t__twin-mark dvdm-t__twin-mark--close"></span>'
-			. '</span>';
+		$twin_open = '<span class="dvdm-t__twin-mark dvdm-t__twin-mark--open" aria-hidden="true"></span>';
 
 		// Treatments that need a real element rather than a pseudo-element.
 		return match ( $mark ) {
@@ -647,7 +661,7 @@ final class Renderer {
 			'bracket' => '<span class="dvdm-t__rule dvdm-t__rule--top" aria-hidden="true"></span>'
 				. $blockquote
 				. '<span class="dvdm-t__rule dvdm-t__rule--bottom" aria-hidden="true"></span>',
-			'twin'    => $twin . $blockquote,
+			'twin'    => $twin_open . $blockquote,
 			default   => $blockquote,
 		};
 	}

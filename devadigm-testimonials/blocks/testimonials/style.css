@@ -664,11 +664,13 @@
 }
 
 /*
- * Twin corners: a bordered card with two small round marks in a row above
- * the quote - the opening glyph, then the closing one. Cards alternate
- * which of the two accents leads, on the border, the card's own background
- * tint and both marks, so a row or grid reads as a two-tone checker rather
- * than every card looking identical.
+ * Twin corners: a bordered card with a small round opening mark before the
+ * quote, at the start of the row, and its closing counterpart after the
+ * attribution, at the end - reading top-left and bottom-right, the corners
+ * the style is named for. Cards alternate which of the two accents leads,
+ * on the border, the card's own background tint and both marks, so a row
+ * or grid reads as a two-tone checker rather than every card looking
+ * identical.
  *
  * Two earlier releases tried absolutely positioning the marks over the
  * card's corners - flush against the border, then inset from it - sized and
@@ -676,9 +678,9 @@
  * this card, which this plugin does not control. Both still ended up with
  * the mark overlapping the quote on a real site once that font-size was
  * larger than assumed. Rendered as real, in-flow elements instead (see
- * Renderer::quote_block()), the marks are laid out by the browser like any
- * other content: they reserve their own space above the quote and the quote
- * starts below them unconditionally, whatever font-size is in play.
+ * Renderer::quote_block() and Renderer::item()), each mark is laid out by
+ * the browser like any other content and reserves its own space, so neither
+ * can ever overlap the quote or the attribution regardless of font-size.
  */
 .dvdm-mark--twin .dvdm-t__item {
 	/*
@@ -695,12 +697,14 @@
 	background: color-mix( in srgb, var( --dvdm-accent, currentColor ) 6%, var( --dvdm-surface, canvas ) );
 }
 
-.dvdm-t__twin {
-	display: flex;
-	justify-content: space-between;
-	margin-bottom: 0.9em;
-}
-
+/*
+ * Each mark is an ordinary flex child of the card (a flex column - see
+ * .dvdm-t__item at the top of this file), sized so it never stretches to
+ * the column's full width, and positioned along that row with `align-self`
+ * rather than `position`. That is what puts the opening mark at the start
+ * (left) before the quote and the closing one at the end (right) after the
+ * attribution, without either ever leaving normal document flow.
+ */
 .dvdm-t__twin-mark {
 	width: 2em;
 	height: 2em;
@@ -715,6 +719,7 @@
 }
 
 .dvdm-t__twin-mark--open {
+	align-self: flex-start;
 	background: var( --dvdm-accent, currentColor );
 	color: var( --dvdm-accent-contrast, canvas );
 }
@@ -724,6 +729,7 @@
 }
 
 .dvdm-t__twin-mark--close {
+	align-self: flex-end;
 	background: var( --dvdm-accent-b, var( --dvdm-accent, currentColor ) );
 	color: var( --dvdm-accent-contrast, canvas );
 }
