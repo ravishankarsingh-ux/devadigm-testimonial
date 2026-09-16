@@ -4,7 +4,7 @@ Tags: testimonials, reviews, social proof, block, slider
 Requires at least: 6.7
 Tested up to: 7.0
 Requires PHP: 8.1
-Stable tag: 1.8.1
+Stable tag: 1.8.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -92,6 +92,12 @@ front-end script is a plain ES module, so the plugin runs straight from the zip.
 == Changelog ==
 
 See CHANGELOG.md for full detail. Summary:
+
+= 1.8.2 =
+* Fixed: Twin corners' closing mark sat on its own line below the
+  attribution instead of beside it. It now sits on the same line as the
+  name and role, vertically centred with them, at the right-hand end of
+  that row.
 
 = 1.8.1 =
 * Changed: Twin corners' closing mark moves back to the bottom-right of

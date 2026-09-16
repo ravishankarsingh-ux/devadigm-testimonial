@@ -590,20 +590,19 @@ final class Renderer {
 			$parts[] = self::read_more_link( $post, $name );
 		}
 
-		$parts[] = self::attribution( $post, $name, $role, $company, $url, $show_avatar );
-
 		/*
-		 * The closing mark for Twin corners sits after everything else and
-		 * right-aligns itself with `align-self` (see style.css) rather than
-		 * `position: absolute` - the opening mark, added in quote_block(),
-		 * already sits at the start for the same reason. Both are ordinary
-		 * flow content the browser lays out like anything else, which is
-		 * what makes them structurally unable to overlap the quote or the
-		 * attribution: flow layout reserves each one its own space.
+		 * Twin corners' closing mark rides inside the attribution row itself
+		 * rather than sitting below it - that row is already a flex line with
+		 * the name and role vertically centred, and a trailing flex child
+		 * pushed to the far end with `margin-inline-start: auto` (see
+		 * style.css) lands on that exact same line, centred with them, without
+		 * either element needing `position: absolute` to get there.
 		 */
-		if ( 'twin' === $mark ) {
-			$parts[] = '<span class="dvdm-t__twin-mark dvdm-t__twin-mark--close" aria-hidden="true"></span>';
-		}
+		$closing_mark = 'twin' === $mark
+			? '<span class="dvdm-t__twin-mark dvdm-t__twin-mark--close" aria-hidden="true"></span>'
+			: '';
+
+		$parts[] = self::attribution( $post, $name, $role, $company, $url, $show_avatar, $closing_mark );
 
 		return sprintf(
 			'<figure class="dvdm-t__item">%s</figure>',
@@ -725,10 +724,16 @@ final class Renderer {
 	 * @param string   $company     Company name.
 	 * @param string   $url         Company URL.
 	 * @param bool     $show_avatar Whether to render the avatar.
+	 * @param string   $trailing    Extra markup appended inside the row, after
+	 *                              the name/role, right-aligned and vertically
+	 *                              centred with them - Twin corners' closing
+	 *                              mark, for example. Falls back to being
+	 *                              returned bare when there is no name or
+	 *                              company to build a row around.
 	 */
-	private static function attribution( \WP_Post $post, string $name, string $role, string $company, string $url, bool $show_avatar ): string {
+	private static function attribution( \WP_Post $post, string $name, string $role, string $company, string $url, bool $show_avatar, string $trailing = '' ): string {
 		if ( '' === $name && '' === $company ) {
-			return '';
+			return $trailing;
 		}
 
 		$avatar = '';
@@ -764,10 +769,11 @@ final class Renderer {
 		}
 
 		return sprintf(
-			'<figcaption class="dvdm-t__attribution">%1$s<span class="dvdm-t__who">%2$s%3$s</span></figcaption>',
+			'<figcaption class="dvdm-t__attribution">%1$s<span class="dvdm-t__who">%2$s%3$s</span>%4$s</figcaption>',
 			$avatar,
 			'' !== $name ? sprintf( '<span class="dvdm-t__name">%s</span>', esc_html( $name ) ) : '',
-			'' !== $secondary ? sprintf( '<span class="dvdm-t__role">%s</span>', $secondary ) : ''
+			'' !== $secondary ? sprintf( '<span class="dvdm-t__role">%s</span>', $secondary ) : '',
+			$trailing
 		);
 	}
 

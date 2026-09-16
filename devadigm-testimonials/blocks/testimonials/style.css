@@ -665,22 +665,25 @@
 
 /*
  * Twin corners: a bordered card with a small round opening mark before the
- * quote, at the start of the row, and its closing counterpart after the
- * attribution, at the end - reading top-left and bottom-right, the corners
- * the style is named for. Cards alternate which of the two accents leads,
- * on the border, the card's own background tint and both marks, so a row
- * or grid reads as a two-tone checker rather than every card looking
- * identical.
+ * quote, top-left, and its closing counterpart on the same line as the name
+ * and role, at the right-hand end of that row - reading top-left and
+ * bottom-right, the corners the style is named for. Cards alternate which
+ * of the two accents leads, on the border, the card's own background tint
+ * and both marks, so a row or grid reads as a two-tone checker rather than
+ * every card looking identical.
  *
- * Two earlier releases tried absolutely positioning the marks over the
- * card's corners - flush against the border, then inset from it - sized and
- * cleared in em units against whatever font-size the surrounding page gives
- * this card, which this plugin does not control. Both still ended up with
- * the mark overlapping the quote on a real site once that font-size was
- * larger than assumed. Rendered as real, in-flow elements instead (see
- * Renderer::quote_block() and Renderer::item()), each mark is laid out by
- * the browser like any other content and reserves its own space, so neither
- * can ever overlap the quote or the attribution regardless of font-size.
+ * Earlier releases tried absolutely positioning both marks over the card's
+ * corners, then placed them in a row of their own above the quote instead;
+ * both attempts ended up either overlapping the quote on a real site (the
+ * first, sized and cleared in em units against a font-size this plugin does
+ * not control) or sitting on their own line below the attribution rather
+ * than beside it (the second). Rendered as real, in-flow elements - the
+ * opening mark in Renderer::quote_block(), the closing one folded into
+ * Renderer::attribution()'s own row - each mark is laid out by the browser
+ * like any other content: the opening one reserves its own space before the
+ * quote, and the closing one rides the existing name/role line via the
+ * standard flexbox auto-margin trick, landing centred with them rather than
+ * needing a line of its own.
  */
 .dvdm-mark--twin .dvdm-t__item {
 	/*
@@ -697,14 +700,6 @@
 	background: color-mix( in srgb, var( --dvdm-accent, currentColor ) 6%, var( --dvdm-surface, canvas ) );
 }
 
-/*
- * Each mark is an ordinary flex child of the card (a flex column - see
- * .dvdm-t__item at the top of this file), sized so it never stretches to
- * the column's full width, and positioned along that row with `align-self`
- * rather than `position`. That is what puts the opening mark at the start
- * (left) before the quote and the closing one at the end (right) after the
- * attribution, without either ever leaving normal document flow.
- */
 .dvdm-t__twin-mark {
 	width: 2em;
 	height: 2em;
@@ -718,6 +713,13 @@
 	opacity: var( --dvdm-mark-opacity, 1 );
 }
 
+/*
+ * An ordinary flex child of the card (a flex column - see .dvdm-t__item at
+ * the top of this file) that never stretches to the column's full width,
+ * positioned at the start of that column with `align-self` rather than
+ * `position` - which is what puts it before the quote without ever leaving
+ * normal document flow.
+ */
 .dvdm-t__twin-mark--open {
 	align-self: flex-start;
 	background: var( --dvdm-accent, currentColor );
@@ -728,8 +730,23 @@
 	content: var( --dvdm-glyph, "\201C" );
 }
 
+/*
+ * Renderer::attribution() places this mark as the last child of the
+ * attribution row itself (a flex row, already vertically centring the name
+ * and role) whenever there is a name or company to build that row around -
+ * `margin-inline-start: auto` there is the standard flexbox trick for
+ * pushing one item to the far end of its row, landing the mark on the exact
+ * same line as the name, centred with it, rather than on a line of its own
+ * below it.
+ *
+ * When there is neither a name nor a company, attribution() has no row to
+ * put it in and returns the mark bare instead - back as a lone child of the
+ * card's own column, where that same auto margin still pushes it to the
+ * right of the card on its own line, so it never depends on which case it
+ * lands in.
+ */
 .dvdm-t__twin-mark--close {
-	align-self: flex-end;
+	margin-inline-start: auto;
 	background: var( --dvdm-accent-b, var( --dvdm-accent, currentColor ) );
 	color: var( --dvdm-accent-contrast, canvas );
 }

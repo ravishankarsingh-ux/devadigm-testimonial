@@ -4,6 +4,24 @@ All notable changes to this plugin are documented here. Version numbers follow
 [Semantic Versioning](https://semver.org/): MAJOR for breaking changes, MINOR
 for new features that stay backward-compatible, PATCH for fixes.
 
+## 1.8.2 - 2026-09-16
+
+### Fixed
+
+- **Twin corners' closing mark sat on its own line below the attribution,
+  at the left rather than the right.** `align-self` positions a flex item
+  within its own container, but the mark was a standalone child of the
+  card's own column - its own row, not the name/role's - so aligning it to
+  the "end" moved it to the bottom of the card, not to the right of the
+  attribution line, and the value used (`flex-end`) has no rightward effect
+  in a column container's own stacking direction, only the fallback
+  `align-self` behaviour for a lone item on its own row. The mark is now
+  folded directly into the attribution row itself (`Renderer::attribution()`
+  gained a `$trailing` parameter for this) and pushed to the far end of that
+  row with a standard flexbox auto-margin, landing on the same line as the
+  name and role and vertically centred with them, rather than on a line of
+  its own.
+
 ## 1.8.1 - 2026-09-16
 
 ### Changed
